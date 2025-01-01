@@ -6,6 +6,7 @@ import { CandidateModule } from './candidate/candidate.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CatsModule } from './cats/cats.module';
 import { ConfigModule } from '@nestjs/config';
+import { JobModule } from './job/job.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from '@nestjs/config';
     RecruiterModule,
     CandidateModule,
     CatsModule,
+    JobModule,
   ],
   controllers: [AppController],
   providers: [AppService],

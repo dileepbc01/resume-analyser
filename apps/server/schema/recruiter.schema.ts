@@ -1,3 +1,4 @@
+import { Job } from './job.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
@@ -11,8 +12,13 @@ export class Recruiter {
   @Prop({ type: MongooseSchema.Types.String, required: true })
   last_name: string;
 
-  @Prop(Number)
-  email: number;
+  @Prop({ type: MongooseSchema.Types.String, required: true, unique: true })
+  email: string;
+
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Job' }],
+  })
+  jobs: Job[];
 }
 
 export const RecruiterSchema = SchemaFactory.createForClass(Recruiter);
