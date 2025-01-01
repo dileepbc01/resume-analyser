@@ -5,16 +5,107 @@ export type CandidateDocument = HydratedDocument<Candidate>;
 
 @Schema()
 export class Education {
-  @Prop()
-  name: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  institution: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  field_of_study: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  grade: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  type: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  degree: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  start_date: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+    default: '',
+  })
+  end_date: string;
+  @Prop({
+    type: MongooseSchema.Types.Boolean,
+    required: true,
+    default: false,
+  })
+  is_currently_studying: string;
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  description: string;
 }
 // Generate a Mongoose Schema before use as Subdocument
 const EducationSchema = SchemaFactory.createForClass(Education);
 
 @Schema()
 export class Experience {
-  @Prop()
-  name: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  title: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+    enum: ['full-time', 'part-time', 'contract', 'internship', 'temporary'],
+  })
+  employment_type: string;
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  location: string;
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  description: string;
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+    enum: ['remote', 'onsite', 'hybrid'],
+  })
+  location_type: string;
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  start_date: string;
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: false,
+  })
+  end_date: string;
+
+  @Prop({
+    type: MongooseSchema.Types.Boolean,
+    required: true,
+  })
+  is_currently_working: string;
 }
 // Generate a Mongoose Schema before use as Subdocument
 const ExperienceSchema = SchemaFactory.createForClass(Experience);
