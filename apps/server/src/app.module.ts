@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CatsModule } from './cats/cats.module';
 import { ConfigModule } from '@nestjs/config';
 import { JobModule } from './job/job.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JobModule } from './job/job.module';
     CandidateModule,
     CatsModule,
     JobModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

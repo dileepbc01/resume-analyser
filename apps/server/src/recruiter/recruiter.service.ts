@@ -10,6 +10,13 @@ export class RecruiterService {
     @InjectModel(Recruiter.name) private recruiterModel: Model<Recruiter>,
   ) {}
 
+  async findByEmail(email: string): Promise<Recruiter> {
+    const recruiter = await this.recruiterModel.findOne({ email }).exec();
+    if (recruiter !== null) {
+      return recruiter;
+    }
+    throw new HttpException('Recruiter not found', HttpStatus.NOT_FOUND);
+  }
   async find(recruiter_id: string): Promise<Recruiter> {
     const recruiter = await this.recruiterModel.findById(recruiter_id).exec();
     if (recruiter !== null) {

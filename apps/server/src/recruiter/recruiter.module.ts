@@ -18,6 +18,7 @@ import { Recruiter, RecruiterSchema } from 'schema/recruiter.schema';
   controllers: [RecruiterController],
 
   providers: [RecruiterService],
+
+  exports: [RecruiterService],
 })
 export class RecruiterModule {}
-

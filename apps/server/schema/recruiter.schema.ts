@@ -15,6 +15,9 @@ export class Recruiter {
   @Prop({ type: MongooseSchema.Types.String, required: true, unique: true })
   email: string;
 
+  @Prop({ type: MongooseSchema.Types.String, required: true })
+  password: string;
+
   @Prop({
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Job' }],
   })
