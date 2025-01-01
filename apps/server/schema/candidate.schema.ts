@@ -173,3 +173,5 @@ export class Candidate {
 
   // socials
 }
+
+export const CandidateSchema = SchemaFactory.createForClass(Candidate);
