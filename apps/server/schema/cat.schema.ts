@@ -8,7 +8,7 @@ export class Cat {
   @Prop({ type: MongooseSchema.Types.String, required: true })
   name: string;
 
-  @Prop([Number])
+  @Prop(Number)
   age: number;
 
   @Prop()
