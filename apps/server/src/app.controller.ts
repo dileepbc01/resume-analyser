@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Res } from '@nestjs/common';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,8 +7,7 @@ export class AppController {
 
   @Get()
   @HttpCode(200)
-  getHello(@Res response) {
-    this.appService.getHello();
-    response.status(202).send('modified response');
+  getHello() {
+    return this.appService.getHello();
   }
 }
