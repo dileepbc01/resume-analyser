@@ -7,4 +7,6 @@ export class CreateRecruiterDto {
   last_name: string;
   @IsEmail()
   email: string;
+  @IsString()
+  password: string;
 }

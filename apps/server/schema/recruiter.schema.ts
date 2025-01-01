@@ -20,6 +20,7 @@ export class Recruiter {
 
   @Prop({
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Job' }],
+    default: [],
   })
   jobs: Job[];
 }

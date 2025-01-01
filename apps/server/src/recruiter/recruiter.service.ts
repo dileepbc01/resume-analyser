@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Recruiter } from 'schema/recruiter.schema';
 import { CreateRecruiterDto } from './dto/create-recruiter.dto';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class RecruiterService {
   constructor(
@@ -26,7 +26,11 @@ export class RecruiterService {
   }
 
   async create(createRecruiterDto: CreateRecruiterDto): Promise<Recruiter> {
-    const createdRecruiter = new this.recruiterModel(createRecruiterDto);
+    const hash = await bcrypt.hash(createRecruiterDto.password, 10);
+    const createdRecruiter = new this.recruiterModel({
+      ...createRecruiterDto,
+      password: hash,
+    });
     return createdRecruiter.save();
   }
 }
