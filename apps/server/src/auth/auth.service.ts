@@ -1,53 +1,103 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import ms from 'ms';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
+
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { AuthDto } from './dto/auth.dto';
 import { RecruiterService } from 'src/recruiter/recruiter.service';
-import { TokenPayload } from './token-payload.interface';
-import { Recruiter } from 'schema/recruiter.schema';
+import { CreateRecruiterDto } from 'src/recruiter/dto/create-recruiter.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly recruiterService: RecruiterService,
-    private readonly configService: ConfigService,
-    private readonly jwtService: JwtService,
+    private recruiterService: RecruiterService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
-  async login(user: Recruiter, response: Response) {
-    const expires = new Date();
-    expires.setMilliseconds(
-      expires.getMilliseconds() +
-        ms(this.configService.getOrThrow<string>('JWT_EXPIRATION')),
+  async signUp(createUserDto: CreateRecruiterDto): Promise<any> {
+    // Check if user exists
+
+    const recruiterExist = await this.recruiterService.findByEmail(
+      createUserDto.email,
     );
 
-    const tokenPayload: TokenPayload = {
-      userId: user.email,
-    };
-    const token = this.jwtService.sign(tokenPayload);
+    if (recruiterExist) {
+      throw new BadRequestException('User already exists');
+    }
 
-    response.cookie('Authentication', token, {
-      secure: true,
-      httpOnly: true,
-      expires,
+    // Hash password
+    const newRecruiter = await this.recruiterService.create({
+      ...createUserDto,
     });
-
-    return { tokenPayload };
+    const tokens = await this.getTokens(
+      String(newRecruiter._id),
+      newRecruiter.email,
+    );
+    await this.updateRefreshToken(
+      String(newRecruiter._id),
+      tokens.refreshToken,
+    );
+    return tokens;
   }
 
-  async verifyUser(email: string, password: string) {
-    try {
-      const user = await this.recruiterService.findByEmail(email);
-      const authenticated = await bcrypt.compare(password, user.password);
-      if (!authenticated) {
-        throw new UnauthorizedException();
-      }
-      return user;
-    } catch (_err: any) {
-      console.error(_err);
-      throw new UnauthorizedException('Credentials are not valid.');
-    }
+  async signIn(data: AuthDto) {
+    // Check if user exists
+    const recruiter = await this.recruiterService.findByEmail(data.email);
+    if (!recruiter) throw new BadRequestException('User does not exist');
+    const passwordMatches = await bcrypt.compare(
+      data.password,
+      recruiter.password,
+    );
+    if (!passwordMatches)
+      throw new BadRequestException('Password is incorrect');
+    const tokens = await this.getTokens(String(recruiter._id), recruiter.email);
+    await this.updateRefreshToken(String(recruiter._id), tokens.refreshToken);
+    return tokens;
+  }
+
+  async logout(userId: string) {
+    return this.recruiterService.update(userId, { refresh_token: null });
+  }
+
+  async hashData(data: string) {
+    return await bcrypt.hash(data, 10);
+  }
+
+  async updateRefreshToken(userId: string, refreshToken: string) {
+    const hashedRefreshToken = await this.hashData(refreshToken);
+    await this.recruiterService.update(userId, {
+      refresh_token: hashedRefreshToken,
+    });
+  }
+
+  async getTokens(userId: string, email: string) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+          expiresIn: '15m',
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+          expiresIn: '7d',
+        },
+      ),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }

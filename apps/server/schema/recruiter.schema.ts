@@ -6,6 +6,9 @@ export type RecruiterDocument = HydratedDocument<Recruiter>;
 
 @Schema()
 export class Recruiter {
+  @Prop({ type: MongooseSchema.Types.ObjectId, required: true, auto: true })
+  _id: MongooseSchema.Types.ObjectId;
+
   @Prop({ type: MongooseSchema.Types.String, required: true })
   first_name: string;
 
@@ -23,6 +26,9 @@ export class Recruiter {
     default: [],
   })
   jobs: Job[];
+
+  @Prop({ type: MongooseSchema.Types.String })
+  refresh_token: string;
 }
 
 export const RecruiterSchema = SchemaFactory.createForClass(Recruiter);

@@ -9,4 +9,5 @@ export class CreateRecruiterDto {
   email: string;
   @IsString()
   password: string;
+  refresh_token: string | null;
 }

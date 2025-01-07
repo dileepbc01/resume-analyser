@@ -4,18 +4,15 @@ import { Model } from 'mongoose';
 import { Recruiter } from 'schema/recruiter.schema';
 import { CreateRecruiterDto } from './dto/create-recruiter.dto';
 import * as bcrypt from 'bcrypt';
+import { RemoveRecruiterDto } from './dto/remove-recruiter.dto';
 @Injectable()
 export class RecruiterService {
   constructor(
     @InjectModel(Recruiter.name) private recruiterModel: Model<Recruiter>,
   ) {}
 
-  async findByEmail(email: string): Promise<Recruiter> {
-    const recruiter = await this.recruiterModel.findOne({ email }).exec();
-    if (recruiter !== null) {
-      return recruiter;
-    }
-    throw new HttpException('Recruiter not found', HttpStatus.NOT_FOUND);
+  async findByEmail(email: string) {
+    return await this.recruiterModel.findOne({ email }).exec();
   }
   async find(recruiter_id: string): Promise<Recruiter> {
     const recruiter = await this.recruiterModel.findById(recruiter_id).exec();
@@ -32,5 +29,25 @@ export class RecruiterService {
       password: hash,
     });
     return createdRecruiter.save();
+  }
+  async remove(removeRecruiterDto: RemoveRecruiterDto) {
+    await this.recruiterModel
+      .findOneAndDelete({
+        id: removeRecruiterDto.id,
+      })
+      .exec();
+  }
+  async update(
+    recruiter_id: string,
+    updateRecruiterDto: Partial<CreateRecruiterDto>,
+  ): Promise<Recruiter> {
+    console.log('dto', updateRecruiterDto);
+    const updatedRecruiter = await this.recruiterModel
+      .findByIdAndUpdate(recruiter_id, updateRecruiterDto, { new: true })
+      .exec();
+    if (updatedRecruiter !== null) {
+      return updatedRecruiter;
+    }
+    throw new HttpException('Recruiter not found', HttpStatus.NOT_FOUND);
   }
 }

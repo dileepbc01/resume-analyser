@@ -16,3 +16,5 @@ Today goal
 - python 20 problems
 - plan further
 - piano practice
+
+how bcypt hashes password
