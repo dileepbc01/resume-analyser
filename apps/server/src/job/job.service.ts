@@ -33,4 +33,8 @@ export class JobService {
       .findByIdAndUpdate(id, { status: JobStatus.ARCHIVED }, { new: true })
       .exec();
   }
+
+  async addApplications() {
+    //
+  }
 }
