@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { Job } from './job.schema';
 
-export type CandidateDocument = HydratedDocument<Candidate>;
+export type CandidateDocument = HydratedDocument<Application>;
 
 @Schema()
 export class Education {
@@ -134,7 +135,7 @@ export class SocialLink {
 const SocialLinkSchema = SchemaFactory.createForClass(SocialLink);
 
 @Schema()
-export class Candidate {
+export class Application {
   @Prop({ type: MongooseSchema.Types.String, required: true })
   first_name: string;
 
@@ -171,7 +172,9 @@ export class Candidate {
   @Prop({ type: [SocialLinkSchema], required: false })
   Social: SocialLink[];
 
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Job' })
+  job: Job; // Reference to the Job schema
   // socials
 }
 
-export const CandidateSchema = SchemaFactory.createForClass(Candidate);
+export const ApplicationSchema = SchemaFactory.createForClass(Application);

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
-import { Candidate } from 'src/candidate/entities/candidate.entity';
+import { Application } from './application.schema';
 
 export type JobDocument = HydratedDocument<Job>;
 
@@ -55,9 +55,9 @@ export class Job {
   updated_at: Date;
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Candidate' }],
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Application' }],
   })
-  candidates: Candidate[]; // TODO: how mongoose relation works ?
+  candidates: Application[]; // One-to-many relationship with Candidate
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);

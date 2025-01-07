@@ -4,10 +4,10 @@ import { AppService } from './app.service';
 import { RecruiterModule } from './recruiter/recruiter.module';
 import { CandidateModule } from './candidate/candidate.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CatsModule } from './cats/cats.module';
 import { ConfigModule } from '@nestjs/config';
 import { JobModule } from './job/job.module';
 import { AuthModule } from './auth/auth.module';
+import { ApplicationModule } from './application/application.module';
 
 @Module({
   imports: [
@@ -17,9 +17,9 @@ import { AuthModule } from './auth/auth.module';
     MongooseModule.forRoot(process.env.MONGO_URI),
     RecruiterModule,
     CandidateModule,
-    CatsModule,
     JobModule,
     AuthModule,
+    ApplicationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
