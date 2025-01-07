@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { JwtService } from '@nestjs/jwt';
@@ -69,6 +73,20 @@ export class AuthService {
     await this.recruiterService.update(userId, {
       refresh_token: hashedRefreshToken,
     });
+  }
+
+  async refreshTokens(userId: string, refreshToken: string) {
+    const recruiter = await this.recruiterService.findByRecruiterId(userId);
+    if (!recruiter || !recruiter.refresh_token)
+      throw new ForbiddenException('Access Denied');
+    const refreshTokenMatches = await bcrypt.compare(
+      refreshToken,
+      recruiter.refresh_token,
+    );
+    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    const tokens = await this.getTokens(recruiter.id, recruiter.email);
+    await this.updateRefreshToken(recruiter.id, tokens.refreshToken);
+    return tokens;
   }
 
   async getTokens(userId: string, email: string) {

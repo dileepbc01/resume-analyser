@@ -11,9 +11,17 @@ export class RecruiterService {
     @InjectModel(Recruiter.name) private recruiterModel: Model<Recruiter>,
   ) {}
 
+  async findAll(): Promise<Recruiter[]> {
+    return this.recruiterModel.find().exec();
+  }
   async findByEmail(email: string) {
     return await this.recruiterModel.findOne({ email }).exec();
   }
+
+  async findByRecruiterId(id: string) {
+    return await this.recruiterModel.findOne({ _id: id }).exec();
+  }
+
   async find(recruiter_id: string): Promise<Recruiter> {
     const recruiter = await this.recruiterModel.findById(recruiter_id).exec();
     if (recruiter !== null) {
