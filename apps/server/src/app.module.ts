@@ -21,5 +21,6 @@ import { ApplicationModule } from './application/application.module';
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [],
 })
 export class AppModule {}

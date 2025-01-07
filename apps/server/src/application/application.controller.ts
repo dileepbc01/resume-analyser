@@ -50,12 +50,8 @@ export class ApplicationController {
     return this.applicationService.remove(+id);
   }
   @Post('upload')
-  @UseInterceptors(
-    FilesInterceptor('files', CONSTANTS.MAX_FILE_UPLOADS, {
-      dest: '../../uploads',
-    }),
-  )
-  uploadFileAndValidate(
+  @UseInterceptors(FilesInterceptor('files', CONSTANTS.MAX_FILE_UPLOADS))
+  async uploadFileAndValidate(
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
@@ -73,8 +69,14 @@ export class ApplicationController {
         ],
       }),
     )
-    file: Express.Multer.File,
+    files: Express.Multer.File[],
   ) {
-    return file;
+    const resolvedPromises = await Promise.allSettled(
+      await files.map(async (file) => {
+        return this.applicationService.uploadResume(file);
+      }),
+    );
+    console.log('resolvedPromises', resolvedPromises);
+    return resolvedPromises;
   }
 }
