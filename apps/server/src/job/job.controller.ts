@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { JobService } from './job.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 
+@UseGuards(AccessTokenGuard)
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
@@ -19,16 +29,16 @@ export class JobController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.jobService.findOne(+id);
+    return this.jobService.findOne({ id });
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobService.update(+id, updateJobDto);
+    return this.jobService.update(id, updateJobDto);
   }
 
-  @Delete(':id')
+  @Get('archive')
   remove(@Param('id') id: string) {
-    return this.jobService.remove(+id);
+    return this.jobService.archive(id);
   }
 }

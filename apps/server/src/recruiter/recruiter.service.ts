@@ -49,7 +49,6 @@ export class RecruiterService {
     recruiter_id: string,
     updateRecruiterDto: Partial<CreateRecruiterDto>,
   ): Promise<Recruiter> {
-    console.log('dto', updateRecruiterDto);
     const updatedRecruiter = await this.recruiterModel
       .findByIdAndUpdate(recruiter_id, updateRecruiterDto, { new: true })
       .exec();

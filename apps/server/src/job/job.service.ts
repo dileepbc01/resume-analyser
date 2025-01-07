@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Job, JobStatus } from 'schema/job.schema';
+import { Model } from 'mongoose';
+import { GetJobDto } from './dto/get-job.dto';
 
 @Injectable()
 export class JobService {
+  constructor(@InjectModel(Job.name) private jobModel: Model<Job>) {}
+
   create(createJobDto: CreateJobDto) {
-    return 'This action adds a new job';
+    console.log('dto', createJobDto);
+    return this.jobModel.create(createJobDto);
   }
 
-  findAll() {
-    return `This action returns all job`;
+  async findAll() {
+    return this.jobModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  async findOne(getJobDto: GetJobDto) {
+    return this.jobModel.findById(getJobDto.id).exec();
   }
 
-  update(id: number, updateJobDto: UpdateJobDto) {
-    return `This action updates a #${id} job`;
+  async update(id: string, updateJobDto: UpdateJobDto) {
+    return this.jobModel
+      .findByIdAndUpdate(id, updateJobDto, { new: true })
+      .exec();
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} job`;
+  async archive(id: string) {
+    await this.jobModel
+      .findByIdAndUpdate(id, { status: JobStatus.ARCHIVED }, { new: true })
+      .exec();
   }
 }

@@ -11,20 +11,53 @@ enum JobType {
   INTERNSHIP = 'internship',
   TEMPORARY = 'temporary',
 }
+export enum JobStatus {
+  SAVING = 'SAVING',
+  PUBLISHED = 'PUBLISHED',
+  ARCHIVED = 'archived',
+}
 @Schema()
 export class Job {
-  @Prop({ type: MongooseSchema.Types.String, required: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, required: true, auto: true })
+  _id: MongooseSchema.Types.ObjectId;
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
   role: string;
-  @Prop({ required: true })
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    default: JobType.FULL_TIME,
+  })
   type: JobType; // full-time, part-time, contract, etc.
-  @Prop({ type: MongooseSchema.Types.String, required: true })
+
+  @Prop({
+    type: MongooseSchema.Types.String,
+    default: '',
+  })
   location: string;
-  @Prop({ type: MongooseSchema.Types.String, required: true })
+
+  @Prop({ type: MongooseSchema.Types.String, default: '' })
+  company: string;
+
+  @Prop({ type: MongooseSchema.Types.String, default: '' })
   description: string;
+
+  @Prop({ type: MongooseSchema.Types.String, default: JobStatus.SAVING })
+  status: JobStatus;
+
+  @Prop({ type: Date, default: Date.now })
+  created_at: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  updated_at: Date;
+
   @Prop({
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Candidate' }],
   })
-  candidates: Candidate[];
+  candidates: Candidate[]; // TODO: how mongoose relation works ?
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);
