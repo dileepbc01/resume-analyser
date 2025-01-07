@@ -5,7 +5,8 @@ declare global {
       PORT: string;
       MONGO_URI: string;
       JWT_REFRESH_SECRET: string;
-      JWT_EXPIRE: string;
+      JWT_EXPIRATION: string;
+      JWT_REFRESH_EXPIRATION;
     }
   }
 }
