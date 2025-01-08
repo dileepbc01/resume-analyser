@@ -46,7 +46,6 @@ export class AuthService {
   }
 
   async signIn(data: AuthDto) {
-    // Check if user exists
     const recruiter = await this.recruiterService.findByEmail(data.email);
     if (!recruiter) throw new BadRequestException('User does not exist');
     const passwordMatches = await bcrypt.compare(
