@@ -56,7 +56,27 @@ export class AuthService {
       throw new BadRequestException('Password is incorrect');
     const tokens = await this.getTokens(String(recruiter._id), recruiter.email);
     await this.updateRefreshToken(String(recruiter._id), tokens.refreshToken);
-    return tokens;
+    const recruiterDetails = {
+      // TODO: create proper type for this
+
+      firstName: recruiter.first_name,
+      lastName: recruiter.last_name,
+      email: recruiter.email,
+    };
+    return { ...tokens, recruiterDetails };
+  }
+  async getMe(recruiterId: string) {
+    const recruiter =
+      await this.recruiterService.findByRecruiterId(recruiterId);
+    if (!recruiter) throw new BadRequestException('User does not exist');
+    const recruiterDetails = {
+      // TODO: create proper type for this
+
+      firstName: recruiter.first_name,
+      lastName: recruiter.last_name,
+      email: recruiter.email,
+    };
+    return recruiterDetails;
   }
 
   async logout(userId: string) {

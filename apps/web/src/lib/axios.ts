@@ -39,12 +39,12 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await axiosInstance.post('/auth/refresh');
+        await axiosInstance.get('/auth/refresh');
         processQueue(null);
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-        // window.location.href = '/login';
+        window.location.href = '/login'; //TODO: disable later
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

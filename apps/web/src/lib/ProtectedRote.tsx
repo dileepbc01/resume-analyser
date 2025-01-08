@@ -3,16 +3,16 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isFetching, isError, user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (isError) {
       router.push('/login');
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isError, isFetching, router]);
 
-  if (isLoading) {
+  if (isFetching) {
     return <div>Loading...</div>;
   }
   return isAuthenticated ? <>{children}</> : null;

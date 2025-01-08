@@ -2,7 +2,7 @@ import { LoginCredentials, Recruiter } from '@/types/auth';
 import { axiosInstance } from '../axios';
 export const authApi = {
   login: async (credentials: LoginCredentials) => {
-    const { data } = await axiosInstance.post<{ user: Recruiter }>(
+    const { data } = await axiosInstance.post<{ recruiterDetails: Recruiter }>(
       '/auth/login',
       credentials
     );
@@ -14,7 +14,9 @@ export const authApi = {
   },
 
   getMe: async () => {
-    const { data } = await axiosInstance.get<Recruiter>('/auth/me');
+    const { data } = await axiosInstance.get<Recruiter>('/auth/me', {
+      withCredentials: true,
+    });
     return data;
   },
 };
