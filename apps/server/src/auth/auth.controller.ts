@@ -74,7 +74,11 @@ export class AuthController {
   @Get('logout')
   @ApiResponse({ status: 200, description: 'User successfully logged out.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  logout(@Req() req: any) {
+  logout(@Req() req: any,
+  @Res({ passthrough: true }) res: Response,
+) {
+  res.clearCookie('access_token');
+  res.clearCookie('refresh_token');
     this.authService.logout(req.user['sub']);
   }
 

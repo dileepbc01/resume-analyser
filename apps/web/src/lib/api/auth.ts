@@ -14,7 +14,7 @@ export const authApi = {
   },
   
   logout: async () => {
-    await api.post<AuthRoutes['/auth/logout']['get']['responses']>('/auth/logout');
+    await api.get<AuthRoutes['/auth/logout']['get']['responses']>('/auth/logout');
   },
   
   getMe: async () => {
