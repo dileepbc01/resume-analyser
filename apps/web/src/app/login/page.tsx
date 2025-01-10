@@ -23,7 +23,7 @@ const formSchema = z.object({
 
 // TODO: split the comps
 export default function SignInPage() {
-  const { login, loginError, isLoading } = useAuth();
+  const { loginMutation} = useAuth();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,13 +32,12 @@ export default function SignInPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    login({
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    loginMutation.mutate({
       email: values.email,
       password: values.password,
     });
   }
-
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <Card className='w-[350px]'>
@@ -47,9 +46,9 @@ export default function SignInPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            {loginError ? (
+            {loginMutation.isError ? (
               <div className='text-red-500 text-sm text-center'>
-                {loginError}
+                {loginMutation.error.response.data.message}
               </div>
             ) : (
               <></>
@@ -81,8 +80,8 @@ export default function SignInPage() {
                   </FormItem>
                 )}
               />
-              <Button type='submit' className='w-full' disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Login'}
+              <Button type='submit' className='w-full' disabled={loginMutation.isLoading}>
+                {loginMutation.isLoading ? 'Logging in...' : 'Login'}
               </Button>
             </form>
           </Form>

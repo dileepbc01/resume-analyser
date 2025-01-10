@@ -1,30 +1,41 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useRouter, usePathname } from 'next/navigation';
+import { toast } from 'sonner';
 import { authApi } from '@/lib/api/auth';
-import { LoginCredentials } from '@/types/auth';
+import { CustomAxiosError } from '@/lib/axios';
 
 export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathName = usePathname();
-  const {
-    data: user,
-    isFetching,
-    isError,
-    status,
-  } = useQuery({
+
+  const recruiterQuery = useQuery({
     queryKey: ['auth-user'],
     queryFn: authApi.getMe,
     retry: false,
-    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
-    enabled: !pathName.includes('login'), //TODO:
+    staleTime: 5 * 60 * 1000,
+    enabled: !pathName.includes('login'),
+  });
+  const signupMutation = useMutation({
+    mutationFn: (recruiter: Parameters<typeof authApi.signup>[0]) => authApi.signup(recruiter),
+    onSuccess: (resp) => {
+      queryClient.setQueryData(['auth-user'], () => resp.data);
+      router.push('/jobs');
+    },
+    onError: (err: CustomAxiosError) => {
+      toast.error(err.response.data.message);
+    }
   });
 
   const loginMutation = useMutation({
-    mutationFn: (credentials: LoginCredentials) => authApi.login(credentials),
-    onSuccess: (data) => {
-      queryClient.setQueryData(['auth-user'], () => data.recruiterDetails);
+    mutationFn: (credentials: Parameters<typeof authApi.login>[0]) => authApi.login(credentials),
+    onSuccess: (resp) => {
+      queryClient.setQueryData(['auth-user'], () => resp.data);
+      router.push('/jobs');
     },
+    onError: (err: CustomAxiosError) => {
+      toast.error(err.response.data.message);
+    }
   });
 
   const logoutMutation = useMutation({
@@ -33,18 +44,17 @@ export function useAuth() {
       queryClient.setQueryData(['auth-user'], null);
       router.push('/login');
     },
+   
   });
 
-  console.log('authed user', status);
 
   return {
-    user,
-    isAuthenticated: !!user,
-    isFetching,
-    isError,
-    login: loginMutation.mutate,
-    logout: logoutMutation.mutate,
-    isLoginLoading: loginMutation.isLoading,
-    loginError: loginMutation.error,
+    user: recruiterQuery.data,
+    isAuthenticated: !!recruiterQuery.data,
+    isFetching: recruiterQuery.isFetching,
+    isError: recruiterQuery.isError,
+    loginMutation,
+    logoutMutation,
+    signupMutation
   };
 }

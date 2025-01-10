@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isFetching, isError, user } = useAuth();
+  const { isAuthenticated, isFetching, isError, } = useAuth();
   const router = useRouter();
 
   useEffect(() => {

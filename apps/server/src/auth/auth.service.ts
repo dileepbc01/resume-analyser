@@ -19,9 +19,8 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async signUp(createUserDto: CreateRecruiterDto): Promise<any> {
+  async signUp(createUserDto: CreateRecruiterDto){
     // Check if user exists
-
     const recruiterExist = await this.recruiterService.findByEmail(
       createUserDto.email,
     );
@@ -42,10 +41,20 @@ export class AuthService {
       String(newRecruiter._id),
       tokens.refreshToken,
     );
-    return tokens;
+    
+    return {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      recruiterDetails: {
+        id: String(newRecruiter._id),
+        firstName: newRecruiter.first_name,
+        lastName: newRecruiter.last_name,
+        email: newRecruiter.email,
+      },
+    }
   }
 
-  async signIn(data: AuthDto) {
+  async signIn(data: AuthDto){
     const recruiter = await this.recruiterService.findByEmail(data.email);
     if (!recruiter) throw new BadRequestException('User does not exist');
     const passwordMatches = await bcrypt.compare(
@@ -57,15 +66,15 @@ export class AuthService {
     const tokens = await this.getTokens(String(recruiter._id), recruiter.email);
     await this.updateRefreshToken(String(recruiter._id), tokens.refreshToken);
     const recruiterDetails = {
-      // TODO: create proper type for this
-
+      id: String(recruiter._id),
       firstName: recruiter.first_name,
       lastName: recruiter.last_name,
       email: recruiter.email,
     };
     return { ...tokens, recruiterDetails };
   }
-  async getMe(recruiterId: string) {
+
+  async getMe(recruiterId: string){
     const recruiter =
       await this.recruiterService.findByRecruiterId(recruiterId);
     if (!recruiter) throw new BadRequestException('User does not exist');
@@ -80,7 +89,7 @@ export class AuthService {
   }
 
   async logout(userId: string) {
-    return this.recruiterService.update(userId, { refresh_token: null });
+    await this.recruiterService.update(userId, { refresh_token: null });
   }
 
   async hashData(data: string) {

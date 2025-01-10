@@ -1,22 +1,33 @@
-import { LoginCredentials, Recruiter } from '@/types/auth';
-import { axiosInstance } from '../axios';
+
+import { AuthRoutes } from '@/types/auth';
+import { api } from '../axios';
+
 export const authApi = {
-  login: async (credentials: LoginCredentials) => {
-    const { data } = await axiosInstance.post<{ recruiterDetails: Recruiter }>(
+  
+  login: async (credentials:AuthRoutes['/auth/login']['post']['requestBody']) => {
+    const resp = await api.post<
+    AuthRoutes['/auth/login']['post']['responses']>(
       '/auth/login',
       credentials
     );
-    return data;
+    return resp;
   },
-
+  
   logout: async () => {
-    await axiosInstance.post('/auth/logout');
+    await api.post<AuthRoutes['/auth/logout']['get']['responses']>('/auth/logout');
   },
-
+  
   getMe: async () => {
-    const { data } = await axiosInstance.get<Recruiter>('/auth/me', {
+    const { data } = await api.get<AuthRoutes['/auth/me']['get']['responses']>('/auth/me', {
       withCredentials: true,
     });
     return data;
   },
+
+  signup: async (recruiter: AuthRoutes['/auth/signup']['post']['requestBody']) => {
+    const { data } = await api.post<AuthRoutes['/auth/signup']['post']['responses']>('/auth/signup', {
+      ...recruiter
+    });
+    return data;
+  }
 };
