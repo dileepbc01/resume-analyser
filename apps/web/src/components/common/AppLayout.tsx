@@ -4,20 +4,19 @@ import Image from 'next/image';
 import React, { useState } from 'react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
 
 function AppLayout({children}:{children: React.ReactNode}) {
+  const router = useRouter();
     const [activeTab, setActiveTab] = useState('overview');
     const {logoutMutation}=useAuth()
 
 
 function handleLogout() {
     logoutMutation.mutate();
-    }
+    } 
 
-    function handleNavigation(_path:string) {
-    // console.log('Navigating to:', path);
-    }
-
+   
     const NavItem = ({ icon: Icon, label, tabName, onClick }: { icon: React.ComponentType<{ className?: string }>, label: string, tabName: string, onClick?: () => void }) => (
     <TooltipProvider>
         <Tooltip>
@@ -51,7 +50,7 @@ function handleLogout() {
                 icon={Briefcase}
                 label='Jobs'
                 tabName='jobs'
-                onClick={() => handleNavigation('/jobs')}
+                onClick={() => router.push('/jobs')}
               />
             </ul>
           </nav>
@@ -80,16 +79,10 @@ function handleLogout() {
         {/* Top Header with Profile */}
         <div className='bg-white border-b px-6 py-3'>
           <div className='flex justify-end'>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Button variant='ghost' size='icon' className='h-9 w-9'>
+            
+                  <Button variant='ghost' size='icon' className='h-9 w-9' onClick={() => router.push('/profile')}>
                     <User className='h-5 w-5' />
                   </Button>
-                </TooltipTrigger>
-                <TooltipContent>Profile</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
         </div>
         <div className='p-6 flex-1'>

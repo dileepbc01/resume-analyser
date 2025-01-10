@@ -3,5 +3,9 @@
     {
       "mode": "auto"
     }
-  ]
+  ],
+  // "github.copilot.enable": true,
+  // "github.copilot.chat.codeGeneration.instructions": [{
+  //   "text": ""
+  // }]
 }

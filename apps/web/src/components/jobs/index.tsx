@@ -1,8 +1,12 @@
+"use client";
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
 
 const Jobs: React.FC = () => {
+  const router = useRouter();
     return (
         <>
           <Card>
@@ -14,7 +18,9 @@ const Jobs: React.FC = () => {
                     Manage your job postings and applications
                   </p>
                 </div>
-                <Button>Add New Job</Button>
+                <Button onClick={()=>{
+                  router.push('/job/new')
+                }}>Add New Job</Button>
               </div>
             </CardHeader>
             <CardContent className='p-0'>
