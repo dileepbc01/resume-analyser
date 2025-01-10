@@ -16,8 +16,8 @@ import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 import { RefreshTokenGuard } from 'src/common/guards/refresh-token.guard';
 import { Response } from 'express';
 import { CONSTANTS } from 'src/common/constants';
-import { RecruiterService } from 'src/recruiter/recruiter.service';
 import { AuthResponse } from './response/recruiter-details.response';
+const ms = require('ms'); 
 
 @ApiTags('auth')
 @Controller('auth')
@@ -43,7 +43,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) : Promise<AuthResponse> {
     const { accessToken, refreshToken, recruiterDetails } =
-      await this.authService.signIn(authDto);
+      await this.authService.login(authDto);
 
     // Set access token cookie
     res
@@ -51,13 +51,13 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        expires: new Date(Date.now() + CONSTANTS.COOKIE_EXPIRE),
+        expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)),
       })
       .cookie('refresh_token', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        expires: new Date(Date.now() + CONSTANTS.COOKIE_EXPIRE * 15), // longer expiration for refresh token
+        expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)), // longer expiration for refresh token
       })
      
     return {
@@ -84,10 +84,19 @@ export class AuthController {
   @Get('refresh')
   @ApiResponse({ status: 200, description: 'Tokens successfully refreshed.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  refresh(@Req() req: any) {
+  async refresh(@Req() req: any,
+  @Res({ passthrough: true }) res: Response,
+) {
     const userId = req.user['sub']; //TODO: loose typing
     const refreshToken = req.user['refreshToken'];
-    return this.authService.refreshTokens(userId, refreshToken);
+    const {accessToken}= await this.authService.refreshTokens(userId, refreshToken);
+    res
+    .cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)),
+    }).send();
   }
 
   @UseGuards(AccessTokenGuard)

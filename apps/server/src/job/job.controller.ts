@@ -20,7 +20,6 @@ import { GetJobResponse } from './response/get-jobs.response';
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
-
   @Post()
   @ApiResponse({ status: 201, description: 'The job has been successfully created.', type: GetJobResponse })
   @ApiResponse({ status: 400, description: 'Bad Request.' })

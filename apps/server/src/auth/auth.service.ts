@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthDto } from './dto/auth.dto';
 import { RecruiterService } from 'src/recruiter/recruiter.service';
 import { CreateRecruiterDto } from 'src/recruiter/dto/create-recruiter.dto';
+import { CONSTANTS } from 'src/common/constants';
 
 @Injectable()
 export class AuthService {
@@ -54,7 +55,7 @@ export class AuthService {
     }
   }
 
-  async signIn(data: AuthDto){
+  async login(data: AuthDto){
     const recruiter = await this.recruiterService.findByEmail(data.email);
     if (!recruiter) throw new BadRequestException('User does not exist');
     const passwordMatches = await bcrypt.compare(
@@ -126,7 +127,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: this.configService.get<string>('JWT_EXPIRATION'),
+          expiresIn: CONSTANTS.ACCESS_TOKEN_EXPIRATION,
         },
       ),
       this.jwtService.signAsync(
@@ -136,7 +137,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-          expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRATION'),
+          expiresIn: CONSTANTS.REFRESH_TOKEN_EXPIRATION,
         },
       ),
     ]);
