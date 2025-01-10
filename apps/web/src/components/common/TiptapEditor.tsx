@@ -36,7 +36,7 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
   }
 
   return (
-    <div className="border rounded-lg h-96">
+    <div className="border rounded-lg min-h-96">
       <div className="flex items-center gap-2 p-2 border-b bg-background ">
       <Button
         variant={editor.isActive('bold') ? 'default' : 'ghost'}

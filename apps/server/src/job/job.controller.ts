@@ -24,13 +24,15 @@ export class JobController {
   @ApiResponse({ status: 201, description: 'The job has been successfully created.', type: GetJobResponse })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async create(@Body() createJobDto: CreateJobDto): Promise<GetJobResponse> {
-    return this.jobService.create(createJobDto);
+    const newJob= await this.jobService.create(createJobDto);
+    return GetJobResponse.fromEntity(newJob);
   }
 
   @Get()
   @ApiResponse({ status: 200, description: 'Return all jobs.', type: [GetJobResponse] })
   async findAll(): Promise<GetJobResponse[]> {
-    return this.jobService.findAll();
+    const jobs= await this.jobService.findAll();
+    return jobs.map(job => GetJobResponse.fromEntity(job));
   }
 
   @Get(':id')
@@ -41,7 +43,7 @@ export class JobController {
     if (!job) {
       throw new NotFoundException('Job not found');
     }
-    return job;
+    return GetJobResponse.fromEntity(job);
   }
 
   @Patch(':id')
@@ -52,7 +54,8 @@ export class JobController {
     if (!job) {
       throw new NotFoundException('Job not found');
     }
-    return job;
+    return GetJobResponse.fromEntity(job);
+
   }
 
   @Get('archive')
@@ -63,6 +66,7 @@ export class JobController {
     if (!job) {
       throw new NotFoundException('Job not found');
     }
-    return job;
+    return GetJobResponse.fromEntity(job);
+
   }
 }

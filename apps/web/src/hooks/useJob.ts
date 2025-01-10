@@ -24,8 +24,7 @@ export const useJob = () => {
     mutationFn: (newJob: CreateJobDto) => jobApi.createJob(newJob),
     onSuccess: (d) => {
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
-      // console.log(d)
-      // router.push(`/job/${d.id}`);
+      router.push(`/job/${d._id}`);
     },
     onError: (error:CustomAxiosError) => { 
       toast.error(error.response?.data.message);
