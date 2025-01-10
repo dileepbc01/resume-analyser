@@ -89,13 +89,18 @@ export class AuthController {
 ) {
     const userId = req.user['sub']; //TODO: loose typing
     const refreshToken = req.user['refreshToken'];
-    const {accessToken}= await this.authService.refreshTokens(userId, refreshToken);
+    const {accessToken,refreshToken:newRefreshToken}= await this.authService.refreshTokens(userId, refreshToken);
     res
     .cookie('access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)),
+    }).cookie('refresh_token',newRefreshToken,{
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)), // longer expiration for refresh token
     }).send();
   }
 

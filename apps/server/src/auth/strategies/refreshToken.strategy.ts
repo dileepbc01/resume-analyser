@@ -1,14 +1,17 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { RecruiterService } from 'src/recruiter/recruiter.service';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh',
 ) {
-  constructor() {
+  constructor(
+    private recruiterService:RecruiterService
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         RefreshTokenStrategy.extractJWTFromCookie,
@@ -21,13 +24,14 @@ export class RefreshTokenStrategy extends PassportStrategy(
     if (req.cookies && req.cookies.refresh_token) {
       return req.cookies.refresh_token;
     }
-    return null;
+    throw new UnauthorizedException("No refresh token found in cookie 1");
   }
   validate(req: Request, payload: any) {
+  
     if (req.cookies && req.cookies.refresh_token) {
       const refreshToken = req.cookies.refresh_token;
       return { refreshToken, ...payload };
     }
-    return null;
+    throw new UnauthorizedException("No refresh token found in cookie 2");
   }
 }

@@ -1,3 +1,5 @@
+"use client"
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -17,10 +19,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useJob } from '@/hooks/useJob';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createjobSchema } from '@/types/routes/job';
+import TipTapEditor from '../common/TiptapEditor';
 
 const jobTypes = [
   { value: 'full-time', label: 'Full Time' },
@@ -30,28 +32,31 @@ const jobTypes = [
   { value: 'temporary', label: 'Temporary' },
 ];
 
-const New = () => {
 
-const {createJob}=useJob()
+
+export const New = () => {
+  const { createJob } = useJob();
+  
   const form = useForm({
-    resolver:zodResolver(createjobSchema),
+    resolver: zodResolver(createjobSchema),
     defaultValues: {
-    role: '',
-    type: 'full-time',
-    location: '',
-    company: '',
-    description: '',
+      role: '',
+      type: 'full-time',
+      location: '',
+      company: '',
+      description: '',
     },
   });
 
-
-
+  const onSubmit = (data: any) => {
+    createJob({ ...data });
+  };
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Create New Job</h1>
-      
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(d=>createJob(d))} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {/* Role field */}
           <FormField
             control={form.control}
             name="role"
@@ -66,6 +71,7 @@ const {createJob}=useJob()
             )}
           />
 
+          {/* Job Type field */}
           <FormField
             control={form.control}
             name="type"
@@ -91,6 +97,7 @@ const {createJob}=useJob()
             )}
           />
 
+          {/* Location field */}
           <FormField
             control={form.control}
             name="location"
@@ -105,6 +112,7 @@ const {createJob}=useJob()
             )}
           />
 
+          {/* Company field */}
           <FormField
             control={form.control}
             name="company"
@@ -119,23 +127,17 @@ const {createJob}=useJob()
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Job description and requirements"
-                    className="min-h-[150px]"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {/* Description field */}
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <TipTapEditor 
+              description={form.watch('description')}
+              onChange={(value) => form.setValue('description', value)}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
 
           <div className="flex justify-end">
             <Button type="submit">Create Job</Button>
@@ -146,4 +148,3 @@ const {createJob}=useJob()
   );
 };
 
-export default New;

@@ -1,6 +1,6 @@
 'use client';
 
-import New from '@/components/jobs/New';
+import {New} from '@/components/jobs/New';
 import React from 'react'
 
 const page = () => {
@@ -12,3 +12,4 @@ const page = () => {
 }
 
 export default page
+
