@@ -26,7 +26,6 @@ export class AuthController {
 
   @Post('signup')
   @ApiResponse({ status: 201, type:AuthResponse, description: 'User successfully signed up.' })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
   async signup(@Body() createUserDto: CreateRecruiterDto): Promise<AuthResponse> {
     const recruiter= await this.authService.signUp(createUserDto);
     return {
@@ -39,7 +38,6 @@ export class AuthController {
 
   @Post('login')
   @ApiResponse({ status: 200, description: 'User successfully logged in.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async signin(
     @Body() authDto: AuthDto,
     @Res({ passthrough: true }) res: Response,

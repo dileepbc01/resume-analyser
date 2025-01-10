@@ -1,5 +1,5 @@
 
-import { AuthRoutes } from '@/types/auth';
+import { AuthRoutes } from '@/types/routes/auth';
 import { api } from '../axios';
 
 export const authApi = {

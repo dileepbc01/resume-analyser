@@ -11,17 +11,16 @@ import { CreateRecruiterDto } from './dto/create-recruiter.dto';
 import { RecruiterService } from './recruiter.service';
 import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
 
+@UseGuards(AccessTokenGuard)
 @Controller('recruiter')
 export class RecruiterController {
   constructor(private readonly recruiterService: RecruiterService) {}
 
-  @UseGuards(AccessTokenGuard)
   @Get()
   async findAll() {
     return await this.recruiterService.findAll();
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get(':id')
   async find(@Param('id') recruiter_id: string) {
     return await this.recruiterService.find(recruiter_id);

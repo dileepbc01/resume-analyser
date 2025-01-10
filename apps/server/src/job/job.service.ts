@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -11,7 +11,6 @@ export class JobService {
   constructor(@InjectModel(Job.name) private jobModel: Model<Job>) {}
 
   create(createJobDto: CreateJobDto) {
-    console.log('dto', createJobDto);
     return this.jobModel.create(createJobDto);
   }
 
@@ -20,16 +19,20 @@ export class JobService {
   }
 
   async findOne(getJobDto: GetJobDto) {
-    return this.jobModel.findById(getJobDto.id).exec();
+    const job = await this.jobModel.findById(getJobDto.id).exec();
+    return job
   }
 
   async update(id: string, updateJobDto: UpdateJobDto) {
-    return this.jobModel
-      .findByIdAndUpdate(id, updateJobDto, { new: true })
-      .exec();
+    const job = await this.jobModel.findByIdAndUpdate(id,{
+      ...updateJobDto
+    },{
+      new:true
+    });
+    return job;
   }
   async archive(id: string) {
-    await this.jobModel
+    return await this.jobModel
       .findByIdAndUpdate(id, { status: JobStatus.ARCHIVED }, { new: true })
       .exec();
   }
