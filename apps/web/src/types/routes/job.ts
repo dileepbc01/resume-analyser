@@ -7,6 +7,13 @@ export interface BaseJobDto {
   location: string;
   company: string;
   description: string;
+  scoringWeights: {
+    technical_competence: number;
+    proffessional_experience_impact: number;
+    education: number;
+    leadership_soft_skills: number;
+    role_alignment_cultural_fit: number
+  }
 }
 
 export const createjobSchema = z.object({

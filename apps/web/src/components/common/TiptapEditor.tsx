@@ -7,20 +7,23 @@ import { Button } from "@/components/ui/button";
 interface TipTapEditorProps {
   description: string;
   onChange: (richText: string) => void;
+  isDisabled?: boolean;
 }
 
-const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
+const TipTapEditor = ({ description, onChange, isDisabled = false }: TipTapEditorProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     content: description,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
+      if(isDisabled) return;
       onChange(editor.getHTML());
     },
     editorProps: {
       attributes: {
         class: "focus:outline-none",
       },
+      editable: ()=>!isDisabled,
     },
   });
 
@@ -29,9 +32,10 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
   }
 
   return (
-    <div className="min-h-96 rounded-lg border">
+    <div className={`min-h-96 rounded-lg border ${isDisabled ? 'opacity-60' : ''}`}>
       <div className="bg-background flex items-center gap-2 border-b p-2">
         <Button
+          disabled={isDisabled}
           variant={editor.isActive("bold") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -39,6 +43,7 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
           <Bold className="h-4 w-4" />
         </Button>
         <Button
+          disabled={isDisabled}
           variant={editor.isActive("italic") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -46,6 +51,7 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
           <Italic className="h-4 w-4" />
         </Button>
         <Button
+          disabled={isDisabled}
           variant={editor.isActive("bulletList") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -53,6 +59,7 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
           <List className="h-4 w-4" />
         </Button>
         <Button
+          disabled={isDisabled}
           variant={editor.isActive("orderedList") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -60,6 +67,7 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
           <ListOrdered className="h-4 w-4" />
         </Button>
         <Button
+          disabled={isDisabled}
           variant={editor.isActive("blockquote") ? "default" : "ghost"}
           size="sm"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -67,6 +75,7 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
           <Quote className="h-4 w-4" />
         </Button>
         <Button
+          disabled={isDisabled}
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().undo().run()}
@@ -74,6 +83,7 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
           <Undo className="h-4 w-4" />
         </Button>
         <Button
+          disabled={isDisabled}
           variant="ghost"
           size="sm"
           onClick={() => editor.chain().focus().redo().run()}
@@ -81,7 +91,10 @@ const TipTapEditor = ({ description, onChange }: TipTapEditorProps) => {
           <Redo className="h-4 w-4" />
         </Button>
       </div>
-      <EditorContent editor={editor} className="prose h-full max-w-none p-4" />
+      <EditorContent 
+        editor={editor} 
+        className={`prose h-full max-w-none p-4 ${isDisabled ? 'blur-[0.3px] pointer-events-none' : ''}`} 
+      />
     </div>
   );
 };

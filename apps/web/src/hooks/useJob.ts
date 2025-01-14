@@ -27,10 +27,10 @@ export const useJob = () => {
     mutationFn: (newJob: CreateJobDto) => jobApi.createJob(newJob),
     onSuccess: (d) => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      router.push(`/job/${d._id}`);
+      router.push(`/job/${d.id}`);
     },
     onError: (error: CustomAxiosError) => {
-      toast.error(error.response?.data.message);
+      toast.error(error.response.data.message);
     },
   });
 
@@ -42,6 +42,8 @@ export const useJob = () => {
     },
   });
 
+
+  
   return {
     // Data
     jobs,

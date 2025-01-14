@@ -1,7 +1,15 @@
+/* eslint-disable @next/next/no-async-client-component */
+"use client"
+import JobDetails from "@/components/JobDetails";
+import { useParams } from "next/navigation";
 import React from "react";
 
-const page = () => {
-  return <div></div>;
-};
+export default function Page() {
+  const params = useParams() as {
+    job_id: string;
+  };
 
-export default page;
+  return <>
+    <JobDetails job_id={(params).job_id}/>
+  </>
+}

@@ -1,13 +1,18 @@
 "use client";
 
 import AppLayout from "@/components/common/AppLayout";
-
 import { ProtectedRoute } from "@/lib/ProtectedRote";
 
-export default function LoginLayout({ children }: { children: React.ReactNode }) {
+
+export default function JobDetailsLayout({ children }: { children: React.ReactNode }) {
+ 
   return (
     <ProtectedRoute>
-      <AppLayout>{children}</AppLayout>
+      <AppLayout>
+        {
+          children
+        }
+      </AppLayout>
     </ProtectedRoute>
   );
 }
