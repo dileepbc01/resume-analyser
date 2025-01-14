@@ -1,13 +1,13 @@
-'use client';
-import React from 'react';
-import Jobs from '@/components/jobs';
+"use client";
+
+import React from "react";
+
+import Jobs from "@/components/jobs";
 
 export default function DashboardPage() {
-
-
   return (
     <>
-      <Jobs/>
+      <Jobs />
     </>
   );
 }

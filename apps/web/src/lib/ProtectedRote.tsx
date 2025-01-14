@@ -1,14 +1,16 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from "@/hooks/useAuth";
+
+import { useEffect } from "react";
+
+import { useRouter } from "next/navigation";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isFetching, isError, } = useAuth();
+  const { isAuthenticated, isFetching, isError } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (isError) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [isError, isFetching, router]);
 

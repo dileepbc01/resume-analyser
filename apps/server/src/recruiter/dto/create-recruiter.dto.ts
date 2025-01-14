@@ -1,7 +1,6 @@
 import { IsEmail, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-
 export class CreateRecruiterDto {
   @ApiProperty({ description: 'First name of the recruiter' })
   @IsString()
@@ -18,5 +17,4 @@ export class CreateRecruiterDto {
   @ApiProperty({ description: 'Password for the recruiter account' })
   @IsString()
   password: string;
-
 }

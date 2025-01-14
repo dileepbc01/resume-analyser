@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import {New} from '@/components/jobs/New';
-import React from 'react'
+import React from "react";
+
+import { New } from "@/components/jobs/New";
 
 const page = () => {
   return (
-   <>
-   <New/>
-   </>
-  )
-}
+    <>
+      <New />
+    </>
+  );
+};
 
-export default page
-
+export default page;

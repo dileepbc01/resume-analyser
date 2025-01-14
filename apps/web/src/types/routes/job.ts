@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export type JobType = 'full-time' | 'part-time' | 'contract' | 'internship' | 'temporary';
+export type JobType = "full-time" | "part-time" | "contract" | "internship" | "temporary";
 export interface BaseJobDto {
   role: string;
   type: JobType;
@@ -10,9 +10,9 @@ export interface BaseJobDto {
 }
 
 export const createjobSchema = z.object({
-  role: z.string().min(1, 'Role is required'),
-  type: z.enum(['full-time', 'part-time', 'contract', 'internship', 'temporary'], {
-    required_error: 'Job type is required',
+  role: z.string().min(1, "Role is required"),
+  type: z.enum(["full-time", "part-time", "contract", "internship", "temporary"], {
+    required_error: "Job type is required",
   }),
   location: z.string().optional(),
   company: z.string().optional(),
@@ -26,7 +26,6 @@ export interface UpdateJobDto extends Partial<CreateJobDto> {
   // All fields are optional for updates
 }
 
-
 export interface JobResponse extends Required<BaseJobDto> {
   id: string;
   createdAt: string;
@@ -34,7 +33,7 @@ export interface JobResponse extends Required<BaseJobDto> {
 }
 
 export interface JobRoutes {
-  '/job': {
+  "/job": {
     post: {
       requestBody: CreateJobDto;
       responses: JobResponse;
@@ -43,7 +42,7 @@ export interface JobRoutes {
       responses: JobResponse[];
     };
   };
-  '/job/:id': {
+  "/job/:id": {
     get: {
       responses: JobResponse;
     };
@@ -52,4 +51,4 @@ export interface JobRoutes {
       responses: JobResponse;
     };
   };
-  };
+}

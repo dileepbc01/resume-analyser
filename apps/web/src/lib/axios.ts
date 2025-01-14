@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 export interface CustomAxiosError extends AxiosError {
   response: {
     data: {
       message: string;
       statusCode: number;
-      error:string
+      error: string;
     };
     status: number;
     statusText: string;
@@ -16,9 +16,9 @@ export interface CustomAxiosError extends AxiosError {
 }
 
 export const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
-    withCredentials: true,
-  });
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+});
 
 // Queue interface
 interface QueueItem {
@@ -40,7 +40,6 @@ const processQueue = (error: AxiosError | null) => {
   failedQueue = [];
 };
 
-
 // Request interceptor
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -61,11 +60,11 @@ api.interceptors.response.use(
         }).then(() => axios(originalRequest));
       }
 
-    isRefreshing = true;
-    originalRequest._retry = true;
+      isRefreshing = true;
+      originalRequest._retry = true;
 
       try {
-        await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,{
+        await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
           withCredentials: true,
         });
         processQueue(null);

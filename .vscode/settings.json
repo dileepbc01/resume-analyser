@@ -8,5 +8,5 @@
   // "github.copilot.chat.codeGeneration.instructions": [{
   //   "text": ""
   // }],
-  "files.eol": "auto"
+  "files.eol": "\r\n"
 }

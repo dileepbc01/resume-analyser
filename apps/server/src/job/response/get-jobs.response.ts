@@ -1,7 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { JobType } from "../dto/create-job.dto";
-import { IsString } from "class-validator";
-import { Job } from "schema/job.schema";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { JobType } from '../dto/create-job.dto';
+import { IsString } from 'class-validator';
+import { Job } from 'schema/job.schema';
 
 export class GetJobResponse {
   @IsString()
@@ -46,5 +46,4 @@ export class GetJobResponse {
     dto.updatedAt = job.updated_at;
     return dto;
   }
-
 }

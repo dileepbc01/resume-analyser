@@ -48,7 +48,7 @@ export class RecruiterService {
   }
   async update(
     recruiter_id: string,
-    updateRecruiterDto: updateRecruiterDto&{refresh_token?:string|null},
+    updateRecruiterDto: updateRecruiterDto & { refresh_token?: string | null },
   ): Promise<Recruiter> {
     const updatedRecruiter = await this.recruiterModel
       .findByIdAndUpdate(recruiter_id, updateRecruiterDto, { new: true })

@@ -48,36 +48,35 @@ interface AuthRefreshResponse {
   };
 }
 
-
 // Type for the Auth routes
 export type AuthRoutes = {
-  '/auth/signup': {
+  "/auth/signup": {
     post: {
       requestBody: CreateRecruiterDto;
       responses: AuthSignupResponse;
     };
   };
-  
-  '/auth/login': {
+
+  "/auth/login": {
     post: {
       requestBody: AuthDto;
       responses: AuthLoginResponse;
     };
   };
 
-  '/auth/logout': {
+  "/auth/logout": {
     get: {
       responses: AuthLogoutResponse;
     };
   };
 
-  '/auth/refresh': {
+  "/auth/refresh": {
     get: {
       responses: AuthRefreshResponse;
     };
   };
 
-  '/auth/me': {
+  "/auth/me": {
     get: {
       responses: AuthResponse;
     };

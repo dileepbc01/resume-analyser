@@ -1,50 +1,39 @@
-"use client"
+"use client";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { useJob } from '@/hooks/useJob';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createjobSchema } from '@/types/routes/job';
-import TipTapEditor from '../common/TiptapEditor';
+import { useJob } from "@/hooks/useJob";
+import { createjobSchema } from "@/types/routes/job";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import React from "react";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import TipTapEditor from "../common/TiptapEditor";
 
 const jobTypes = [
-  { value: 'full-time', label: 'Full Time' },
-  { value: 'part-time', label: 'Part Time' },
-  { value: 'contract', label: 'Contract' },
-  { value: 'internship', label: 'Internship' },
-  { value: 'temporary', label: 'Temporary' },
+  { value: "full-time", label: "Full Time" },
+  { value: "part-time", label: "Part Time" },
+  { value: "contract", label: "Contract" },
+  { value: "internship", label: "Internship" },
+  { value: "temporary", label: "Temporary" },
 ];
-
-
 
 export const New = () => {
   const { createJob } = useJob();
-  
+
   const form = useForm({
     resolver: zodResolver(createjobSchema),
     defaultValues: {
-      role: '',
-      type: 'full-time',
-      location: '',
-      company: '',
-      description: '',
+      role: "",
+      type: "full-time",
+      location: "",
+      company: "",
+      description: "",
     },
   });
 
@@ -52,8 +41,8 @@ export const New = () => {
     createJob({ ...data });
   };
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Create New Job</h1>
+    <div className="mx-auto max-w-2xl p-6">
+      <h1 className="mb-6 text-2xl font-bold">Create New Job</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Role field */}
@@ -131,9 +120,9 @@ export const New = () => {
           <FormItem>
             <FormLabel>Description</FormLabel>
             <FormControl>
-              <TipTapEditor 
-              description={form.watch('description')}
-              onChange={(value) => form.setValue('description', value)}
+              <TipTapEditor
+                description={form.watch("description")}
+                onChange={(value) => form.setValue("description", value)}
               />
             </FormControl>
             <FormMessage />
@@ -147,4 +136,3 @@ export const New = () => {
     </div>
   );
 };
-

@@ -11,14 +11,13 @@ import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
-
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     BullModule.forRoot({
-      connection:{
+      connection: {
         url: process.env.REDIS_URL,
-      }
+      },
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     RecruiterModule,

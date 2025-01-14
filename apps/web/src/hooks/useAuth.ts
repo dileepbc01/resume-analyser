@@ -1,8 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { useRouter, usePathname } from 'next/navigation';
-import { toast } from 'sonner';
-import { authApi } from '@/lib/api/auth';
-import { CustomAxiosError } from '@/lib/axios';
+import { toast } from "sonner";
+
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import { usePathname, useRouter } from "next/navigation";
+
+import { authApi } from "@/lib/api/auth";
+import { CustomAxiosError } from "@/lib/axios";
 
 export function useAuth() {
   const queryClient = useQueryClient();
@@ -10,43 +13,41 @@ export function useAuth() {
   const pathName = usePathname();
 
   const recruiterQuery = useQuery({
-    queryKey: ['auth-user'],
+    queryKey: ["auth-user"],
     queryFn: authApi.getMe,
     retry: false,
     staleTime: 5 * 60 * 1000,
-    enabled: !pathName.includes('login'),
+    enabled: !pathName.includes("login"),
   });
   const signupMutation = useMutation({
     mutationFn: (recruiter: Parameters<typeof authApi.signup>[0]) => authApi.signup(recruiter),
     onSuccess: (resp) => {
-      queryClient.setQueryData(['auth-user'], () => resp.data);
-      router.push('/jobs');
+      queryClient.setQueryData(["auth-user"], () => resp.data);
+      router.push("/jobs");
     },
     onError: (err: CustomAxiosError) => {
       toast.error(err.response.data.message);
-    }
+    },
   });
 
   const loginMutation = useMutation({
     mutationFn: (credentials: Parameters<typeof authApi.login>[0]) => authApi.login(credentials),
     onSuccess: (resp) => {
-      queryClient.setQueryData(['auth-user'], () => resp.data);
-      router.push('/jobs');
+      queryClient.setQueryData(["auth-user"], () => resp.data);
+      router.push("/jobs");
     },
     onError: (err: CustomAxiosError) => {
       toast.error(err.response.data.message);
-    }
+    },
   });
 
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
-      queryClient.setQueryData(['auth-user'], null);
-      router.push('/login');
+      queryClient.setQueryData(["auth-user"], null);
+      router.push("/login");
     },
-   
   });
-
 
   return {
     user: recruiterQuery.data,
@@ -55,6 +56,6 @@ export function useAuth() {
     isError: recruiterQuery.isError,
     loginMutation,
     logoutMutation,
-    signupMutation
+    signupMutation,
   };
 }

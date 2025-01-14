@@ -9,9 +9,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh',
 ) {
-  constructor(
-    private recruiterService:RecruiterService
-  ) {
+  constructor(private recruiterService: RecruiterService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         RefreshTokenStrategy.extractJWTFromCookie,
@@ -24,14 +22,13 @@ export class RefreshTokenStrategy extends PassportStrategy(
     if (req.cookies && req.cookies.refresh_token) {
       return req.cookies.refresh_token;
     }
-    throw new UnauthorizedException("No refresh token found in cookie 1");
+    throw new UnauthorizedException('No refresh token found in cookie 1');
   }
   validate(req: Request, payload: any) {
-  
     if (req.cookies && req.cookies.refresh_token) {
       const refreshToken = req.cookies.refresh_token;
       return { refreshToken, ...payload };
     }
-    throw new UnauthorizedException("No refresh token found in cookie 2");
+    throw new UnauthorizedException('No refresh token found in cookie 2');
   }
 }

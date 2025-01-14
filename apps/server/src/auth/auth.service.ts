@@ -20,7 +20,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async signUp(createUserDto: CreateRecruiterDto){
+  async signUp(createUserDto: CreateRecruiterDto) {
     // Check if user exists
     const recruiterExist = await this.recruiterService.findByEmail(
       createUserDto.email,
@@ -42,7 +42,7 @@ export class AuthService {
       String(newRecruiter._id),
       tokens.refreshToken,
     );
-    
+
     return {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
@@ -52,10 +52,10 @@ export class AuthService {
         lastName: newRecruiter.last_name,
         email: newRecruiter.email,
       },
-    }
+    };
   }
 
-  async login(data: AuthDto){
+  async login(data: AuthDto) {
     const recruiter = await this.recruiterService.findByEmail(data.email);
     if (!recruiter) throw new BadRequestException('User does not exist');
     const passwordMatches = await bcrypt.compare(
@@ -75,7 +75,7 @@ export class AuthService {
     return { ...tokens, recruiterDetails };
   }
 
-  async getMe(recruiterId: string){
+  async getMe(recruiterId: string) {
     const recruiter =
       await this.recruiterService.findByRecruiterId(recruiterId);
     if (!recruiter) throw new BadRequestException('User does not exist');

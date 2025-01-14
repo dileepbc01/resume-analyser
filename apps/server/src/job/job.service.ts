@@ -20,15 +20,19 @@ export class JobService {
 
   async findOne(getJobDto: GetJobDto) {
     const job = await this.jobModel.findById(getJobDto.id).exec();
-    return job
+    return job;
   }
 
   async update(id: string, updateJobDto: UpdateJobDto) {
-    const job = await this.jobModel.findByIdAndUpdate(id,{
-      ...updateJobDto
-    },{
-      new:true
-    });
+    const job = await this.jobModel.findByIdAndUpdate(
+      id,
+      {
+        ...updateJobDto,
+      },
+      {
+        new: true,
+      },
+    );
     return job;
   }
   async archive(id: string) {
