@@ -7,5 +7,6 @@
   // "github.copilot.enable": true,
   // "github.copilot.chat.codeGeneration.instructions": [{
   //   "text": ""
-  // }]
+  // }],
+  "files.eol": "auto"
 }
