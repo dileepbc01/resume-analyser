@@ -1,6 +1,7 @@
-import { Job } from './job.schema';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
+
+import { Job } from "./job.schema";
 
 export type RecruiterDocument = HydratedDocument<Recruiter>;
 
@@ -22,7 +23,7 @@ export class Recruiter {
   password: string;
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Job' }],
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: "Job" }],
     default: [],
   })
   jobs: Job[];

@@ -1,16 +1,16 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Recruiter } from 'schema/recruiter.schema';
-import { CreateRecruiterDto } from './dto/create-recruiter.dto';
-import * as bcrypt from 'bcrypt';
-import { RemoveRecruiterDto } from './dto/remove-recruiter.dto';
-import { updateRecruiterDto } from './dto/update-recruiter.dto';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import * as bcrypt from "bcrypt";
+import { Model } from "mongoose";
+import { Recruiter } from "schema/recruiter.schema";
+
+import { CreateRecruiterDto } from "./dto/create-recruiter.dto";
+import { RemoveRecruiterDto } from "./dto/remove-recruiter.dto";
+import { updateRecruiterDto } from "./dto/update-recruiter.dto";
+
 @Injectable()
 export class RecruiterService {
-  constructor(
-    @InjectModel(Recruiter.name) private recruiterModel: Model<Recruiter>,
-  ) {}
+  constructor(@InjectModel(Recruiter.name) private recruiterModel: Model<Recruiter>) {}
 
   async findAll(): Promise<Recruiter[]> {
     return this.recruiterModel.find().exec();
@@ -28,7 +28,7 @@ export class RecruiterService {
     if (recruiter !== null) {
       return recruiter;
     }
-    throw new HttpException('Recruiter not found', HttpStatus.NOT_FOUND);
+    throw new HttpException("Recruiter not found", HttpStatus.NOT_FOUND);
   }
 
   async create(createRecruiterDto: CreateRecruiterDto): Promise<Recruiter> {
@@ -48,7 +48,7 @@ export class RecruiterService {
   }
   async update(
     recruiter_id: string,
-    updateRecruiterDto: updateRecruiterDto & { refresh_token?: string | null },
+    updateRecruiterDto: updateRecruiterDto & { refresh_token?: string | null }
   ): Promise<Recruiter> {
     const updatedRecruiter = await this.recruiterModel
       .findByIdAndUpdate(recruiter_id, updateRecruiterDto, { new: true })
@@ -56,6 +56,6 @@ export class RecruiterService {
     if (updatedRecruiter !== null) {
       return updatedRecruiter;
     }
-    throw new HttpException('Recruiter not found', HttpStatus.NOT_FOUND);
+    throw new HttpException("Recruiter not found", HttpStatus.NOT_FOUND);
   }
 }

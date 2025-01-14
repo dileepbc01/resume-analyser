@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
-import { S3Service } from 'src/s3/s3.service';
+import { Injectable } from "@nestjs/common";
+import { S3Service } from "src/s3/s3.service";
+
+import { CreateApplicationDto } from "./dto/create-application.dto";
+import { UpdateApplicationDto } from "./dto/update-application.dto";
 
 @Injectable()
 export class ApplicationService {
   constructor(private readonly s3Service: S3Service) {}
 
   create(createApplicationDto: CreateApplicationDto) {
-    return 'This action adds a new application';
+    return "This action adds a new application";
   }
 
   findAll() {

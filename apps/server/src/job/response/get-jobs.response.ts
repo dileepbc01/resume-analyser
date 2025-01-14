@@ -1,37 +1,38 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { JobType } from '../dto/create-job.dto';
-import { IsString } from 'class-validator';
-import { Job } from 'schema/job.schema';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsString } from "class-validator";
+import { Job } from "schema/job.schema";
+
+import { JobType } from "../dto/create-job.dto";
 
 export class GetJobResponse {
   @IsString()
-  @ApiProperty({ description: 'Job document id' })
+  @ApiProperty({ description: "Job document id" })
   id: string;
 
-  @ApiProperty({ description: 'Role of the job' })
+  @ApiProperty({ description: "Role of the job" })
   @IsString()
   role: string;
 
-  @ApiPropertyOptional({ enum: JobType, description: 'Type of the job' })
+  @ApiPropertyOptional({ enum: JobType, description: "Type of the job" })
   @IsString()
   type: JobType;
 
-  @ApiPropertyOptional({ description: 'Location of the job' })
+  @ApiPropertyOptional({ description: "Location of the job" })
   @IsString()
   location: string;
 
-  @ApiPropertyOptional({ description: 'Company offering the job' })
+  @ApiPropertyOptional({ description: "Company offering the job" })
   @IsString()
   company: string;
 
-  @ApiPropertyOptional({ description: 'Description of the job' })
+  @ApiPropertyOptional({ description: "Description of the job" })
   @IsString()
   description: string;
 
-  @ApiProperty({ description: 'Job creation timestamp' })
+  @ApiProperty({ description: "Job creation timestamp" })
   createdAt: Date;
 
-  @ApiProperty({ description: 'Job update timestamp' })
+  @ApiProperty({ description: "Job update timestamp" })
   updatedAt: Date;
 
   static fromEntity(job: Job): GetJobResponse {

@@ -1,6 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
-import { Job } from './job.schema';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
+
+import { Job } from "./job.schema";
 
 export type CandidateDocument = HydratedDocument<Application>;
 
@@ -39,7 +40,7 @@ export class Education {
   @Prop({
     type: MongooseSchema.Types.String,
     required: true,
-    default: '',
+    default: "",
   })
   end_date: string;
   @Prop({
@@ -68,7 +69,7 @@ export class Experience {
   @Prop({
     type: MongooseSchema.Types.String,
     required: true,
-    enum: ['full-time', 'part-time', 'contract', 'internship', 'temporary'],
+    enum: ["full-time", "part-time", "contract", "internship", "temporary"],
   })
   employment_type: string;
   @Prop({
@@ -86,7 +87,7 @@ export class Experience {
   @Prop({
     type: MongooseSchema.Types.String,
     required: true,
-    enum: ['remote', 'onsite', 'hybrid'],
+    enum: ["remote", "onsite", "hybrid"],
   })
   location_type: string;
 
@@ -117,15 +118,7 @@ export class SocialLink {
     type: MongooseSchema.Types.String,
     required: true,
     unique: true,
-    enum: [
-      'linkedin',
-      'github',
-      'twitter',
-      'facebook',
-      'instagram',
-      'x',
-      'blog',
-    ],
+    enum: ["linkedin", "github", "twitter", "facebook", "instagram", "x", "blog"],
   })
   name: string;
   @Prop()
@@ -172,7 +165,7 @@ export class Application {
   @Prop({ type: [SocialLinkSchema], required: false })
   Social: SocialLink[];
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Job' })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
   job: Job; // Reference to the Job schema
   // socials
 }

@@ -1,47 +1,35 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { CONSTANTS } from "src/common/constants";
+import { CreateRecruiterDto } from "src/recruiter/dto/create-recruiter.dto";
+import { RecruiterService } from "src/recruiter/recruiter.service";
 
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { AuthDto } from './dto/auth.dto';
-import { RecruiterService } from 'src/recruiter/recruiter.service';
-import { CreateRecruiterDto } from 'src/recruiter/dto/create-recruiter.dto';
-import { CONSTANTS } from 'src/common/constants';
+import { AuthDto } from "./dto/auth.dto";
 
 @Injectable()
 export class AuthService {
   constructor(
     private recruiterService: RecruiterService,
     private jwtService: JwtService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {}
 
   async signUp(createUserDto: CreateRecruiterDto) {
     // Check if user exists
-    const recruiterExist = await this.recruiterService.findByEmail(
-      createUserDto.email,
-    );
+    const recruiterExist = await this.recruiterService.findByEmail(createUserDto.email);
 
     if (recruiterExist) {
-      throw new BadRequestException('User already exists');
+      throw new BadRequestException("User already exists");
     }
 
     // Hash password
     const newRecruiter = await this.recruiterService.create({
       ...createUserDto,
     });
-    const tokens = await this.getTokens(
-      String(newRecruiter._id),
-      newRecruiter.email,
-    );
-    await this.updateRefreshToken(
-      String(newRecruiter._id),
-      tokens.refreshToken,
-    );
+    const tokens = await this.getTokens(String(newRecruiter._id), newRecruiter.email);
+    await this.updateRefreshToken(String(newRecruiter._id), tokens.refreshToken);
 
     return {
       accessToken: tokens.accessToken,
@@ -57,13 +45,9 @@ export class AuthService {
 
   async login(data: AuthDto) {
     const recruiter = await this.recruiterService.findByEmail(data.email);
-    if (!recruiter) throw new BadRequestException('User does not exist');
-    const passwordMatches = await bcrypt.compare(
-      data.password,
-      recruiter.password,
-    );
-    if (!passwordMatches)
-      throw new BadRequestException('Password is incorrect');
+    if (!recruiter) throw new BadRequestException("User does not exist");
+    const passwordMatches = await bcrypt.compare(data.password, recruiter.password);
+    if (!passwordMatches) throw new BadRequestException("Password is incorrect");
     const tokens = await this.getTokens(String(recruiter._id), recruiter.email);
     await this.updateRefreshToken(String(recruiter._id), tokens.refreshToken);
     const recruiterDetails = {
@@ -76,9 +60,8 @@ export class AuthService {
   }
 
   async getMe(recruiterId: string) {
-    const recruiter =
-      await this.recruiterService.findByRecruiterId(recruiterId);
-    if (!recruiter) throw new BadRequestException('User does not exist');
+    const recruiter = await this.recruiterService.findByRecruiterId(recruiterId);
+    if (!recruiter) throw new BadRequestException("User does not exist");
     const recruiterDetails = {
       // TODO: create proper type for this
 
@@ -106,13 +89,9 @@ export class AuthService {
 
   async refreshTokens(userId: string, refreshToken: string) {
     const recruiter = await this.recruiterService.findByRecruiterId(userId);
-    if (!recruiter || !recruiter.refresh_token)
-      throw new ForbiddenException('Access Denied');
-    const refreshTokenMatches = await bcrypt.compare(
-      refreshToken,
-      recruiter.refresh_token,
-    );
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    if (!recruiter || !recruiter.refresh_token) throw new ForbiddenException("Access Denied");
+    const refreshTokenMatches = await bcrypt.compare(refreshToken, recruiter.refresh_token);
+    if (!refreshTokenMatches) throw new ForbiddenException("Access Denied");
     const tokens = await this.getTokens(recruiter.id, recruiter.email);
     await this.updateRefreshToken(recruiter.id, tokens.refreshToken);
     return tokens;
@@ -126,9 +105,9 @@ export class AuthService {
           email,
         },
         {
-          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+          secret: this.configService.get<string>("JWT_ACCESS_SECRET"),
           expiresIn: CONSTANTS.ACCESS_TOKEN_EXPIRATION,
-        },
+        }
       ),
       this.jwtService.signAsync(
         {
@@ -136,9 +115,9 @@ export class AuthService {
           email,
         },
         {
-          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+          secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
           expiresIn: CONSTANTS.REFRESH_TOKEN_EXPIRATION,
-        },
+        }
       ),
     ]);
 

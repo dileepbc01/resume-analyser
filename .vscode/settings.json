@@ -8,5 +8,6 @@
   // "github.copilot.chat.codeGeneration.instructions": [{
   //   "text": ""
   // }],
-  "files.eol": "\r\n"
+  "files.eol": "\r\n",
+  "editor.formatOnSave": true
 }

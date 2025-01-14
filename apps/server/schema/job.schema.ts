@@ -1,20 +1,21 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
-import { Application } from './application.schema';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
+
+import { Application } from "./application.schema";
 
 export type JobDocument = HydratedDocument<Job>;
 
 enum JobType {
-  FULL_TIME = 'full-time',
-  PART_TIME = 'part-time',
-  CONTRACT = 'contract',
-  INTERNSHIP = 'internship',
-  TEMPORARY = 'temporary',
+  FULL_TIME = "full-time",
+  PART_TIME = "part-time",
+  CONTRACT = "contract",
+  INTERNSHIP = "internship",
+  TEMPORARY = "temporary",
 }
 export enum JobStatus {
-  SAVING = 'SAVING',
-  PUBLISHED = 'PUBLISHED',
-  ARCHIVED = 'archived',
+  SAVING = "SAVING",
+  PUBLISHED = "PUBLISHED",
+  ARCHIVED = "archived",
 }
 @Schema()
 export class Job {
@@ -35,14 +36,14 @@ export class Job {
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: '',
+    default: "",
   })
   location: string;
 
-  @Prop({ type: MongooseSchema.Types.String, default: '' })
+  @Prop({ type: MongooseSchema.Types.String, default: "" })
   company: string;
 
-  @Prop({ type: MongooseSchema.Types.String, default: '' })
+  @Prop({ type: MongooseSchema.Types.String, default: "" })
   description: string;
 
   @Prop({ type: MongooseSchema.Types.String, default: JobStatus.SAVING })
@@ -55,7 +56,7 @@ export class Job {
   updated_at: Date;
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Application' }],
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: "Application" }],
   })
   candidates: Application[]; // One-to-many relationship with Candidate
 }

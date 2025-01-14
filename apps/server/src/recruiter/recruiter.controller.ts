@@ -1,18 +1,11 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
-import { CreateRecruiterDto } from './dto/create-recruiter.dto';
-import { RecruiterService } from './recruiter.service';
-import { AccessTokenGuard } from 'src/common/guards/access-token.guard';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { AccessTokenGuard } from "src/common/guards/access-token.guard";
+
+import { CreateRecruiterDto } from "./dto/create-recruiter.dto";
+import { RecruiterService } from "./recruiter.service";
 
 @UseGuards(AccessTokenGuard)
-@Controller('recruiter')
+@Controller("recruiter")
 export class RecruiterController {
   constructor(private readonly recruiterService: RecruiterService) {}
 
@@ -21,8 +14,8 @@ export class RecruiterController {
     return await this.recruiterService.findAll();
   }
 
-  @Get(':id')
-  async find(@Param('id') recruiter_id: string) {
+  @Get(":id")
+  async find(@Param("id") recruiter_id: string) {
     return await this.recruiterService.find(recruiter_id);
   }
 
@@ -30,16 +23,13 @@ export class RecruiterController {
   async create(@Body() createRecruiterDto: CreateRecruiterDto) {
     return await this.recruiterService.create(createRecruiterDto);
   }
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
+  @Delete(":id")
+  async remove(@Param("id") id: string) {
     await this.recruiterService.remove({
       id,
     });
   }
-  async update(
-    @Param('id') recruiter_id: string,
-    @Body() updateRecruiterDto: Partial<CreateRecruiterDto>,
-  ) {
+  async update(@Param("id") recruiter_id: string, @Body() updateRecruiterDto: Partial<CreateRecruiterDto>) {
     return await this.recruiterService.update(recruiter_id, updateRecruiterDto);
   }
 }

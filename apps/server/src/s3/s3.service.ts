@@ -1,8 +1,8 @@
 // s3.service.ts
-import { Injectable } from '@nestjs/common';
-import { S3 } from 'aws-sdk';
-import { ConfigService } from '@nestjs/config';
-import { CONSTANTS } from 'src/common/constants';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { S3 } from "aws-sdk";
+import { CONSTANTS } from "src/common/constants";
 
 @Injectable()
 export class S3Service {
@@ -10,16 +10,13 @@ export class S3Service {
 
   constructor(private configService: ConfigService) {
     this.s3 = new S3({
-      accessKeyId: this.configService.get('AWS_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.get('AWS_SECRET_ACCESS_KEY'),
-      region: this.configService.get('AWS_REGION'),
+      accessKeyId: this.configService.get("AWS_ACCESS_KEY_ID"),
+      secretAccessKey: this.configService.get("AWS_SECRET_ACCESS_KEY"),
+      region: this.configService.get("AWS_REGION"),
     });
   }
 
-  async uploadFile(
-    file: Express.Multer.File,
-    folder: string = 'uploads',
-  ): Promise<string> {
+  async uploadFile(file: Express.Multer.File, folder: string = "uploads"): Promise<string> {
     const key = `${folder}/${Date.now()}-${file.originalname}`;
     console.log(file);
     const params = {
@@ -27,9 +24,9 @@ export class S3Service {
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
-      ACL: 'public-read',
+      ACL: "public-read",
     };
-    console.log('s3 params', params);
+    console.log("s3 params", params);
 
     const upload = await this.s3.upload(params).promise();
     return upload.Location;
