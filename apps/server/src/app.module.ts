@@ -12,6 +12,7 @@ import { RecruiterModule } from "./recruiter/recruiter.module";
 import { VideoQueueEventsListener } from "./video-queue.event";
 import { VideoController } from "./video.controller";
 import { VideoProcessor } from "./video.worker";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 
 @Module({
   imports: [
@@ -27,6 +28,8 @@ import { VideoProcessor } from "./video.worker";
         backoff: 2000, // Wait at least 2 seconds before attempting the job again, after failure
       },
     }),
+    EventEmitterModule.forRoot(),
+
     BullModule.registerQueue({ name: "video" }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     RecruiterModule,

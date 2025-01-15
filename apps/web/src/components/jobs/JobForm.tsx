@@ -1,6 +1,6 @@
 import React from "react";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createjobSchema } from "@/types/routes/job";
+import { createjobSchema } from "@/types/routes/job.route";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 

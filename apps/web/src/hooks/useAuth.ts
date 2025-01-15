@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { usePathname, useRouter } from "next/navigation";
 
-import { authApi } from "@/lib/api/auth";
+import { authApi } from "@/lib/api/auth.api";
 import { CustomAxiosError } from "@/lib/axios";
 
 export function useAuth() {

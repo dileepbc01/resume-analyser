@@ -8,16 +8,32 @@ import { Loader2, X, Upload, File } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-
+import { useMutation } from 'react-query'
+import { applicationApi } from '@/lib/api/application.api'
+import { CustomAxiosError } from '@/lib/axios'
+import {nanoid} from 'nanoid'
 const MAX_FILES = 30
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 10MB
 
 export function TopBar({ job_id }: { job_id: string }) {
+
+
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [files, setFiles] = useState<File[]>([])
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+
+  const {mutateAsync}=useMutation({
+      mutationFn:applicationApi.uploadResumeFiles,
+      onSuccess:()=>{
+        // 
+      },
+      onError:(err:CustomAxiosError)=>{
+       toast.error(err.response.data.message) 
+      }
+  })
 
   const onDrop = (acceptedFiles: File[]) => {
     const totalFiles = files.length + acceptedFiles.length
@@ -60,16 +76,12 @@ export function TopBar({ job_id }: { job_id: string }) {
       files.forEach(file => {
         formData.append('files', file)
       })
-      formData.append('job_id', job_id)
-
-      const response = await fetch('/api/upload-resumes', {
-        method: 'POST',
-        body: formData
+      formData.append('job_id', job_id);
+      await mutateAsync({
+        upload_id:nanoid(),
+        form:formData
       })
-
-      if (!response.ok) throw new Error('Upload failed')
       
-      toast.success('Resumes uploaded successfully')
       setOpen(false)
       setFiles([])
     } catch (error) {

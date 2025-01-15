@@ -1,11 +1,11 @@
-import { CreateJobDto, UpdateJobDto } from "@/types/routes/job";
+import { CreateJobDto, UpdateJobDto } from "@/types/routes/job.route";
 import { toast } from "sonner";
 
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { useRouter } from "next/navigation";
 
-import { jobApi } from "@/lib/api/job";
+import { jobApi } from "@/lib/api/job.api";
 import { CustomAxiosError } from "@/lib/axios";
 
 export const useJob = () => {

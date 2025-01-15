@@ -1,4 +1,4 @@
-import { JobResponse } from "@/types/routes/job";
+import { JobResponse } from "@/types/routes/job.route";
 import Link from "next/link";
 import React from "react";
 

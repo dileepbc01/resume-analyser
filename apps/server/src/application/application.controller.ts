@@ -3,12 +3,15 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
   Patch,
   Post,
+  Req,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
@@ -18,35 +21,20 @@ import { ResumeFileTypeValidator } from "src/common/file-validators";
 import { ApplicationService } from "./application.service";
 import { CreateApplicationDto } from "./dto/create-application.dto";
 import { UpdateApplicationDto } from "./dto/update-application.dto";
+import { AccessTokenGuard } from "src/common/guards/access-token.guard";
+import { Request } from "express";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 
 @Controller("application")
+@UseGuards(AccessTokenGuard)
+
 export class ApplicationController {
-  constructor(private readonly applicationService: ApplicationService) {}
+  private uploadProgressMap = new Map<string, number>();
 
-  @Post()
-  create(@Body() createApplicationDto: CreateApplicationDto) {
-    return this.applicationService.create(createApplicationDto);
-  }
+  constructor(private readonly applicationService: ApplicationService,
+    private eventEmitter: EventEmitter2
+  ) {}
 
-  @Get()
-  findAll() {
-    return this.applicationService.findAll();
-  }
-
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.applicationService.findOne(+id);
-  }
-
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateApplicationDto: UpdateApplicationDto) {
-    return this.applicationService.update(+id, updateApplicationDto);
-  }
-
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.applicationService.remove(+id);
-  }
   @Post("upload")
   @UseInterceptors(FilesInterceptor("files", CONSTANTS.MAX_FILE_UPLOADS))
   async uploadFileAndValidate(
@@ -66,15 +54,33 @@ export class ApplicationController {
           }),
         ],
       })
-    )
-    files: Express.Multer.File[]
+    )files: Express.Multer.File[],
+    @Req() req: Request
   ) {
+    const uploadId = req.headers['upload-id'] as string;
+
+    req.on('data', (chunk: Buffer) => {
+    console.log("progress",req.socket.bytesRead);
+
+      const contentLength = parseInt(req.headers['content-length'] as any, 10);
+      const uploaded = req.socket.bytesRead;
+      const progress = Math.round((uploaded / contentLength) * 100);
+      
+      this.uploadProgressMap.set(uploadId, progress);
+      
+      // Emit progress event
+      this.eventEmitter.emit('upload.progress', {
+        uploadId,
+        progress,
+      });
+    });
+
     const resolvedPromises = await Promise.allSettled(
       await files.map(async (file) => {
         return this.applicationService.uploadResume(file);
       })
     );
-    console.log("resolvedPromises", resolvedPromises);
+    // console.log("resolvedPromises", resolvedPromises);
     return resolvedPromises;
   }
 }

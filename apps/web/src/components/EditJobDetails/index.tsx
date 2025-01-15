@@ -4,7 +4,7 @@ import React from 'react'
 import JobForm from '../jobs/JobForm';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from 'react-query';
-import { jobApi } from '@/lib/api/job';
+import { jobApi } from '@/lib/api/job.api';
 import { ParameterSlider } from '../jobs/ParameterSlider';
 
 export enum JobDetailsTab {
