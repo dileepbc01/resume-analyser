@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-async-client-component */
 "use client"
-import JobDetails from "@/components/JobDetails";
+import JobApplications from "@/components/JobApplications";
 import { useParams } from "next/navigation";
 import React from "react";
 
@@ -10,6 +10,6 @@ export default function Page() {
   };
 
   return <>
-    <JobDetails job_id={(params).job_id}/>
+  <JobApplications job_id={params.job_id}/>
   </>
 }

@@ -8,9 +8,7 @@ const Job: React.FC<{ job: JobResponse }> = ({ job }) => {
     return `${days} ${days === 1 ? 'day' : 'days'} ago`;
   };
 
-  const handleCheckbox = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent link navigation when clicking checkbox
-  };
+
 
   return (
     <div className="border-b hover:bg-gray-50">

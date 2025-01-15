@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { JobDetailsTab } from '@/components/JobDetails';
+import { JobDetailsTab } from '@/components/EditJobDetails';
 
 interface LayoutProps {
   children: React.ReactNode

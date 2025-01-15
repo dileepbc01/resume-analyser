@@ -48,7 +48,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex h-screen">
         {/* Sidebar */}
-        <div className="flex w-16 flex-col border-r bg-white">
+        <div className="flex w-16 flex-col border-r bg-gray-100">
           <div className="flex justify-center border-b p-4">
             <Image src={"/app-logo.png"} width={30} height={30} alt="app-logo" />
           </div>
@@ -75,16 +75,16 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-1 flex-col bg-gray-50">
+        <div className="flex flex-1 flex-col">
           {/* Top Header with Profile */}
-          <div className="border-b bg-white px-6 py-3">
+          <div className="border-b bg-gray-100 px-6 py-3">
             <div className="flex justify-end">
-              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => router.push("/profile")}>
+              <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => router.push("/profile")}>
                 <User className="h-5 w-5" />
               </Button>
             </div>
           </div>
-          <div className="flex-1 p-6">{children}</div>
+          <div className="flex-1 p-3 ">{children}</div>
         </div>
       </div>
     </>

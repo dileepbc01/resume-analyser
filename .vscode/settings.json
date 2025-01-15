@@ -4,10 +4,10 @@
       "mode": "auto"
     }
   ],
-  // "github.copilot.enable": true,
-  // "github.copilot.chat.codeGeneration.instructions": [{
-  //   "text": ""
-  // }],
+  "github.copilot.enable": true,
+  "github.copilot.chat.codeGeneration.instructions": [{
+    // "text": "This is a Turborepo monorepo project with two applications:\n- A server app built with NestJS\n- A web app built with Next.js, utilizing ShadcN UI components and React Query for data fetching"
+  }],
   "files.eol": "\r\n",
   "editor.formatOnSave": true
 }
