@@ -46,7 +46,7 @@ export class Education {
     type: MongooseSchema.Types.Boolean,
     default: false,
   })
-  is_currently_studying: string;
+  is_currently_studying: boolean;
 
   @Prop({
     type: MongooseSchema.Types.String,
@@ -105,7 +105,7 @@ export class Experience {
     type: MongooseSchema.Types.Boolean,
     default: false,
   })
-  is_currently_working: string;
+  is_currently_working: boolean;
 }
 // Generate a Mongoose Schema before use as Subdocument
 const ExperienceSchema = SchemaFactory.createForClass(Experience);

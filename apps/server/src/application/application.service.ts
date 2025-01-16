@@ -42,4 +42,12 @@ export class ApplicationService {
       .exec();
     //
   }
+  async getApplicationsByJobId(jobId: string) {
+    const applications = await this.applicationModel
+      .find({
+        job: jobId,
+      })
+      .exec();
+    return applications;
+  }
 }

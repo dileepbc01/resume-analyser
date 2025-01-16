@@ -6,4 +6,12 @@ export type ApplicationRoutes = {
       responses: any;
     };
   };
+  "/application": {
+    get: {
+      request: {
+        job_id: string;
+      };
+      responses: any;
+    };
+  };
 };

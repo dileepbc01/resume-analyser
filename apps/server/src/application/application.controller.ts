@@ -10,6 +10,7 @@ import {
   ParseFilePipe,
   Patch,
   Post,
+  Query,
   Req,
   Res,
   UploadedFile,
@@ -28,6 +29,8 @@ import { AppQueueEnum, FileMimeTypes, QueuePayload } from "src/queues/app-queues
 import { S3Service } from "src/s3/s3.service";
 
 import { ApplicationService } from "./application.service";
+import { GetApplicationsDto } from "./dto/get-applications.dto";
+import { GetApplicationResponse } from "./responses/application.response";
 
 @Controller("application")
 @UseGuards(AccessTokenGuard)
@@ -80,5 +83,11 @@ export class ApplicationController {
       mimeType: file.mimetype as FileMimeTypes,
       resumeFileName: file.originalname,
     });
+  }
+
+  @Get()
+  async getApplications(@Query() dto: GetApplicationsDto) {
+    const applicants = await this.applicationService.getApplicationsByJobId(dto.job_id);
+    return applicants.map((a) => GetApplicationResponse.fromEntity(a));
   }
 }

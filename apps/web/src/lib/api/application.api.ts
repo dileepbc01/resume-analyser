@@ -20,4 +20,10 @@ export const applicationApi = {
     });
     return data;
   },
+  getApplications: async ({ job_id }: { job_id: string }) => {
+    const { data } = await api.get<ApplicationRoutes["/application"]["get"]["responses"]>(
+      `/application?job_id=${job_id}`
+    );
+    return data;
+  },
 };
