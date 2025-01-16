@@ -2,6 +2,7 @@ import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Application, ApplicationSchema } from "schema/application.schema";
+import { LangchainService } from "src/langchain/langchain.service";
 import { AppQueues, videoQueue } from "src/queues/app-queues";
 import { ResumeParseEventsListener } from "src/queues/resume-parse/resume-parse.event";
 import { ResumeParseProcessor } from "src/queues/resume-parse/resume-parse.worker";
@@ -14,6 +15,12 @@ import { ApplicationService } from "./application.service";
   imports: [MongooseModule.forFeature([{ name: Application.name, schema: ApplicationSchema }]), ...AppQueues],
 
   controllers: [ApplicationController],
-  providers: [ApplicationService, S3Service, ResumeParseProcessor, ResumeParseEventsListener],
+  providers: [
+    ApplicationService,
+    LangchainService,
+    S3Service,
+    ResumeParseProcessor,
+    ResumeParseEventsListener,
+  ],
 })
 export class ApplicationModule {}

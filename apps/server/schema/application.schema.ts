@@ -9,50 +9,48 @@ export type CandidateDocument = HydratedDocument<Application>;
 export class Education {
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   institution: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   field_of_study: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   grade: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   type: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   degree: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   start_date: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
-    default: "",
+    default: null,
   })
   end_date: string;
   @Prop({
     type: MongooseSchema.Types.Boolean,
-    required: true,
     default: false,
   })
   is_currently_studying: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   description: string;
 }
@@ -63,49 +61,49 @@ const EducationSchema = SchemaFactory.createForClass(Education);
 export class Experience {
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   title: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
     enum: ["full-time", "part-time", "contract", "internship", "temporary"],
   })
   employment_type: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   location: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   description: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
     enum: ["remote", "onsite", "hybrid"],
   })
   location_type: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   start_date: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    required: false,
+    default: null,
   })
   end_date: string;
 
   @Prop({
     type: MongooseSchema.Types.Boolean,
-    required: true,
+    default: false,
   })
   is_currently_working: string;
 }
@@ -113,62 +111,83 @@ export class Experience {
 const ExperienceSchema = SchemaFactory.createForClass(Experience);
 
 @Schema()
-export class SocialLink {
+export class Profile {
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
-    unique: true,
-    enum: ["linkedin", "github", "twitter", "facebook", "instagram", "x", "blog"],
+    default: null,
   })
   name: string;
-  @Prop()
+  @Prop({
+    type: MongooseSchema.Types.String,
+    default: null,
+  })
   url: string;
 }
 
-const SocialLinkSchema = SchemaFactory.createForClass(SocialLink);
+@Schema()
+export class Skill {
+  @Prop({
+    type: MongooseSchema.Types.String,
+    default: null,
+  })
+  name: string;
+  @Prop({
+    type: MongooseSchema.Types.Number,
+    default: 0,
+  })
+  level: number;
+}
+
+const SkillSchema = SchemaFactory.createForClass(Skill);
+
+const ProfileSchema = SchemaFactory.createForClass(Profile);
 
 @Schema()
 export class Application {
-  @Prop({ type: MongooseSchema.Types.String, required: true })
-  first_name: string;
+  @Prop({ type: MongooseSchema.Types.ObjectId, required: true, auto: true })
+  _id: MongooseSchema.Types.ObjectId;
 
-  @Prop({ type: MongooseSchema.Types.String, required: true })
-  last_name: string;
+  @Prop({ type: MongooseSchema.Types.String, default: null })
+  full_name: string;
 
-  @Prop({ type: MongooseSchema.Types.String, required: true })
+  @Prop({ type: MongooseSchema.Types.String, default: null, unique: true })
+  resume_file_name: string;
+
+  @Prop({ type: MongooseSchema.Types.String, default: null, unique: true })
+  resume_text: string;
+
+  @Prop({ type: MongooseSchema.Types.String, default: null })
   email: string;
 
-  @Prop({ type: MongooseSchema.Types.String, required: false })
+  @Prop({ type: MongooseSchema.Types.String, default: null })
   phone: string;
 
-  @Prop({ type: MongooseSchema.Types.String, required: true })
+  @Prop({ type: MongooseSchema.Types.String, default: null })
   current_role: string;
 
-  @Prop({ type: MongooseSchema.Types.String, required: true })
+  @Prop({ type: MongooseSchema.Types.String, default: null })
   location: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    required: true,
+    default: null,
   })
   resume_url: string;
 
-  @Prop({ type: [MongooseSchema.Types.String], required: true })
-  skills: string[];
+  @Prop({ type: [SkillSchema], default: [] })
+  skills: Skill[];
 
-  @Prop({ type: [EducationSchema], required: false })
+  @Prop({ type: [EducationSchema], default: [] })
   education: Education[];
 
-  @Prop({ type: [ExperienceSchema], required: false })
+  @Prop({ type: [ExperienceSchema], default: [] })
   experience: Experience[];
 
-  @Prop({ type: [SocialLinkSchema], required: false })
-  Social: SocialLink[];
+  @Prop({ type: [ProfileSchema], default: [] })
+  profile: Profile[];
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
   job: Job; // Reference to the Job schema
-  // socials
-  // created application, resume -parsing,resume-parse-failed,resume-parsed, resume-scoring, resume-scored, resume-score-failed,
 }
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);

@@ -5,10 +5,22 @@ export enum AppQueueEnum {
   RESUME_SCORE = "resume-score",
 }
 
+export enum FileMimeTypes {
+  PDF = "application/pdf",
+  DOC = "application/msword",
+  DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  TXT = "text/plain",
+  ODT = "application/vnd.oasis.opendocument.text",
+  JPEG = "image/jpeg",
+  JPG = "image/jpeg",
+}
 export type QueuePayload = {
   [AppQueueEnum.RESUME_PARSE]: {
-    job_id: string;
-    resume_file_url: string;
+    applicationId: string;
+    jobId: string;
+    resumeFileUrl: string;
+    mimeType: FileMimeTypes;
+    resumeFileName: string;
   };
   [AppQueueEnum.RESUME_SCORE]: {
     application_id: string;

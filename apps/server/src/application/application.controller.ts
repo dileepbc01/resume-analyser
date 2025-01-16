@@ -24,7 +24,8 @@ import { Request } from "express";
 import { CONSTANTS } from "src/common/constants";
 import { ResumeFileTypeValidator } from "src/common/file-validators";
 import { AccessTokenGuard } from "src/common/guards/access-token.guard";
-import { AppQueueEnum, QueuePayload } from "src/queues/app-queues";
+import { AppQueueEnum, FileMimeTypes, QueuePayload } from "src/queues/app-queues";
+import { S3Service } from "src/s3/s3.service";
 
 import { ApplicationService } from "./application.service";
 
@@ -34,7 +35,8 @@ export class ApplicationController {
   constructor(
     private readonly applicationService: ApplicationService,
     @InjectQueue(AppQueueEnum.RESUME_PARSE)
-    private readonly resumeParsingQueue: Queue<QueuePayload["resume-parse"]>
+    private readonly resumeParsingQueue: Queue<QueuePayload["resume-parse"]>,
+    private readonly s3Service: S3Service
   ) {}
 
   @Post("upload")
@@ -60,10 +62,23 @@ export class ApplicationController {
     file: Express.Multer.File,
     @Req() req: Request
   ) {
-    const file_url = await this.applicationService.uploadResume(file);
-    this.resumeParsingQueue.add(file_url, {
-      job_id: req.body.job_id,
-      resume_file_url: file_url,
+    if (!Object.values(FileMimeTypes).includes(file.mimetype as any)) {
+      console.log(Object.keys(FileMimeTypes));
+      throw new Error(`${file.mimetype} not supported`);
+    }
+
+    const file_url = await this.s3Service.uploadFile(file);
+    const applicationId = await this.applicationService.createApplication({
+      resume_url: file_url,
+      resumeFileName: file.originalname,
+      jobId: req.body.job_id,
+    });
+    await this.resumeParsingQueue.add("parse-resume", {
+      applicationId: applicationId,
+      jobId: req.body.job_id,
+      resumeFileUrl: file_url,
+      mimeType: file.mimetype as FileMimeTypes,
+      resumeFileName: file.originalname,
     });
   }
 }
