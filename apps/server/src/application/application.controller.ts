@@ -1,3 +1,4 @@
+import { InjectQueue } from "@nestjs/bullmq";
 import {
   Body,
   Controller,
@@ -10,6 +11,7 @@ import {
   Patch,
   Post,
   Req,
+  Res,
   UploadedFile,
   UploadedFiles,
   UseGuards,
@@ -17,19 +19,23 @@ import {
 } from "@nestjs/common";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { Queue } from "bullmq";
 import { Request } from "express";
 import { CONSTANTS } from "src/common/constants";
 import { ResumeFileTypeValidator } from "src/common/file-validators";
 import { AccessTokenGuard } from "src/common/guards/access-token.guard";
+import { AppQueueEnum, QueuePayload } from "src/queues/app-queues";
 
 import { ApplicationService } from "./application.service";
-import { CreateApplicationDto } from "./dto/create-application.dto";
-import { UpdateApplicationDto } from "./dto/update-application.dto";
 
 @Controller("application")
 @UseGuards(AccessTokenGuard)
 export class ApplicationController {
-  constructor(private readonly applicationService: ApplicationService) {}
+  constructor(
+    private readonly applicationService: ApplicationService,
+    @InjectQueue(AppQueueEnum.RESUME_PARSE)
+    private readonly resumeParsingQueue: Queue<QueuePayload["resume-parse"]>
+  ) {}
 
   @Post("upload")
   @UseInterceptors(FileInterceptor("file"))
@@ -51,9 +57,13 @@ export class ApplicationController {
         ],
       })
     )
-    file: Express.Multer.File
+    file: Express.Multer.File,
+    @Req() req: Request
   ) {
-    console.log("file", file);
-    return await this.applicationService.uploadResume(file);
+    const file_url = await this.applicationService.uploadResume(file);
+    this.resumeParsingQueue.add(file_url, {
+      job_id: req.body.job_id,
+      resume_file_url: file_url,
+    });
   }
 }

@@ -168,6 +168,7 @@ export class Application {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
   job: Job; // Reference to the Job schema
   // socials
+  // created application, resume -parsing,resume-parse-failed,resume-parsed, resume-scoring, resume-scored, resume-score-failed,
 }
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);

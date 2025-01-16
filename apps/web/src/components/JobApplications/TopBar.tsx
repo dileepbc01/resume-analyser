@@ -70,6 +70,7 @@ export function TopBar({ job_id }: { job_id: string }) {
       const promises = await files.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file.file);
+        formData.append("job_id", job_id);
         await mutateAsync({
           form: formData,
           onFileUploadProgress: (per: number) => {

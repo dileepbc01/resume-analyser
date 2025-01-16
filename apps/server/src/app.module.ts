@@ -9,6 +9,7 @@ import { AppService } from "./app.service";
 import { ApplicationModule } from "./application/application.module";
 import { AuthModule } from "./auth/auth.module";
 import { JobModule } from "./job/job.module";
+import { videoQueue } from "./queues/app-queues";
 import { RecruiterModule } from "./recruiter/recruiter.module";
 import { VideoQueueEventsListener } from "./video-queue.event";
 import { VideoController } from "./video.controller";
@@ -29,8 +30,7 @@ import { VideoProcessor } from "./video.worker";
       },
     }),
     EventEmitterModule.forRoot(),
-
-    BullModule.registerQueue({ name: "video" }),
+    videoQueue,
     MongooseModule.forRoot(process.env.MONGO_URI),
     RecruiterModule,
     JobModule,
