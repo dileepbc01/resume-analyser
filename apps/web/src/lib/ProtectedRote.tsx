@@ -1,4 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
+import { Loader2 } from "lucide-react";
 
 import { useEffect } from "react";
 
@@ -15,7 +16,12 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }, [isError, isFetching, router]);
 
   if (isFetching) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 />
+      </div>
+    );
   }
+
   return isAuthenticated ? <>{children}</> : null;
 }

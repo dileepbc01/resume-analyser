@@ -28,12 +28,6 @@ export function TopBar({ job_id }: { job_id: string }) {
 
   const { mutateAsync } = useMutation({
     mutationFn: applicationApi.uploadResumeFiles,
-    onSuccess: () => {
-      toast.success("Resumes uploaded successfully");
-    },
-    onError: (err: CustomAxiosError) => {
-      toast.error(err.response.data.message);
-    },
   });
 
   const onDrop = (acceptedFiles: File[]) => {
@@ -84,6 +78,8 @@ export function TopBar({ job_id }: { job_id: string }) {
         });
       });
       await Promise.allSettled(promises);
+      toast.success("Resumes uploaded successfully");
+
       setOpen(false);
       setFiles([]);
     } catch (error) {
