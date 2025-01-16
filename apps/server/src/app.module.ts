@@ -1,6 +1,7 @@
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { MongooseModule } from "@nestjs/mongoose";
 
 import { AppController } from "./app.controller";
@@ -12,7 +13,6 @@ import { RecruiterModule } from "./recruiter/recruiter.module";
 import { VideoQueueEventsListener } from "./video-queue.event";
 import { VideoController } from "./video.controller";
 import { VideoProcessor } from "./video.worker";
-import { EventEmitterModule } from "@nestjs/event-emitter";
 
 @Module({
   imports: [

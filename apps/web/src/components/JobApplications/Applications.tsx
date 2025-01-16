@@ -1,39 +1,31 @@
-import React from 'react'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from '../ui/badge';
+import React from "react";
 
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+import { Badge } from "../ui/badge";
 
 const Applications = () => {
-
-    const candidates = [
-        {
-          name: "Mike Fong",
-          title: "Controller",
-          matchPercentage: 0,
-          currentJobTitle: "Controller",
-          location: "San Leandro, United States",
-          appliedDate: "12/26/2024"
-        },
-        {
-          name: "Chinmai C R C R",
-          title: "Full Stack Engineer",
-          matchPercentage: 66,
-          currentJobTitle: "Full Stack Engineer",
-          location: "Bengaluru, India",
-          appliedDate: "12/26/2024"
-        }
-      ];
+  const candidates = [
+    {
+      name: "Mike Fong",
+      title: "Controller",
+      matchPercentage: 0,
+      currentJobTitle: "Controller",
+      location: "San Leandro, United States",
+      appliedDate: "12/26/2024",
+    },
+    {
+      name: "Chinmai C R C R",
+      title: "Full Stack Engineer",
+      matchPercentage: 66,
+      currentJobTitle: "Full Stack Engineer",
+      location: "Bengaluru, India",
+      appliedDate: "12/26/2024",
+    },
+  ];
   return (
-   <>
-   
-   <div className="px-6 py-4">
+    <>
+      <div className="px-6 py-4">
         <Table>
           <TableHeader>
             <TableRow>
@@ -47,7 +39,6 @@ const Applications = () => {
           <TableBody>
             {candidates.map((candidate) => (
               <TableRow key={candidate.name}>
-
                 <TableCell>
                   <div>
                     <div className="font-medium">{candidate.name}</div>
@@ -57,11 +48,10 @@ const Applications = () => {
                 <TableCell>
                   <Badge
                     variant={candidate.matchPercentage === 0 ? "destructive" : "secondary"}
-                    className="font-normal"
-                  >
-                    {candidate.matchPercentage === 0 ?
-                      'Not a match - 0%' :
-                      `Good match - ${candidate.matchPercentage}%`}
+                    className="font-normal">
+                    {candidate.matchPercentage === 0
+                      ? "Not a match - 0%"
+                      : `Good match - ${candidate.matchPercentage}%`}
                   </Badge>
                 </TableCell>
                 <TableCell>{candidate.currentJobTitle}</TableCell>
@@ -72,8 +62,8 @@ const Applications = () => {
           </TableBody>
         </Table>
       </div>
-   </>
-  )
-}
+    </>
+  );
+};
 
-export default Applications
+export default Applications;

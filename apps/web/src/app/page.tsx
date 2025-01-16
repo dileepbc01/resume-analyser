@@ -1,10 +1,13 @@
-import ParameterSlider from '@/components/jobs/ParameterSlider'
-import React from 'react'
+import React from "react";
+
+import ParameterSlider from "@/components/jobs/ParameterSlider";
 
 const page = () => {
   return (
-    <div><ParameterSlider/></div>
-  )
-}
+    <div>
+      <ParameterSlider />
+    </div>
+  );
+};
 
-export default page
+export default page;

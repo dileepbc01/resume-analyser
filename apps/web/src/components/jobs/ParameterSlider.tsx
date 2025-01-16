@@ -1,11 +1,13 @@
-"use client"
-import { useState } from 'react';
+"use client";
+
+import { useState } from "react";
+
 export enum ApiWeightKey {
-  TECHNICAL = 'technical_competence',
-  EXPERIENCE = 'proffessional_experience_impact',
-  EDUCATION = 'education',
-  LEADERSHIP = 'leadership_soft_skills',
-  CULTURAL = 'role_alignment_cultural_fit'
+  TECHNICAL = "technical_competence",
+  EXPERIENCE = "proffessional_experience_impact",
+  EDUCATION = "education",
+  LEADERSHIP = "leadership_soft_skills",
+  CULTURAL = "role_alignment_cultural_fit",
 }
 
 export interface ApiScoringWeights {
@@ -34,42 +36,42 @@ const DEFAULT_WEIGHTS: ScoringWeights = {
     value: 30,
     color: "bg-blue-500",
     description: "Technical skills, domain knowledge, certifications, and programming experience.",
-    apiKey: ApiWeightKey.TECHNICAL
+    apiKey: ApiWeightKey.TECHNICAL,
   },
   experience: {
     name: "Professional Experience & Impact",
     value: 25,
     color: "bg-green-500",
     description: "Years of experience, project scope, business value delivered, and leadership roles.",
-    apiKey: ApiWeightKey.EXPERIENCE
+    apiKey: ApiWeightKey.EXPERIENCE,
   },
   education: {
     name: "Education & Continuous Learning",
     value: 20,
     color: "bg-purple-500",
     description: "Academic qualifications, certifications, self-learning, and industry contributions.",
-    apiKey: ApiWeightKey.EDUCATION
+    apiKey: ApiWeightKey.EDUCATION,
   },
   leadership: {
     name: "Leadership & Soft Skills",
     value: 15,
     color: "bg-orange-500",
     description: "Team management, communication skills, mentoring, and cultural adaptability.",
-    apiKey: ApiWeightKey.LEADERSHIP
+    apiKey: ApiWeightKey.LEADERSHIP,
   },
   cultural: {
     name: "Role Alignment & Cultural Fit",
     value: 10,
     color: "bg-red-500",
     description: "Alignment with company values, industry knowledge, work style, and clearances.",
-    apiKey: ApiWeightKey.CULTURAL
-  }
+    apiKey: ApiWeightKey.CULTURAL,
+  },
 };
 
 const mapApiToUiWeights = (apiWeights: ApiScoringWeights): ScoringWeights => {
   const uiWeights = { ...DEFAULT_WEIGHTS };
   Object.entries(apiWeights).forEach(([apiKey, value]) => {
-    const weight = Object.values(uiWeights).find(w => w.apiKey === apiKey);
+    const weight = Object.values(uiWeights).find((w) => w.apiKey === apiKey);
     if (weight) {
       weight.value = value;
     }
@@ -79,7 +81,7 @@ const mapApiToUiWeights = (apiWeights: ApiScoringWeights): ScoringWeights => {
 
 const mapUiToApiWeights = (uiWeights: ScoringWeights): ApiScoringWeights => {
   const apiWeights = {} as ApiScoringWeights;
-  Object.values(uiWeights).forEach(weight => {
+  Object.values(uiWeights).forEach((weight) => {
     apiWeights[weight.apiKey] = weight.value;
   });
   return apiWeights;
@@ -94,7 +96,7 @@ export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderPro
   const [weights, setWeights] = useState<ScoringWeights>(
     initialWeights ? mapApiToUiWeights(initialWeights) : DEFAULT_WEIGHTS
   );
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   const handleSliderChange = (index: number, newValue: number) => {
     const currentValue = Object.values(weights)[index].value;
@@ -102,7 +104,9 @@ export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderPro
 
     if (diff === 0) return;
 
-    const otherIndices = Object.values(weights).map((_, i) => i).filter(i => i !== index);
+    const otherIndices = Object.values(weights)
+      .map((_, i) => i)
+      .filter((i) => i !== index);
     const totalOthers = otherIndices.reduce((sum, i) => sum + Object.values(weights)[i].value, 0);
 
     const newWeights = { ...weights };
@@ -110,10 +114,10 @@ export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderPro
 
     // Distribute the difference proportionally among other sliders
     const ratio = (totalOthers - diff) / totalOthers;
-    otherIndices.forEach(i => {
+    otherIndices.forEach((i) => {
       newWeights[Object.keys(weights)[i]] = {
         ...Object.values(weights)[i],
-        value: Math.round(Object.values(weights)[i].value * ratio)
+        value: Math.round(Object.values(weights)[i].value * ratio),
       };
     });
 
@@ -123,10 +127,10 @@ export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderPro
   const handleSubmit = () => {
     const total = Object.values(weights).reduce((sum, w) => sum + w.value, 0);
     if (total !== 100) {
-      setError('Total weight must equal 100%');
+      setError("Total weight must equal 100%");
       return;
     }
-    setError('');
+    setError("");
     onSubmit(mapUiToApiWeights(weights));
   };
 
@@ -149,13 +153,12 @@ export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderPro
           <p className="text-sm text-gray-600">{weight.description}</p>
         </div>
       ))}
-      
+
       {error && <p className="text-red-500">{error}</p>}
-      
+
       <button
         onClick={handleSubmit}
-        className="ml-auto bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-      >
+        className="ml-auto rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
         Save Weights
       </button>
     </div>

@@ -23,4 +23,14 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     "no-console": ["error", { allow: ["warn", "error"] }],
   },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+},
+"editor.formatOnSave": true,
+"eslint.validate": [
+    "javascript",
+    "javascriptreact", 
+    "typescript",
+    "typescriptreact"
+]
 };

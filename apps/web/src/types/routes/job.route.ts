@@ -12,8 +12,8 @@ export interface BaseJobDto {
     proffessional_experience_impact: number;
     education: number;
     leadership_soft_skills: number;
-    role_alignment_cultural_fit: number
-  }
+    role_alignment_cultural_fit: number;
+  };
 }
 
 export const createjobSchema = z.object({

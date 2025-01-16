@@ -1,96 +1,97 @@
-import React, { useState } from 'react'
-import { useDropzone } from 'react-dropzone'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Progress } from '@/components/ui/progress'
-import { Loader2, X, Upload, File } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { useMutation } from 'react-query'
-import { applicationApi } from '@/lib/api/application.api'
-import { CustomAxiosError } from '@/lib/axios'
-import {nanoid} from 'nanoid'
-const MAX_FILES = 30
-const MAX_FILE_SIZE = 5 * 1024 * 1024 // 10MB
+import { File, Loader2, Upload, UploadCloudIcon, X } from "lucide-react";
+import { nanoid } from "nanoid";
+import { toast } from "sonner";
+
+import React, { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { useMutation } from "react-query";
+
+import { useRouter } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { applicationApi } from "@/lib/api/application.api";
+import { CustomAxiosError } from "@/lib/axios";
+import { cn } from "@/lib/utils";
+
+const MAX_FILES = 30;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 10MB
 
 export function TopBar({ job_id }: { job_id: string }) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [files, setFiles] = useState<{ file: File; progress: number }[]>([]);
 
-
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [files, setFiles] = useState<File[]>([])
-  const [uploadProgress, setUploadProgress] = useState(0);
-
-
-  const {mutateAsync}=useMutation({
-      mutationFn:applicationApi.uploadResumeFiles,
-      onSuccess:()=>{
-        // 
-      },
-      onError:(err:CustomAxiosError)=>{
-       toast.error(err.response.data.message) 
-      }
-  })
+  const { mutateAsync } = useMutation({
+    mutationFn: applicationApi.uploadResumeFiles,
+    onSuccess: () => {
+      toast.success("Resumes uploaded successfully");
+    },
+    onError: (err: CustomAxiosError) => {
+      toast.error(err.response.data.message);
+    },
+  });
 
   const onDrop = (acceptedFiles: File[]) => {
-    const totalFiles = files.length + acceptedFiles.length
+    const totalFiles = files.length + acceptedFiles.length;
     if (totalFiles > MAX_FILES) {
-      toast.error(`Maximum ${MAX_FILES} files allowed`)
-      return
+      toast.error(`Maximum ${MAX_FILES} files allowed`);
+      return;
     }
-    
-    const validFiles = acceptedFiles.filter(file => {
+
+    const validFiles = acceptedFiles.filter((file) => {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error(`${file.name} is too large. Max size is 5MB`)
-        return false
+        toast.error(`${file.name} is too large. Max size is 5MB`);
+        return false;
       }
-      return true
-    })
-    
-    setFiles(prev => [...prev, ...validFiles])
-  }
+      return true;
+    });
+
+    setFiles((prev) => [...prev, ...validFiles.map((f) => ({ file: f, progress: 0 }))]);
+  };
 
   const removeFile = (index: number) => {
-    setFiles(files => files.filter((_, idx) => idx !== index))
-  }
+    setFiles((files) => files.filter((_, idx) => idx !== index));
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'application/pdf': ['.pdf'],
-      'application/msword': ['.doc'],
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-      'text/plain': ['.txt'],
-      'image/jpeg': ['.jpg', '.jpeg']
-    }
-  })
+      "application/pdf": [".pdf"],
+      "application/msword": [".doc"],
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+      "text/plain": [".txt"],
+      "image/jpeg": [".jpg", ".jpeg"],
+    },
+  });
 
   const handleUpload = async () => {
     try {
-      setLoading(true)
-      const formData = new FormData()
-      
-      files.forEach(file => {
-        formData.append('files', file)
-      })
-      formData.append('job_id', job_id);
-      await mutateAsync({
-        upload_id:nanoid(),
-        form:formData
-      })
-      
-      setOpen(false)
-      setFiles([])
+      setLoading(true);
+
+      const promises = await files.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file.file);
+        await mutateAsync({
+          form: formData,
+          onFileUploadProgress: (per: number) => {
+            setFiles((prev) => prev.map((f) => (f.file === file.file ? { file: f.file, progress: per } : f)));
+          },
+        });
+      });
+      await Promise.allSettled(promises);
+      setOpen(false);
+      setFiles([]);
     } catch (error) {
-      toast.error('Failed to upload resumes')
+      toast.error("Failed to upload resumes");
     } finally {
-      setLoading(false)
-      setUploadProgress(0)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <>
@@ -102,12 +103,17 @@ export function TopBar({ job_id }: { job_id: string }) {
             <span className="text-sm text-gray-500">Full Stack Developer</span>
           </div>
           <div className="flex items-center gap-3 pb-3">
-            <Button variant="ghost" onClick={() => setOpen(true)}>Add candidates</Button>
-            <Button variant="ghost"
+            <Button variant="ghost" onClick={() => setOpen(true)}>
+              {loading ? <Loader2 /> : <UploadCloudIcon />}
+              Upload Resumes
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => {
                 router.push(`/job/edit?job_id=${job_id}`);
-              }}
-            >Edit</Button>
+              }}>
+              Edit
+            </Button>
           </div>
         </div>
       </div>
@@ -116,29 +122,28 @@ export function TopBar({ job_id }: { job_id: string }) {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold">Upload Resumes</DialogTitle>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2 text-sm">
               Upload candidate resumes (max {MAX_FILES} files, 10MB each)
             </p>
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div 
-              {...getRootProps()} 
+            <div
+              {...getRootProps()}
               className={cn(
-                "flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8",
+                "flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-8",
                 "hover:border-primary cursor-pointer transition-colors",
                 isDragActive ? "border-primary bg-primary/5" : "border-muted",
-                files.length >= MAX_FILES ? "opacity-50 cursor-not-allowed" : ""
-              )}
-            >
+                files.length >= MAX_FILES ? "cursor-not-allowed opacity-50" : ""
+              )}>
               <input {...getInputProps()} disabled={files.length >= MAX_FILES} />
-              <Upload className="h-10 w-10 text-muted-foreground mb-4" />
-              <p className="text-sm text-center">
-                {files.length >= MAX_FILES 
+              <Upload className="text-muted-foreground mb-4 h-10 w-10" />
+              <p className="text-center text-sm">
+                {files.length >= MAX_FILES
                   ? "Maximum files limit reached"
                   : "Drag & drop files here, or click to select files"}
               </p>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-muted-foreground mt-2 text-xs">
                 {files.length} / {MAX_FILES} files • PDF, DOC, DOCX, TXT, JPEG
               </p>
             </div>
@@ -149,12 +154,9 @@ export function TopBar({ job_id }: { job_id: string }) {
                   {files.map((file, idx) => (
                     <div key={idx} className="flex items-center gap-2">
                       <File className="h-4 w-4" />
-                      <span className="text-sm flex-1 truncate">{file.name}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeFile(idx)}
-                      >
+                      <span className="flex-1 truncate text-sm">{file.file.name}</span>
+                      <Progress value={file.progress} className="w-1/3" />
+                      <Button variant="ghost" size="icon" onClick={() => removeFile(idx)}>
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
@@ -162,31 +164,27 @@ export function TopBar({ job_id }: { job_id: string }) {
                 </div>
               </ScrollArea>
             )}
-
-            {loading && (
-              <Progress value={uploadProgress} className="w-full" />
-            )}
           </div>
 
           <DialogFooter>
-            <Button
-              onClick={handleUpload}
-              disabled={loading || files.length === 0}
-            >
+            <Button onClick={handleUpload} disabled={loading || files.length === 0}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Uploading...
                 </>
               ) : (
-                'Upload'
+                <>
+                  <Upload />
+                  Upload
+                </>
               )}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }
 
-export default TopBar
+export default TopBar;

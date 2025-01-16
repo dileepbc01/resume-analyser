@@ -1,7 +1,8 @@
-import React from "react";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createjobSchema } from "@/types/routes/job.route";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import React from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -31,8 +32,8 @@ const jobTypes = [
   { value: "temporary", label: "Temporary" },
 ];
 
-const JobForm: React.FC<JobFormProps> = ({ 
-  onSubmit, 
+const JobForm: React.FC<JobFormProps> = ({
+  onSubmit,
   defaultValues = {
     role: "",
     type: "full-time",
@@ -40,7 +41,7 @@ const JobForm: React.FC<JobFormProps> = ({
     company: "",
     description: "",
   },
-  disabled = false 
+  disabled = false,
 }) => {
   const form = useForm({
     disabled,

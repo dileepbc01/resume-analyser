@@ -19,25 +19,24 @@ export enum JobStatus {
 }
 
 @Schema()
-class ScoringWeights{
-  @Prop({ type: MongooseSchema.Types.Number, default: 30,min:0,max:100 })
+class ScoringWeights {
+  @Prop({ type: MongooseSchema.Types.Number, default: 30, min: 0, max: 100 })
   technical_competence: number;
 
-  @Prop({ type: MongooseSchema.Types.Number, default: 25,min:0,max:100 })
+  @Prop({ type: MongooseSchema.Types.Number, default: 25, min: 0, max: 100 })
   proffessional_experience_impact: number;
- 
-  @Prop({ type: MongooseSchema.Types.Number, default: 20,min:0,max:100 })
+
+  @Prop({ type: MongooseSchema.Types.Number, default: 20, min: 0, max: 100 })
   education: number;
 
-  @Prop({ type: MongooseSchema.Types.Number, default: 15,min:0,max:100 })
+  @Prop({ type: MongooseSchema.Types.Number, default: 15, min: 0, max: 100 })
   leadership_soft_skills: number;
 
-  @Prop({ type: MongooseSchema.Types.Number, default: 10,min:0,max:100 })
+  @Prop({ type: MongooseSchema.Types.Number, default: 10, min: 0, max: 100 })
   role_alignment_cultural_fit: number;
 }
 
 const ScoringWeightsSchema = SchemaFactory.createForClass(ScoringWeights);
-
 
 @Schema()
 export class Job {
@@ -82,13 +81,17 @@ export class Job {
   })
   candidates: Application[]; // One-to-many relationship with Candidate
 
-  @Prop({ type: ScoringWeightsSchema,default:{
-  technical_competence: 30,
-  proffessional_experience_impact: 25,
-  education: 20,
-  leadership_soft_skills: 15,
-  role_alignment_cultural_fit: 10,
-  }, required: false })
+  @Prop({
+    type: ScoringWeightsSchema,
+    default: {
+      technical_competence: 30,
+      proffessional_experience_impact: 25,
+      education: 20,
+      leadership_soft_skills: 15,
+      role_alignment_cultural_fit: 10,
+    },
+    required: false,
+  })
   scoring_weights: ScoringWeights;
 }
 

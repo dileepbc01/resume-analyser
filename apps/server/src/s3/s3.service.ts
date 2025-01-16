@@ -26,7 +26,6 @@ export class S3Service {
       ContentType: file.mimetype,
       ACL: "public-read",
     };
-    console.log("s3 params", params);
 
     const upload = await this.s3.upload(params).promise();
     return upload.Location;

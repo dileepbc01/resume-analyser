@@ -14,7 +14,11 @@ const eslintConfig = [
   {
     rules: {
       "no-console": ["error"]
-    }
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "editor.formatOnSave": true,
   }
 ];
 

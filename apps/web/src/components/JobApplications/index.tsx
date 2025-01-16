@@ -1,22 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import TopBar from './TopBar';
-import ActionBar from './ActionBar';
-import Applications from './Applications';
-
-
-
+import ActionBar from "./ActionBar";
+import Applications from "./Applications";
+import TopBar from "./TopBar";
 
 function JobApplications({ job_id }: { job_id: string }) {
-
-
   return (
     <div className="bg-white">
-     
-    <TopBar job_id={job_id}/>
-    <ActionBar/>
-    <Applications/>
-
+      <TopBar job_id={job_id} />
+      <ActionBar />
+      <Applications />
     </div>
   );
 }

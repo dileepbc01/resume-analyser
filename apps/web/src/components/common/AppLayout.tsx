@@ -79,12 +79,16 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Top Header with Profile */}
           <div className="border-b bg-gray-100 px-6 py-3">
             <div className="flex justify-end">
-              <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => router.push("/profile")}>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => router.push("/profile")}>
                 <User className="h-5 w-5" />
               </Button>
             </div>
           </div>
-          <div className="flex-1 p-3 ">{children}</div>
+          <div className="flex-1 p-3">{children}</div>
         </div>
       </div>
     </>

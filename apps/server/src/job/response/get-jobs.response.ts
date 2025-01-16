@@ -41,10 +41,8 @@ export class GetJobResponse {
     proffessional_experience_impact: number;
     education: number;
     leadership_soft_skills: number;
-    role_alignment_cultural_fit: number
+    role_alignment_cultural_fit: number;
   };
-
-  
 
   static fromEntity(job: Job): GetJobResponse {
     const dto = new GetJobResponse();
@@ -61,7 +59,7 @@ export class GetJobResponse {
       proffessional_experience_impact: job.scoring_weights.proffessional_experience_impact,
       education: job.scoring_weights.education,
       leadership_soft_skills: job.scoring_weights.leadership_soft_skills,
-      role_alignment_cultural_fit: job.scoring_weights.role_alignment_cultural_fit
+      role_alignment_cultural_fit: job.scoring_weights.role_alignment_cultural_fit,
     };
     return dto;
   }

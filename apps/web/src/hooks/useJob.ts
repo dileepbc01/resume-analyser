@@ -42,8 +42,6 @@ export const useJob = () => {
     },
   });
 
-
-  
   return {
     // Data
     jobs,

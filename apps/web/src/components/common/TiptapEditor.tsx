@@ -16,14 +16,14 @@ const TipTapEditor = ({ description, onChange, isDisabled = false }: TipTapEdito
     content: description,
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
-      if(isDisabled) return;
+      if (isDisabled) return;
       onChange(editor.getHTML());
     },
     editorProps: {
       attributes: {
         class: "focus:outline-none",
       },
-      editable: ()=>!isDisabled,
+      editable: () => !isDisabled,
     },
   });
 
@@ -32,7 +32,7 @@ const TipTapEditor = ({ description, onChange, isDisabled = false }: TipTapEdito
   }
 
   return (
-    <div className={`min-h-96 rounded-lg border ${isDisabled ? 'opacity-60' : ''}`}>
+    <div className={`min-h-96 rounded-lg border ${isDisabled ? "opacity-60" : ""}`}>
       <div className="bg-background flex items-center gap-2 border-b p-2">
         <Button
           disabled={isDisabled}
@@ -91,9 +91,9 @@ const TipTapEditor = ({ description, onChange, isDisabled = false }: TipTapEdito
           <Redo className="h-4 w-4" />
         </Button>
       </div>
-      <EditorContent 
-        editor={editor} 
-        className={`prose h-full max-w-none p-4 ${isDisabled ? 'blur-[0.3px] pointer-events-none' : ''}`} 
+      <EditorContent
+        editor={editor}
+        className={`prose h-full max-w-none p-4 ${isDisabled ? "pointer-events-none blur-[0.3px]" : ""}`}
       />
     </div>
   );
