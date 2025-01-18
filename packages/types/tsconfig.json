@@ -10,8 +10,7 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "strictPropertyInitialization": false // Add this line
+   
   },
   "exclude": ["dist", "build", "node_modules"]
 }

@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { Recruiter } from "@repo/types";
 import * as bcrypt from "bcrypt";
 import { Model } from "mongoose";
-import { Recruiter } from "schema/recruiter.schema";
 
 import { CreateRecruiterDto } from "./dto/create-recruiter.dto";
 import { RemoveRecruiterDto } from "./dto/remove-recruiter.dto";

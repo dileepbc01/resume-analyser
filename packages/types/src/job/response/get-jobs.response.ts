@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsString } from "class-validator";
-import { Job } from "schema/job.schema";
+import { Job } from "../../schema";
+import { JobType } from "../dto";
 
-import { JobType } from "../dto/create-job.dto";
 
 export class GetJobResponse {
   @IsString()

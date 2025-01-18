@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { Job, JobSchema } from "schema/job.schema";
+import { JobSchema } from "@repo/types";
+import { Job } from "bullmq";
 
 import { JobController } from "./job.controller";
 import { JobService } from "./job.service";

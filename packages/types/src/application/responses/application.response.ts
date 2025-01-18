@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsBoolean, IsString } from "class-validator";
-import { Application, Education, Experience, Profile, Skill } from "schema/application.schema";
+import { Skill, Education, Experience, Profile, Application } from "../../schema/application.schema";
 
 class SkillResponse {
   @ApiProperty({ description: "Name of the skill" })

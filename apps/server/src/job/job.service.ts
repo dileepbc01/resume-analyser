@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { CreateJobDto, GetJobDto, UpdateJobDto } from "@repo/types";
+import { CreateJobDto, GetJobDto, Job, JobStatus, UpdateJobDto } from "@repo/types";
 import { Model } from "mongoose";
-import { Job, JobStatus } from "schema/job.schema";
 
 @Injectable()
 export class JobService {

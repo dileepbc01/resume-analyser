@@ -25,7 +25,7 @@ export class ResumeParseProcessor extends WorkerHost {
       FileMimeTypes.ODT,
       FileMimeTypes.TXT,
     ];
-    const imageMimeTypes: FileMimeTypes[] = [FileMimeTypes.JPG, FileMimeTypes.JPEG];
+    const imageMimeTypes: FileMimeTypes[] = [FileMimeTypes.JPEG];
     let text = "";
     if (docMimeTypes.includes(job.data.mimeType)) {
       text = await this.langchainService.generateText(job.data.resumeFileUrl);

@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nestjs/mapped-types": "*",
+    "@nestjs/mongoose": "^10.1.0",
     "@nestjs/swagger": "^8.1.0",
-    "class-validator": "^0.14.1"
+    "class-validator": "^0.14.1",
+    "mongoose": "^8.9.3"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:^",

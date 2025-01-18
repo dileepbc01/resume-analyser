@@ -12,6 +12,8 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { GetApplicationsDto } from "@repo/types/src/application/dto/get-applications.dto";
+import { GetApplicationResponse } from "@repo/types/src/application/responses/application.response";
 import { Queue } from "bullmq";
 import { Request } from "express";
 import { CONSTANTS } from "src/common/constants";
@@ -21,8 +23,6 @@ import { AppQueueEnum, FileMimeTypes, QueuePayload } from "src/queues/app-queues
 import { S3Service } from "src/s3/s3.service";
 
 import { ApplicationService } from "./application.service";
-import { GetApplicationsDto } from "./dto/get-applications.dto";
-import { GetApplicationResponse } from "./responses/application.response";
 
 @Controller("application")
 @UseGuards(AccessTokenGuard)

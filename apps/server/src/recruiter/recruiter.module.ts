@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { Recruiter, RecruiterSchema } from "schema/recruiter.schema";
+import { Recruiter, RecruiterSchema } from "@repo/types";
 
 import { RecruiterController } from "./recruiter.controller";
 import { RecruiterService } from "./recruiter.service";

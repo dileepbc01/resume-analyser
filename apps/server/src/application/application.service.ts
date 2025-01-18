@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { Application } from "@repo/types";
 import { Model } from "mongoose";
-import { Application } from "schema/application.schema";
 import { ResumeSchema } from "src/langchain/resume.schema";
 import { z } from "zod";
 
