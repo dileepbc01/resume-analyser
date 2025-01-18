@@ -23,7 +23,6 @@ export class ApplicationService {
     resume_text: string;
     resume_json: z.infer<typeof ResumeSchema>;
   }) {
-    console.log("application_id", dto.application_id);
     await this.applicationModel
       .findByIdAndUpdate(dto.application_id, {
         _id: dto.application_id,

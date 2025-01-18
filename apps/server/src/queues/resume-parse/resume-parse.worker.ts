@@ -6,7 +6,7 @@ import { LangchainService } from "src/langchain/langchain.service";
 import { ResumeSchema } from "src/langchain/resume.schema";
 import { z } from "zod";
 
-import { AppQueueEnum, AppQueues, FileMimeTypes, QueuePayload } from "../app-queues";
+import { AppQueueEnum, FileMimeTypes, QueuePayload } from "../app-queues";
 
 @Injectable()
 @Processor(AppQueueEnum.RESUME_PARSE, { concurrency: 3 }) // Can run up to 3 jobs concurrently
@@ -43,12 +43,12 @@ export class ResumeParseProcessor extends WorkerHost {
 
   @OnWorkerEvent("active")
   onActive(job: Job<QueuePayload["resume-parse"]>) {
-    console.log(`Processing job with id ${job.id}`);
+    console.info(`Processing job with id ${job.id}`);
   }
 
   @OnWorkerEvent("progress")
   onProgress(job: Job<QueuePayload["resume-parse"]>) {
-    console.log(`Job ${job.id} is in progress: ${job.progress}% completed.`);
+    console.info(`Job ${job.id} is in progress: ${job.progress}% completed.`);
   }
 
   @OnWorkerEvent("completed")
@@ -64,12 +64,12 @@ export class ResumeParseProcessor extends WorkerHost {
       resume_text: returnvalue.resumeText,
       resume_url: job.data.resumeFileUrl,
     });
-    console.log(`Job with id ${job.id} COMPLETED!`);
+    console.info(`Job with id ${job.id} COMPLETED!`);
   }
 
   @OnWorkerEvent("failed")
   onFailed(job: Job<QueuePayload["resume-parse"]>) {
-    console.log(`Job with id ${job.id} FAILED! Attempt Number ${job.attemptsMade}`);
-    console.log("Failed reason", job.failedReason);
+    console.info(`Job with id ${job.id} FAILED! Attempt Number ${job.attemptsMade}`);
+    console.info("Failed reason", job.failedReason);
   }
 }

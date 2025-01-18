@@ -1,11 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { CreateJobDto, GetJobDto, UpdateJobDto } from "@repo/types";
 import { Model } from "mongoose";
 import { Job, JobStatus } from "schema/job.schema";
-
-import { CreateJobDto } from "./dto/create-job.dto";
-import { GetJobDto } from "./dto/get-job.dto";
-import { UpdateJobDto } from "./dto/update-job.dto";
 
 @Injectable()
 export class JobService {

@@ -18,7 +18,6 @@ export class S3Service {
 
   async uploadFile(file: Express.Multer.File, folder: string = "uploads"): Promise<string> {
     const key = `${folder}/${Date.now()}-${file.originalname}`;
-    console.log(file);
     const params = {
       Bucket: CONSTANTS.AWS_S3_BUCKET,
       Key: key,

@@ -1,11 +1,9 @@
 import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { CreateJobDto, GetJobResponse, UpdateJobDto } from "@repo/types";
 import { AccessTokenGuard } from "src/common/guards/access-token.guard";
 
-import { CreateJobDto } from "./dto/create-job.dto";
-import { UpdateJobDto } from "./dto/update-job.dto";
 import { JobService } from "./job.service";
-import { GetJobResponse } from "./response/get-jobs.response";
 
 @ApiTags("job")
 @UseGuards(AccessTokenGuard)

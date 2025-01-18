@@ -1,6 +1,12 @@
 {
   "name": "resume-analyser",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "packages/typescript-config",
+    "packages/types"
+  ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",

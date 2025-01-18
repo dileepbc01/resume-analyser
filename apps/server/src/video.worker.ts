@@ -8,19 +8,19 @@ export class VideoProcessor extends WorkerHost {
 
     switch (job.name) {
       case "compress":
-        console.log("Starting compress task");
+        console.info("Starting compress task");
         await this.runTaskWithProgress(job, totalSteps);
 
         break;
 
       case "process":
-        console.log("Starting process task");
+        console.info("Starting process task");
         await this.runTaskWithProgress(job, totalSteps);
 
         break;
 
       default:
-        console.log(`Unknown job name: ${job.name}`);
+        console.info(`Unknown job name: ${job.name}`);
         break;
     }
   }
@@ -40,21 +40,21 @@ export class VideoProcessor extends WorkerHost {
 
   @OnWorkerEvent("active")
   onActive(job: Job) {
-    console.log(`Processing job with id ${job.id}`);
+    console.info(`Processing job with id ${job.id}`);
   }
 
   @OnWorkerEvent("progress")
   onProgress(job: Job) {
-    console.log(`Job ${job.id} is in progress: ${job.progress}% completed.`);
+    console.info(`Job ${job.id} is in progress: ${job.progress}% completed.`);
   }
 
   @OnWorkerEvent("completed")
   onCompleted(job: Job) {
-    console.log(`Job with id ${job.id} COMPLETED!`);
+    console.info(`Job with id ${job.id} COMPLETED!`);
   }
 
   @OnWorkerEvent("failed")
   onFailed(job: Job) {
-    console.log(`Job with id ${job.id} FAILED! Attempt Number ${job.attemptsMade}`);
+    console.info(`Job with id ${job.id} FAILED! Attempt Number ${job.attemptsMade}`);
   }
 }

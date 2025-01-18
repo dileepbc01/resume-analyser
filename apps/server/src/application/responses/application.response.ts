@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsBoolean, IsObject, IsString } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsArray, IsBoolean, IsString } from "class-validator";
 import { Application, Education, Experience, Profile, Skill } from "schema/application.schema";
 
 class SkillResponse {

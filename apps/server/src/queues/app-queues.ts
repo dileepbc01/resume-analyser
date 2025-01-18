@@ -12,7 +12,6 @@ export enum FileMimeTypes {
   TXT = "text/plain",
   ODT = "application/vnd.oasis.opendocument.text",
   JPEG = "image/jpeg",
-  JPG = "image/jpeg",
 }
 export type QueuePayload = {
   [AppQueueEnum.RESUME_PARSE]: {

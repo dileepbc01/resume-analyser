@@ -1,25 +1,17 @@
 import { InjectQueue } from "@nestjs/bullmq";
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Headers,
   MaxFileSizeValidator,
-  Param,
   ParseFilePipe,
-  Patch,
   Post,
   Query,
   Req,
-  Res,
   UploadedFile,
-  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { EventEmitter2 } from "@nestjs/event-emitter";
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { Queue } from "bullmq";
 import { Request } from "express";
 import { CONSTANTS } from "src/common/constants";
@@ -66,7 +58,6 @@ export class ApplicationController {
     @Req() req: Request
   ) {
     if (!Object.values(FileMimeTypes).includes(file.mimetype as any)) {
-      console.log(Object.keys(FileMimeTypes));
       throw new Error(`${file.mimetype} not supported`);
     }
 

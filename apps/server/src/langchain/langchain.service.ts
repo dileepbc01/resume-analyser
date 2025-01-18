@@ -5,6 +5,7 @@ import { ConfigService } from "@nestjs/config";
 
 import { ResumeSchema } from "./resume.schema";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const officeParser = require("officeparser");
 
 @Injectable()
