@@ -12,8 +12,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { GetApplicationsDto } from "@repo/types/src/application/dto/get-applications.dto";
-import { GetApplicationResponse } from "@repo/types/src/application/responses/application.response";
+import { GetApplicationResponse, GetApplicationsDto } from "@repo/types";
 import { Queue } from "bullmq";
 import { Request } from "express";
 import { CONSTANTS } from "src/common/constants";
