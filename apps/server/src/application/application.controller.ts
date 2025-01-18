@@ -76,7 +76,7 @@ export class ApplicationController {
   }
 
   @Get()
-  async getApplications(@Query() dto: GetApplicationsDto) {
+  async getApplications(@Query() dto: GetApplicationsDto): Promise<GetApplicationResponse[]> {
     const applicants = await this.applicationService.getApplicationsByJobId(dto.job_id);
     return applicants.map((a) => GetApplicationResponse.fromEntity(a));
   }

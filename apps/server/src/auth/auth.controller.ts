@@ -1,15 +1,13 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AuthDto, AuthResponse, CreateRecruiterDto } from "@repo/types";
 import { Response } from "express";
 import ms from "ms";
 import { CONSTANTS } from "src/common/constants";
 import { AccessTokenGuard } from "src/common/guards/access-token.guard";
 import { RefreshTokenGuard } from "src/common/guards/refresh-token.guard";
-import { CreateRecruiterDto } from "src/recruiter/dto/create-recruiter.dto";
 
 import { AuthService } from "./auth.service";
-import { AuthDto } from "./dto/auth.dto";
-import { AuthResponse } from "./response/recruiter-details.response";
 
 @ApiTags("auth")
 @Controller("auth")

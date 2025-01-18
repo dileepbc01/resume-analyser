@@ -1,12 +1,10 @@
 import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { AuthDto, CreateRecruiterDto } from "@repo/types";
 import * as bcrypt from "bcrypt";
 import { CONSTANTS } from "src/common/constants";
-import { CreateRecruiterDto } from "src/recruiter/dto/create-recruiter.dto";
 import { RecruiterService } from "src/recruiter/recruiter.service";
-
-import { AuthDto } from "./dto/auth.dto";
 
 @Injectable()
 export class AuthService {

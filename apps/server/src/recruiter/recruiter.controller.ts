@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { CreateRecruiterDto } from "@repo/types";
 import { AccessTokenGuard } from "src/common/guards/access-token.guard";
 
-import { CreateRecruiterDto } from "./dto/create-recruiter.dto";
 import { RecruiterService } from "./recruiter.service";
 
 @UseGuards(AccessTokenGuard)

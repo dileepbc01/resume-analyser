@@ -1,17 +1,17 @@
+import { GetApplicationResponse, GetApplicationsDto } from "@repo/types";
+
 // Type for the Auth routes
 export type ApplicationRoutes = {
   "/application/upload": {
     post: {
       request: any;
-      responses: any;
+      responses: null;
     };
   };
   "/application": {
     get: {
-      request: {
-        job_id: string;
-      };
-      responses: any;
+      request: GetApplicationsDto;
+      responses: GetApplicationResponse[];
     };
   };
 };
