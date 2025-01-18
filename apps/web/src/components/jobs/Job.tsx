@@ -1,10 +1,10 @@
-import { JobResponse } from "@/types/routes/job.route";
+import { GetJobResponse } from "@repo/types";
 
 import React from "react";
 
 import Link from "next/link";
 
-const Job: React.FC<{ job: JobResponse }> = ({ job }) => {
+const Job: React.FC<{ job: GetJobResponse }> = ({ job }) => {
   const formatDate = (date: string) => {
     const days = Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24));
     return `${days} ${days === 1 ? "day" : "days"} ago`;

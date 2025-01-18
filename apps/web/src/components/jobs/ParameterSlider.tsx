@@ -91,6 +91,20 @@ interface ParameterSliderProps {
   initialWeights?: ApiScoringWeights;
   onSubmit: (weights: ApiScoringWeights) => void;
 }
+const getWeightValAtIdx = (weights: ScoringWeights, index: number) => {
+  const weight = Object.values(weights)[index];
+  if (weight) {
+    return weight.value;
+  }
+  return 0;
+};
+const getWeightKeyAtIdx = (weights: ScoringWeights, index: number) => {
+  const weightKey = Object.keys(weights)[index];
+  if (!weightKey) {
+    throw new Error("Invalid weight index");
+  }
+  return weightKey;
+};
 
 export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderProps) => {
   const [weights, setWeights] = useState<ScoringWeights>(
@@ -99,7 +113,7 @@ export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderPro
   const [error, setError] = useState<string>("");
 
   const handleSliderChange = (index: number, newValue: number) => {
-    const currentValue = Object.values(weights)[index].value;
+    const currentValue = getWeightValAtIdx(weights, index);
     const diff = newValue - currentValue;
 
     if (diff === 0) return;
@@ -107,17 +121,19 @@ export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderPro
     const otherIndices = Object.values(weights)
       .map((_, i) => i)
       .filter((i) => i !== index);
-    const totalOthers = otherIndices.reduce((sum, i) => sum + Object.values(weights)[i].value, 0);
+    const totalOthers = otherIndices.reduce((sum, i) => getWeightValAtIdx(weights, i), 0);
 
     const newWeights = { ...weights };
-    newWeights[Object.keys(weights)[index]] = { ...Object.values(weights)[index], value: newValue };
+    const currentKey = getWeightKeyAtIdx(weights, index);
+    newWeights[currentKey] = { ...(weights[currentKey] as ScoringWeight), value: newValue };
 
     // Distribute the difference proportionally among other sliders
     const ratio = (totalOthers - diff) / totalOthers;
     otherIndices.forEach((i) => {
-      newWeights[Object.keys(weights)[i]] = {
-        ...Object.values(weights)[i],
-        value: Math.round(Object.values(weights)[i].value * ratio),
+      const key = getWeightKeyAtIdx(weights, i);
+      newWeights[key] = {
+        ...(weights[key] as ScoringWeight),
+        value: Math.round(getWeightValAtIdx(weights, i) * ratio),
       };
     });
 

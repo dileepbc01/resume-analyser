@@ -1,5 +1,4 @@
 import { File, Loader2, Upload, UploadCloudIcon, X } from "lucide-react";
-import { nanoid } from "nanoid";
 import { toast } from "sonner";
 
 import React, { useState } from "react";
@@ -14,7 +13,6 @@ import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { applicationApi } from "@/lib/api/application.api";
-import { CustomAxiosError } from "@/lib/axios";
 import { cn } from "@/lib/utils";
 
 const MAX_FILES = 30;
@@ -83,7 +81,8 @@ export function TopBar({ job_id }: { job_id: string }) {
 
       setOpen(false);
       setFiles([]);
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    } catch (_error: any) {
       toast.error("Failed to upload resumes");
     } finally {
       setLoading(false);

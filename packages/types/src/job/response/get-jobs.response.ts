@@ -30,10 +30,10 @@ export class GetJobResponse {
   description: string;
 
   @ApiProperty({ description: "Job creation timestamp" })
-  createdAt: Date;
+  createdAt: string;
 
   @ApiProperty({ description: "Job update timestamp" })
-  updatedAt: Date;
+  updatedAt: string;
 
   @ApiProperty({ description: "Scoring weights for the job" })
   scoringWeights: {
@@ -52,8 +52,8 @@ export class GetJobResponse {
     dto.role = job.role;
     dto.location = job.location;
     dto.type = job.type;
-    dto.createdAt = job.created_at;
-    dto.updatedAt = job.updated_at;
+    dto.createdAt = job.created_at.toISOString();
+    dto.updatedAt = job.updated_at.toISOString();
     dto.scoringWeights = {
       technical_competence: job.scoring_weights.technical_competence,
       proffessional_experience_impact: job.scoring_weights.proffessional_experience_impact,

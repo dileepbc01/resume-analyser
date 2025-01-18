@@ -1,4 +1,4 @@
-import { CreateJobDto, UpdateJobDto } from "@/types/routes/job.route";
+import { CreateJobDto, UpdateJobDto } from "@repo/types";
 import { toast } from "sonner";
 
 import { useMutation, useQuery, useQueryClient } from "react-query";

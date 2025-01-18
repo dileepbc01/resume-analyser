@@ -21,8 +21,8 @@ export function useAuth() {
   });
   const signupMutation = useMutation({
     mutationFn: (recruiter: Parameters<typeof authApi.signup>[0]) => authApi.signup(recruiter),
-    onSuccess: (resp) => {
-      queryClient.setQueryData(["auth-user"], () => resp.data);
+    onSuccess: (d) => {
+      queryClient.setQueryData(["auth-user"], () => d);
       router.push("/jobs");
     },
     onError: (err: CustomAxiosError) => {

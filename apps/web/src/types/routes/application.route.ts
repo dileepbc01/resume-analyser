@@ -4,6 +4,7 @@ import { GetApplicationResponse, GetApplicationsDto } from "@repo/types";
 export type ApplicationRoutes = {
   "/application/upload": {
     post: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       request: any;
       responses: null;
     };

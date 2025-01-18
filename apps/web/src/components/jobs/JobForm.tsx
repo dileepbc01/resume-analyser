@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createjobSchema } from "@/types/routes/job.route";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -31,6 +31,14 @@ const jobTypes = [
   { value: "internship", label: "Internship" },
   { value: "temporary", label: "Temporary" },
 ];
+
+const createjobSchema = z.object({
+  role: z.string().nonempty("Role is required"),
+  type: z.string().nonempty("Job type is required"),
+  location: z.string().nonempty("Location is required"),
+  company: z.string().nonempty("Company is required"),
+  description: z.string().nonempty("Description is required"),
+});
 
 const JobForm: React.FC<JobFormProps> = ({
   onSubmit,
