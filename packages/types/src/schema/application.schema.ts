@@ -144,9 +144,16 @@ const ProfileSchema = SchemaFactory.createForClass(Profile);
 
 @Schema()
 export class Application {
+  
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, auto: true })
   _id: MongooseSchema.Types.ObjectId;
 
+  @Prop({ type: MongooseSchema.Types.Date, default: Date.now() })
+  created_at: Date;
+
+  @Prop({ type: MongooseSchema.Types.Date, default: Date.now() })
+  updated_at: Date;
+  
   @Prop({ type: MongooseSchema.Types.String, default: null })
   full_name: string;
 

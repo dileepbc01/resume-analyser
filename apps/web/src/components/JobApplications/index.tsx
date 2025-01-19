@@ -9,7 +9,7 @@ function JobApplications({ job_id }: { job_id: string }) {
     <div className="bg-white">
       <TopBar job_id={job_id} />
       <ActionBar />
-      <Applications />
+      <Applications job_id={job_id} />
     </div>
   );
 }

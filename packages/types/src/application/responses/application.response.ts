@@ -140,6 +140,14 @@ export class GetApplicationResponse {
   @IsString()
   id: string;
 
+  @ApiProperty({ description: "Created At" })
+  @IsString()
+  createdAt: string;
+
+  @ApiProperty({ description: "Updated At" })
+  @IsString()
+  updatedAt: string;
+
   @ApiProperty({ description: "Full name of the applicant" })
   @IsString()
   full_name: string;
@@ -208,6 +216,8 @@ export class GetApplicationResponse {
     dto.experience = application.experience.map(ExperienceResponse.fromEntity);
     dto.profile = application.profile.map(ProfileResponse.fromEntity);
     dto.job = application.job.toString();
+    dto.createdAt = application.created_at.toISOString();
+    dto.updatedAt = application.updated_at.toISOString();
     return dto;
   }
 }
