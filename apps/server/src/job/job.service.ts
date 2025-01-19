@@ -1,14 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { CreateJobDto, GetJobDto, Job, JobStatus, UpdateJobDto } from "@repo/types";
+import { CreateJobDto, GetJobDto, Job, JobStatus, ScoringCriteria, UpdateJobDto } from "@repo/types";
 import { Model } from "mongoose";
+import { defaultScoringCriteria } from "src/utils/defaultScoringCriteria";
 
 @Injectable()
 export class JobService {
-  constructor(@InjectModel(Job.name) private jobModel: Model<Job>) {}
+  constructor(
+    @InjectModel(Job.name) private jobModel: Model<Job>,
+    @InjectModel(ScoringCriteria.name) private ScoringCritModel: Model<ScoringCriteria>
+  ) {}
 
-  create(createJobDto: CreateJobDto) {
-    return this.jobModel.create(createJobDto);
+  async create(createJobDto: CreateJobDto) {
+    const job = await this.jobModel.create(createJobDto);
+    await this.ScoringCritModel.insertMany(
+      defaultScoringCriteria.map((criteria) => ({ ...criteria, job: job._id }))
+    );
+
+    return job;
   }
 
   async findAll() {

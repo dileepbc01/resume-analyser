@@ -1,7 +1,6 @@
-import { Prop, Schema } from "@nestjs/mongoose";
-import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import {  Schema as MongooseSchema } from "mongoose";
 import { Job } from "./job.schema";
-
 
 @Schema()
 export class ScoringCriteria{
@@ -13,7 +12,7 @@ export class ScoringCriteria{
     criteria_name: string;
 
     @Prop({
-        type: [MongooseSchema.Types.String],
+        type:[MongooseSchema.Types.String],
         required: true
     })
     parameters: string[]
@@ -33,3 +32,6 @@ export class ScoringCriteria{
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
     job: Job;
 }
+
+
+export const ScoringCriteriaSchema = SchemaFactory.createForClass(ScoringCriteria);

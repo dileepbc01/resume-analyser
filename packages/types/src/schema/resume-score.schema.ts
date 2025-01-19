@@ -58,3 +58,6 @@ export class ResumeScore{
     job: Application; // Reference to the Job schema
 
 }
+
+
+export const ResumeScoreSchema = SchemaFactory.createForClass(ResumeScore);
