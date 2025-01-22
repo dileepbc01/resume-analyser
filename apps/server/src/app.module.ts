@@ -11,9 +11,6 @@ import { AuthModule } from "./auth/auth.module";
 import { JobModule } from "./job/job.module";
 import { videoQueue } from "./queues/app-queues";
 import { RecruiterModule } from "./recruiter/recruiter.module";
-import { VideoQueueEventsListener } from "./video-queue.event";
-import { VideoController } from "./video.controller";
-import { VideoProcessor } from "./video.worker";
 
 @Module({
   imports: [
@@ -37,8 +34,8 @@ import { VideoProcessor } from "./video.worker";
     AuthModule,
     ApplicationModule,
   ],
-  controllers: [AppController, VideoController],
-  providers: [AppService, VideoProcessor, VideoQueueEventsListener],
+  controllers: [AppController],
+  providers: [AppService],
   exports: [],
 })
 export class AppModule {}
