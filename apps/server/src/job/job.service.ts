@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { CreateJobDto, GetJobDto, Job, JobStatus, ScoringCriteria, UpdateJobDto } from "@repo/types";
+import { CreateJobDto, GetJobDto, Job, ScoringCriteria, UpdateJobDto } from "@repo/types";
 import { Model } from "mongoose";
 import { defaultScoringCriteria } from "src/utils/defaultScoringCriteria";
 
@@ -14,7 +14,13 @@ export class JobService {
   async create(createJobDto: CreateJobDto) {
     const job = await this.jobModel.create(createJobDto);
     await this.ScoringCritModel.insertMany(
-      defaultScoringCriteria.map((criteria) => ({ ...criteria, job: job._id }))
+      defaultScoringCriteria.map((criteria) => ({
+        criteria_name: criteria.criteria_name,
+        importance: criteria.importance,
+        order: criteria.order,
+        parameters: criteria.parameters,
+        job: job._id,
+      }))
     );
 
     return job;
@@ -40,9 +46,6 @@ export class JobService {
       }
     );
     return job;
-  }
-  async archive(id: string) {
-    return await this.jobModel.findByIdAndUpdate(id, { status: JobStatus.ARCHIVED }, { new: true }).exec();
   }
 
   async addApplications() {

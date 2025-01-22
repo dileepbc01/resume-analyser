@@ -2,6 +2,8 @@ import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { ScoringCriteria } from "@repo/types";
+import { z } from "zod";
 
 import { ResumeSchema } from "./resume.schema";
 
@@ -49,5 +51,34 @@ export class LangchainService {
     });
     const structured_resume = await structured_llm.invoke(prompt);
     return structured_resume;
+  }
+
+  async scoreResume(
+    resume_text: string,
+    jd_text: string,
+    criteria: ScoringCriteria,
+    criteriaSchema: z.AnyZodObject
+  ) {
+    //
+    const promptTemplate = ChatPromptTemplate.fromMessages([
+      [
+        "system",
+        `Given the resume of the candidate and the job description, your task is to evaluate the candidate based on the provided criteria and parameters.\n
+        
+        Criteria:${criteria.criteria_name} score each parameter between 1-10 \n
+        Parameters:${criteria.parameters.join("\n")}\n             
+        `,
+      ],
+      ["human", "{text}"],
+    ]);
+
+    const prompt = await promptTemplate.invoke({
+      text: `Resume: ${resume_text}\n\nJob Description: ${jd_text}\n`,
+    });
+    console.log(prompt.toChatMessages());
+    // const structured_llm = this.llm.withStructuredOutput(criteriaSchema);
+    // const structured_criteria = await structured_llm.invoke(prompt);
+
+    // return structured_criteria;
   }
 }

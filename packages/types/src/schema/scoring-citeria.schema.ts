@@ -1,7 +1,21 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import {  Schema as MongooseSchema } from "mongoose";
+import {  Model, Schema as MongooseSchema } from "mongoose";
 import { Job } from "./job.schema";
 
+@Schema()
+export class Parameter{
+    @Prop({
+        type: MongooseSchema.Types.String,
+        required: true
+    })
+    key: string;
+    @Prop({
+        type: MongooseSchema.Types.String,
+        required: true
+    })
+    name: string
+}
+const ParameterSchema = SchemaFactory.createForClass(Parameter);
 @Schema()
 export class ScoringCriteria{
 
@@ -10,6 +24,12 @@ export class ScoringCriteria{
         required:true
     })
     criteria_name: string;
+
+    // @Prop({
+    //     type:[ParameterSchema],
+    //     required: true
+    // })
+    // parameters: Parameter[]
 
     @Prop({
         type:[MongooseSchema.Types.String],
