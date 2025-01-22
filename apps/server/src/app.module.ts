@@ -1,3 +1,5 @@
+import { ExpressAdapter } from "@bull-board/express";
+import { BullBoardModule } from "@bull-board/nestjs";
 import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
@@ -9,7 +11,6 @@ import { AppService } from "./app.service";
 import { ApplicationModule } from "./application/application.module";
 import { AuthModule } from "./auth/auth.module";
 import { JobModule } from "./job/job.module";
-import { videoQueue } from "./queues/app-queues";
 import { RecruiterModule } from "./recruiter/recruiter.module";
 
 @Module({
@@ -26,8 +27,11 @@ import { RecruiterModule } from "./recruiter/recruiter.module";
         backoff: 2000, // Wait at least 2 seconds before attempting the job again, after failure
       },
     }),
+    BullBoardModule.forRoot({
+      route: "/queues",
+      adapter: ExpressAdapter, // Or FastifyAdapter from `@bull-board/fastify`
+    }),
     EventEmitterModule.forRoot(),
-    videoQueue,
     MongooseModule.forRoot(process.env.MONGO_URI),
     RecruiterModule,
     JobModule,

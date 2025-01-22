@@ -26,6 +26,15 @@ importers:
 
   apps/server:
     dependencies:
+      '@bull-board/api':
+        specifier: ^6.7.1
+        version: 6.7.1(@bull-board/ui@6.7.1)
+      '@bull-board/express':
+        specifier: ^6.7.1
+        version: 6.7.1
+      '@bull-board/nestjs':
+        specifier: ^6.7.1
+        version: 6.7.1(@bull-board/api@6.7.1(@bull-board/ui@6.7.1))(@bull-board/express@6.7.1)(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@langchain/anthropic':
         specifier: ^0.3.11
         version: 0.3.11(@langchain/core@0.3.30(openai@4.78.1(zod@3.24.1)))
@@ -695,6 +704,27 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@bull-board/api@6.7.1':
+    resolution: {integrity: sha512-Gv+0jo0QYBjNE0DatcUSavMLfGAOuhsLVPxJHR3QjN7Rp0s1VM/O2ExNTezDip1Q67G8fq8Tp9ZfleJZb1KP2Q==}
+    peerDependencies:
+      '@bull-board/ui': 6.7.1
+
+  '@bull-board/express@6.7.1':
+    resolution: {integrity: sha512-PQ3nMDbafnJPk+O/CPFi+MftBYDomi9jSJkuAMxAIMDGN+nhiVVYkyflUt7ToeV9YppB+GJnunpoGbAN6HZfeg==}
+
+  '@bull-board/nestjs@6.7.1':
+    resolution: {integrity: sha512-GwbfXn5KTqVPPBfiz5ZuwnZr4IKXMBVNPc/fSDgXEO9JIiLA+RLvk/MFLyZocja/N/5GQF5PsJ3myoj/6iWx/Q==}
+    peerDependencies:
+      '@bull-board/api': ^6.7.1
+      '@bull-board/express': ^6.7.1
+      '@nestjs/common': ^9.0.0 || ^10.0.0 || ^11.0.0
+      '@nestjs/core': ^9.0.0 || ^10.0.0 || ^11.0.0
+      reflect-metadata: ^0.1.13 || ^0.2.0
+      rxjs: ^7.8.1
+
+  '@bull-board/ui@6.7.1':
+    resolution: {integrity: sha512-Bf2S81enM+KSz7ltOmWBE/Z69NtKPmYhUFbPEXooFGXs63yrR/17vzdSlraJb9jC6kMLzJhp0y61rXLdCqPTBw==}
 
   '@cfworker/json-schema@4.1.0':
     resolution: {integrity: sha512-/vYKi/qMxwNsuIJ9WGWwM2rflY40ZenK3Kh4uR5vB9/Nz12Y7IUN/Xf4wDA7vzPfw0VNh3b/jz4+MjcVgARKJg==}
@@ -5896,6 +5926,9 @@ packages:
     resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
     engines: {node: '>=4'}
 
+  redis-info@3.1.0:
+    resolution: {integrity: sha512-ER4L9Sh/vm63DkIE0bkSjxluQlioBiBgf5w1UuldaW/3vPcecdljVDisZhmnCMvsxHNiARTTDDHGg9cGwTfrKg==}
+
   redis-parser@3.0.0:
     resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
     engines: {node: '>=4'}
@@ -7102,6 +7135,34 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.9
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@bull-board/api@6.7.1(@bull-board/ui@6.7.1)':
+    dependencies:
+      '@bull-board/ui': 6.7.1
+      redis-info: 3.1.0
+
+  '@bull-board/express@6.7.1':
+    dependencies:
+      '@bull-board/api': 6.7.1(@bull-board/ui@6.7.1)
+      '@bull-board/ui': 6.7.1
+      ejs: 3.1.10
+      express: 4.21.2
+    transitivePeerDependencies:
+      - supports-color
+
+  '@bull-board/nestjs@6.7.1(@bull-board/api@6.7.1(@bull-board/ui@6.7.1))(@bull-board/express@6.7.1)(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+    dependencies:
+      '@bull-board/api': 6.7.1(@bull-board/ui@6.7.1)
+      '@bull-board/express': 6.7.1
+      '@nestjs/bull-shared': 10.2.3(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15)
+      '@nestjs/common': 10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/core': 10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.15)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      reflect-metadata: 0.2.2
+      rxjs: 7.8.1
+
+  '@bull-board/ui@6.7.1':
+    dependencies:
+      '@bull-board/api': 6.7.1(@bull-board/ui@6.7.1)
 
   '@cfworker/json-schema@4.1.0': {}
 
@@ -12846,6 +12907,10 @@ snapshots:
       victory-vendor: 36.9.2
 
   redis-errors@1.2.0: {}
+
+  redis-info@3.1.0:
+    dependencies:
+      lodash: 4.17.21
 
   redis-parser@3.0.0:
     dependencies:
