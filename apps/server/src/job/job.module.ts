@@ -6,12 +6,15 @@ import { Job } from "bullmq";
 import { JobController } from "./JobController";
 import { JobService } from "./job.service";
 
+const JobModel = MongooseModule.forFeature([{ name: Job.name, schema: JobSchema }]);
+const ScoringCriteriaModel = MongooseModule.forFeature([
+  { name: ScoringCriteria.name, schema: ScoringCriteriaSchema },
+]);
+
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: Job.name, schema: JobSchema }]),
-    MongooseModule.forFeature([{ name: ScoringCriteria.name, schema: ScoringCriteriaSchema }]),
-  ],
+  imports: [JobModel, ScoringCriteriaModel],
   controllers: [JobController],
   providers: [JobService],
+  exports: [JobModel],
 })
 export class JobModule {}

@@ -17,6 +17,7 @@ export class JobController {
     private readonly jobService: JobService,
     @InjectModel(Job.name) private jobModel: Model<Job>
   ) {}
+
   @Post()
   @ApiResponse({
     status: 201,

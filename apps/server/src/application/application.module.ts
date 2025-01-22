@@ -6,6 +6,8 @@ import { LangchainService } from "src/langchain/langchain.service";
 import { AppQueues } from "src/queues/app-queues";
 import { ResumeParseEventsListener } from "src/queues/resume-parse/resume-parse.event";
 import { ResumeParseProcessor } from "src/queues/resume-parse/resume-parse.worker";
+import { ResumeScoreEventsListener } from "src/queues/resume-score/resume-score.event";
+import { ResumeScoreProcessor } from "src/queues/resume-score/resume-score.worker";
 import { S3Service } from "src/s3/s3.service";
 
 import { ApplicationController } from "./application.controller";
@@ -22,6 +24,8 @@ import { ApplicationService } from "./application.service";
     ApplicationService,
     LangchainService,
     S3Service,
+    ResumeScoreProcessor,
+    ResumeScoreEventsListener,
     ResumeParseProcessor,
     ResumeParseEventsListener,
   ],

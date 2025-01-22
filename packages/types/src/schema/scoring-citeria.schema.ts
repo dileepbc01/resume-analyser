@@ -25,11 +25,7 @@ export class ScoringCriteria{
     })
     criteria_name: string;
 
-    // @Prop({
-    //     type:[ParameterSchema],
-    //     required: true
-    // })
-    // parameters: Parameter[]
+  
 
     @Prop({
         type:[MongooseSchema.Types.String],

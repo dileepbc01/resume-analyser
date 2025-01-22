@@ -1,6 +1,6 @@
-import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
+import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Injectable } from "@nestjs/common";
-import { Job } from "bullmq";
+import { Job, Queue } from "bullmq";
 import { ApplicationService } from "src/application/application.service";
 import { LangchainService } from "src/langchain/langchain.service";
 import { ResumeSchema } from "src/langchain/resume.schema";
@@ -12,6 +12,8 @@ import { AppQueueEnum, FileMimeTypes, QueuePayload } from "../app-queues";
 @Processor(AppQueueEnum.RESUME_PARSE, { concurrency: 3 }) // Can run up to 3 jobs concurrently
 export class ResumeParseProcessor extends WorkerHost {
   constructor(
+    @InjectQueue(AppQueueEnum.RESUME_SCORE)
+    private readonly resumeScoringQueue: Queue<QueuePayload["resume-score"]>,
     private langchainService: LangchainService,
     private applicationService: ApplicationService
   ) {
@@ -65,6 +67,9 @@ export class ResumeParseProcessor extends WorkerHost {
       resume_url: job.data.resumeFileUrl,
     });
     console.info(`Job with id ${job.id} COMPLETED!`);
+    this.resumeScoringQueue.add("score-resume", {
+      application_id: job.data.applicationId,
+    });
   }
 
   @OnWorkerEvent("failed")
