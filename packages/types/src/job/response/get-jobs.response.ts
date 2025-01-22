@@ -35,14 +35,7 @@ export class GetJobResponse {
   @ApiProperty({ description: "Job update timestamp" })
   updatedAt: string;
 
-  @ApiProperty({ description: "Scoring weights for the job" })
-  scoringWeights: {
-    technical_competence: number;
-    proffessional_experience_impact: number;
-    education: number;
-    leadership_soft_skills: number;
-    role_alignment_cultural_fit: number;
-  };
+ 
 
   static fromEntity(job: Job): GetJobResponse {
     const dto = new GetJobResponse();
@@ -54,13 +47,6 @@ export class GetJobResponse {
     dto.type = job.type;
     dto.createdAt = job.created_at.toISOString();
     dto.updatedAt = job.updated_at.toISOString();
-    dto.scoringWeights = {
-      technical_competence: job.scoring_weights.technical_competence,
-      proffessional_experience_impact: job.scoring_weights.proffessional_experience_impact,
-      education: job.scoring_weights.education,
-      leadership_soft_skills: job.scoring_weights.leadership_soft_skills,
-      role_alignment_cultural_fit: job.scoring_weights.role_alignment_cultural_fit,
-    };
     return dto;
   }
 }

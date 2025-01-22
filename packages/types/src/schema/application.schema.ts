@@ -160,7 +160,7 @@ export class Application {
   @Prop({ type: MongooseSchema.Types.String, default: null, unique: true })
   resume_file_name: string;
 
-  @Prop({ type: MongooseSchema.Types.String, default: null, unique: true })
+  @Prop({ type: MongooseSchema.Types.String, default: null })
   resume_text: string;
 
   @Prop({ type: MongooseSchema.Types.String, default: null })

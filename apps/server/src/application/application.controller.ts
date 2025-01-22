@@ -63,7 +63,7 @@ export class ApplicationController {
     const file_url = await this.s3Service.uploadFile(file);
     const applicationId = await this.applicationService.createApplication({
       resume_url: file_url,
-      resumeFileName: file.originalname,
+      resumeFileName: file.originalname + Date.now(),
       jobId: req.body.job_id,
     });
     await this.resumeParsingQueue.add("parse-resume", {

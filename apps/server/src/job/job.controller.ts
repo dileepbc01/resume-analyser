@@ -26,7 +26,12 @@ export class JobController {
   })
   @ApiResponse({ status: 400, description: "Bad Request." })
   async create(@Body() createJobDto: CreateJobDto, @GetUser() user: JwtPayload): Promise<GetJobResponse> {
-    const newJob = await this.jobService.createJob(createJobDto, user.sub);
+    const newJob = await this.jobService.createJob(
+      {
+        ...createJobDto,
+      },
+      user.sub
+    );
     return GetJobResponse.fromEntity(newJob);
   }
 

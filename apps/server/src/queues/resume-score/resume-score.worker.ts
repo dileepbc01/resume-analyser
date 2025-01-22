@@ -20,6 +20,7 @@ export class ResumeScoreProcessor extends WorkerHost {
   ) {
     super();
   }
+
   async process(job: BullJob<QueuePayload["resume-score"]>) {
     const application = await this.applicationModel.findById(job.data.application_id);
     if (!application) {
@@ -30,25 +31,29 @@ export class ResumeScoreProcessor extends WorkerHost {
       throw new Error("Job not found"); // TODO: custom error
     }
     const scoreCriterias = await this.scoringCriteria.find({
-      job_id: application.job,
+      job: application.job,
     });
-
-    scoreCriterias.map(async (scoreCriteria) => {
+    if (!scoreCriterias.length) {
+      throw new Error("No scoring criteria found for the job"); // TODO: custom error
+    }
+    console.log("scoring........");
+    console.log("criteriaData", scoreCriterias.length);
+    const promises = scoreCriterias.map(async (scoreCriteria) => {
       const criteriaData = defaultScoringCriteria.find(
         (criteria) => criteria.criteria_name === scoreCriteria.criteria_name
       );
       if (!criteriaData) {
         throw new Error("Schema not found"); // TODO: custom error
       }
-      await this.langchainService.scoreResume(
+      const criteriascoreJson = await this.langchainService.scoreResume(
         application.resume_text,
         appJob.description,
         scoreCriteria,
         criteriaData.schema
       );
+      console.log("criteriascoreJson", criteriascoreJson);
     });
-    // defaultScoringCriteria;
-    // console.log("application", application, appJob);
+    await Promise.allSettled(promises);
   }
 
   @OnWorkerEvent("active")
@@ -68,6 +73,6 @@ export class ResumeScoreProcessor extends WorkerHost {
 
   @OnWorkerEvent("failed")
   onFailed(job: BullJob<QueuePayload["resume-parse"]>) {
-    console.info(`Job with id ${job.id} FAILED!`);
+    console.info(`Job with id ${job.id} FAILED!`, job.failedReason);
   }
 }
