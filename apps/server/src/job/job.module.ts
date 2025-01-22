@@ -3,7 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { JobSchema, ScoringCriteria, ScoringCriteriaSchema } from "@repo/types";
 import { Job } from "bullmq";
 
-import { JobController } from "./job.controller";
+import { JobController } from "./JobController";
 import { JobService } from "./job.service";
 
 @Module({

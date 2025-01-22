@@ -11,8 +11,8 @@ export class JobService {
     @InjectModel(ScoringCriteria.name) private ScoringCritModel: Model<ScoringCriteria>
   ) {}
 
-  async create(createJobDto: CreateJobDto) {
-    const job = await this.jobModel.create(createJobDto);
+  async createJob(createJobDto: CreateJobDto, recruiterId: string) {
+    const job = await this.jobModel.create({ ...createJobDto, recruiter: recruiterId });
     await this.ScoringCritModel.insertMany(
       defaultScoringCriteria.map((criteria) => ({
         criteria_name: criteria.criteria_name,
@@ -22,33 +22,6 @@ export class JobService {
         job: job._id,
       }))
     );
-
     return job;
-  }
-
-  async findAll() {
-    return this.jobModel.find().exec();
-  }
-
-  async findOne(getJobDto: GetJobDto) {
-    const job = await this.jobModel.findById(getJobDto.id).exec();
-    return job;
-  }
-
-  async update(id: string, updateJobDto: UpdateJobDto) {
-    const job = await this.jobModel.findByIdAndUpdate(
-      id,
-      {
-        ...updateJobDto,
-      },
-      {
-        new: true,
-      }
-    );
-    return job;
-  }
-
-  async addApplications() {
-    //
   }
 }

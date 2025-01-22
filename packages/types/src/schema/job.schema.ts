@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
 
 import { Application } from "./application.schema";
+import { Recruiter } from "./recruiter.schema";
 
 export type JobDocument = HydratedDocument<Job>;
 
@@ -93,6 +94,8 @@ export class Job {
     required: false,
   })
   scoring_weights: ScoringWeights;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Recruiter" })
+  recruiter: Recruiter;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);

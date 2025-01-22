@@ -17,6 +17,7 @@ export class JobController {
     private readonly jobService: JobService,
     @InjectModel(Job.name) private jobModel: Model<Job>
   ) {}
+
   @Post()
   @ApiResponse({
     status: 201,
@@ -29,7 +30,6 @@ export class JobController {
     return GetJobResponse.fromEntity(newJob);
   }
 
-  // TODO: return only recruiters jobs
   @Get()
   @ApiResponse({
     status: 200,
@@ -50,8 +50,11 @@ export class JobController {
     type: GetJobResponse,
   })
   @ApiResponse({ status: 404, description: "Job not found." })
-  async findOne(@Param("id") id: string): Promise<GetJobResponse> {
-    const job = await this.jobModel.findById(id);
+  async findOne(@Param("id") id: string, @GetUser() recruiter: JwtPayload): Promise<GetJobResponse> {
+    const job = await this.jobModel.findOne({
+      _id: id,
+      recruiter: recruiter.sub,
+    });
     if (!job) {
       throw new NotFoundException("Job not found");
     }
@@ -66,9 +69,7 @@ export class JobController {
   })
   @ApiResponse({ status: 404, description: "Job not found." })
   async update(@Param("id") id: string, @Body() updateJobDto: UpdateJobDto): Promise<GetJobResponse> {
-    const job = await this.jobModel.findByIdAndUpdate(id, updateJobDto, {
-      new: true,
-    });
+    const job = await this.jobModel.findByIdAndUpdate(id, updateJobDto);
     if (!job) {
       throw new NotFoundException("Job not found");
     }
