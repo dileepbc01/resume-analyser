@@ -24,9 +24,6 @@ export class ScoringCriteria{
         required:true
     })
     criteria_name: string;
-
-  
-
     @Prop({
         type:[MongooseSchema.Types.String],
         required: true
