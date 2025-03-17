@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import TipTapEditor from "../common/TiptapEditor";
 
 export enum ApiWeightKey {
   TECHNICAL = "technical_competence",
@@ -104,6 +105,65 @@ const getWeightKeyAtIdx = (weights: ScoringWeights, index: number) => {
     throw new Error("Invalid weight index");
   }
   return weightKey;
+};
+
+export const ResumeScoreSettings = () => {
+  const [activeTab, setActiveTab] = useState<'prompt' | 'parameters'>('parameters');
+
+  return (
+    <div className="w-full">
+      <div className="flex justify-end mb-4">
+        <div className="inline-flex rounded-lg border border-gray-200">
+          <button
+            className={`px-4 py-2 rounded-l-lg ${
+              activeTab === 'parameters' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveTab('parameters')}
+          >
+            Parameters
+          </button>
+          <button
+            className={`px-4 py-2 rounded-r-lg ${
+              activeTab === 'prompt' 
+                ? 'bg-blue-600 text-white' 
+                : 'bg-white text-gray-600 hover:bg-gray-50'
+            }`}
+            onClick={() => setActiveTab('prompt')}
+          >
+            Prompt
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        {activeTab === 'parameters' ? (
+          <ParameterSlider onSubmit={() => {}} initialWeights={null} />
+        ) : (
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-medium mb-2">Resume Scoring Prompt</h3>
+            <div>
+              <p>Choose Prompt Specific suited for a ROle</p>
+              <select className="w-full p-2 border rounded-md mb-4">
+                <option value="">Select a role-specific prompt</option>
+                <option value="software-engineer">Software Engineer</option>
+                <option value="data-scientist">Data Scientist</option>
+                <option value="product-manager">Product Manager</option>
+                <option value="designer">UX/UI Designer</option>
+                <option value="devops">DevOps Engineer</option>
+              </select>
+            </div>
+           <TipTapEditor
+            description=""
+            onChange={() => {}}
+            isDisabled={false}
+           />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderProps) => {
