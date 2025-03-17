@@ -29,4 +29,10 @@ export const jobApi = {
     );
     return data;
   },
+  getJobScoringCriteria: async (jobId: string) => {
+    const { data } = await api.get<JobRoutes["/job/:id/scoring-criteria"]["get"]["responses"]>(
+      `/job/${jobId}/scoring-criteria`
+    );
+    return data;
+  },
 };

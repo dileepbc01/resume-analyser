@@ -1,7 +1,14 @@
 import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CreateJobDto, GetJobResponse, Job, UpdateJobDto } from "@repo/types";
+import {
+  CreateJobDto,
+  GetJobResponse,
+  GetScoringSettingsResponse,
+  Job,
+  ScoringCriteria,
+  UpdateJobDto,
+} from "@repo/types";
 import { Model } from "mongoose";
 import { JwtPayload } from "src/auth/strategies/accessToken.strategy";
 import { AccessTokenGuard } from "src/common/guards/access-token.guard";
@@ -15,7 +22,8 @@ import { JobService } from "./job.service";
 export class JobController {
   constructor(
     private readonly jobService: JobService,
-    @InjectModel(Job.name) private jobModel: Model<Job>
+    @InjectModel(Job.name) private jobModel: Model<Job>,
+    @InjectModel(ScoringCriteria.name) private ScoringCritModel: Model<ScoringCriteria>
   ) {}
 
   @Post()
@@ -88,5 +96,17 @@ export class JobController {
   ) {
     await this.jobService.updateScoringCriteria(jobId, createScoringPromptDto.scoringPrompt);
     return;
+  }
+
+  @Get(":id/scoring-criteria")
+  @ApiResponse({
+    status: 200,
+    description: "The scoring prompt has been returned.",
+    type: [GetScoringSettingsResponse],
+  })
+  @ApiResponse({ status: 400, description: "Bad Request." })
+  async getScoringCriteria(@Param("id") jobId: string): Promise<GetScoringSettingsResponse[]> {
+    const scoringCriteria = await this.ScoringCritModel.find({ job: jobId });
+    return scoringCriteria.map((sc) => GetScoringSettingsResponse.fromEntity(sc));
   }
 }

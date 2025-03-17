@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { JobSchema, ScoringCriteria, ScoringCriteriaSchema } from "@repo/types";
 import { Job } from "bullmq";
+import { LangchainService } from "src/langchain/langchain.service";
 
 import { JobController } from "./job.controller";
 import { JobService } from "./job.service";
-import { LangchainService } from "src/langchain/langchain.service";
 
 const JobModel = MongooseModule.forFeature([{ name: Job.name, schema: JobSchema }]);
 const ScoringCriteriaModel = MongooseModule.forFeature([

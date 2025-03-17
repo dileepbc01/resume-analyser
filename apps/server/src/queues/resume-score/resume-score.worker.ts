@@ -1,8 +1,8 @@
-import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
+import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Application, Job, ScoringCriteria } from "@repo/types";
-import { Job as BullJob, Queue } from "bullmq";
+import { Job as BullJob } from "bullmq";
 import { Model } from "mongoose";
 import { LangchainService } from "src/langchain/langchain.service";
 import { defaultScoringCriteria } from "src/utils/defaultScoringCriteria";
@@ -36,8 +36,8 @@ export class ResumeScoreProcessor extends WorkerHost {
     if (!scoreCriterias.length) {
       throw new Error("No scoring criteria found for the job"); // TODO: custom error
     }
-    console.log("scoring........");
-    console.log("criteriaData", scoreCriterias.length);
+    // console.log("scoring........");
+    // console.log("criteriaData", scoreCriterias.length);
     const promises = scoreCriterias.map(async (scoreCriteria) => {
       const criteriaData = defaultScoringCriteria.find(
         (criteria) => criteria.criteria_name === scoreCriteria.criteria_name
@@ -51,7 +51,7 @@ export class ResumeScoreProcessor extends WorkerHost {
         scoreCriteria
         // criteriaData.schema
       );
-      console.log("criteriascoreJson", criteriascoreJson);
+      // console.log("criteriascoreJson", criteriascoreJson);
     });
     await Promise.allSettled(promises);
   }

@@ -34,6 +34,7 @@ export class JobService {
     const jobDetails = await this.jobModel.findById(jobId);
     if (!jobDetails) throw new Error("Job not found");
     const structuredScoreSetting = await this.langchainService.getStructedScoreSettings(CriteriaString);
+    await this.ScoringCritModel.deleteMany({ job: jobId });
     await this.ScoringCritModel.insertMany(
       structuredScoreSetting.criteria.map((criteria, idx) => ({
         criteria_name: criteria.criteria_name,

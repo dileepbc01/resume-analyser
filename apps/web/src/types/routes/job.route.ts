@@ -1,4 +1,5 @@
 import { CreateJobDto, GetJobResponse, UpdateJobDto, UpdateScoringPromptDto } from "@repo/types";
+import { GetScoringSettingsResponse } from "@repo/types/src/job/response/get-scoring-settings.response";
 
 export interface JobRoutes {
   "/job": {
@@ -23,6 +24,9 @@ export interface JobRoutes {
     post: {
       requestBody: UpdateScoringPromptDto;
       responses: void;
+    };
+    get: {
+      responses: GetScoringSettingsResponse[];
     };
   };
 }
