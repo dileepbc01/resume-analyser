@@ -56,17 +56,17 @@ export class LangchainService {
   async scoreResume(resume_text: string, jd_text: string, criteria: ScoringCriteria) {
     //
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const promptTemplate = ChatPromptTemplate.fromMessages([
-      [
-        "system",
-        `Given the resume of the candidate and the job description, your task is to evaluate the candidate based on the provided criteria and parameters.\n
-        
-        Criteria:${criteria.criteria_name} score each parameter between 1-10 \n
-        Parameters:${criteria.parameters.join("\n")}\n             
-        `,
-      ],
-      ["human", "{text}"],
-    ]);
+    // const promptTemplate = ChatPromptTemplate.fromMessages([
+    //   [
+    //     "system",
+    //     `Given the resume of the candidate and the job description, your task is to evaluate the candidate based on the provided criteria and parameters.\n
+
+    //     Criteria:${criteria.criteria_name} score each parameter between 1-10 \n
+    //     Parameters:${criteria.parameters.join("\n")}\n
+    //     `,
+    //   ],
+    //   ["human", "{text}"],
+    // ]);
 
     // const prompt = await promptTemplate.invoke({
     //   text: `Resume: ${resume_text}\n\nJob Description: ${jd_text}\n`,

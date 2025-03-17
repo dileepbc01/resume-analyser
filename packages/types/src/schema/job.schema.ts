@@ -3,6 +3,7 @@ import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
 
 import { Application } from "./application.schema";
 import { Recruiter } from "./recruiter.schema";
+import { ScoringCriteria } from "./scoring-citeria.schema";
 
 export type JobDocument = HydratedDocument<Job>;
 
@@ -66,11 +67,11 @@ export class Job {
   recruiter: Recruiter;
 
   @Prop({
-    type: MongooseSchema.Types.Number,
+    type: MongooseSchema.Types.ObjectId,
+    ref: "ScoringCriteria",
     required: true,
-    default: 1,
   })
-  score_setting_version: number;
+  scoringCriteria: ScoringCriteria;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);

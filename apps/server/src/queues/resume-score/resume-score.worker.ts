@@ -38,22 +38,22 @@ export class ResumeScoreProcessor extends WorkerHost {
     }
     // console.log("scoring........");
     // console.log("criteriaData", scoreCriterias.length);
-    const promises = scoreCriterias.map(async (scoreCriteria) => {
-      const criteriaData = defaultScoringCriteria.find(
-        (criteria) => criteria.criteria_name === scoreCriteria.criteria_name
-      );
-      if (!criteriaData) {
-        throw new Error("Schema not found"); // TODO: custom error
-      }
-      const criteriascoreJson = await this.langchainService.scoreResume(
-        application.resume_text,
-        appJob.description,
-        scoreCriteria
-        // criteriaData.schema
-      );
-      // console.log("criteriascoreJson", criteriascoreJson);
-    });
-    await Promise.allSettled(promises);
+    // const promises = scoreCriterias.map(async (scoreCriteria) => {
+    //   const criteriaData = defaultScoringCriteria.find(
+    //     (criteria) => criteria.criteria_name === scoreCriteria.criteria_name
+    //   );
+    //   if (!criteriaData) {
+    //     throw new Error("Schema not found"); // TODO: custom error
+    //   }
+    //   const criteriascoreJson = await this.langchainService.scoreResume(
+    //     application.resume_text,
+    //     appJob.description,
+    //     scoreCriteria
+    //     // criteriaData.schema
+    //   );
+    //   // console.log("criteriascoreJson", criteriascoreJson);
+    // });
+    // await Promise.allSettled(promises);
   }
 
   @OnWorkerEvent("active")

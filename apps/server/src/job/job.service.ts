@@ -14,16 +14,16 @@ export class JobService {
   ) {}
 
   async createJob(createJobDto: CreateJobDto, recruiterId: string) {
-    const job = await this.jobModel.create({ ...createJobDto, recruiter: recruiterId });
-    await this.ScoringCritModel.insertMany(
-      defaultScoringCriteria.map((criteria) => ({
-        criteria_name: criteria.criteria_name,
-        importance: criteria.importance,
-        order: criteria.order,
-        parameters: criteria.parameters,
-        job: job._id,
-      }))
-    );
+    const scoringcrit = await this.ScoringCritModel.create({
+      criterias: defaultScoringCriteria.criterias,
+      scoring_instructions: defaultScoringCriteria.scoring_instructions,
+    });
+    const job = await this.jobModel.create({
+      ...createJobDto,
+      recruiter: recruiterId,
+      scoringCriteria: scoringcrit._id,
+    });
+
     return job;
   }
 
@@ -31,19 +31,22 @@ export class JobService {
     await this.ScoringCritModel.deleteOne({
       job: jobId,
     });
-    const jobDetails = await this.jobModel.findById(jobId);
+    const jobDetails = await this.jobModel.findById(jobId).populate("scoringCriteria");
+
     if (!jobDetails) throw new Error("Job not found");
     const structuredScoreSetting = await this.langchainService.getStructedScoreSettings(CriteriaString);
-    await this.ScoringCritModel.deleteMany({ job: jobId });
-    await this.ScoringCritModel.insertMany(
-      structuredScoreSetting.criteria.map((criteria, idx) => ({
+
+    console.log(jobDetails.scoringCriteria);
+    await this.ScoringCritModel.findByIdAndUpdate(jobDetails.scoringCriteria._id, {
+      scoring_instructions: CriteriaString,
+      job: jobId,
+      criterias: structuredScoreSetting.criteria.map((criteria, idx) => ({
         criteria_name: criteria.criteria_name,
         importance: criteria.importance,
         order: idx,
         parameters: criteria.parameters,
-        job: jobId,
-      }))
-    );
+      })),
+      version: jobDetails.scoringCriteria.version + 1,
+    });
   }
-  //
 }

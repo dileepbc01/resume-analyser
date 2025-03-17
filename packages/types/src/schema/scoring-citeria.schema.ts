@@ -16,8 +16,9 @@ export class Parameter {
   name: string;
 }
 const ParameterSchema = SchemaFactory.createForClass(Parameter);
+
 @Schema()
-export class ScoringCriteria {
+export class Criteria {
   @Prop({
     type: MongooseSchema.Types.String,
     required: true,
@@ -41,9 +42,32 @@ export class ScoringCriteria {
     required: true,
   })
   order: number;
+}
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
-  job: Job;
+const CriteriaSchema = SchemaFactory.createForClass(Criteria);
+
+@Schema()
+export class ScoringCriteria {
+  @Prop({ type: MongooseSchema.Types.ObjectId, required: true, auto: true })
+  _id: MongooseSchema.Types.ObjectId;
+
+  @Prop({
+    type: [CriteriaSchema],
+    default: [],
+  })
+  criterias: Criteria[];
+  @Prop({
+    type: MongooseSchema.Types.String,
+    required: true,
+  })
+  scoring_instructions: string;
+
+  @Prop({
+    type: MongooseSchema.Types.Number,
+    required: true,
+    default: 1,
+  })
+  version: number;
 }
 
 export const ScoringCriteriaSchema = SchemaFactory.createForClass(ScoringCriteria);
