@@ -1,4 +1,4 @@
-import { CreateJobDto, GetJobResponse, UpdateJobDto } from "@repo/types";
+import { CreateJobDto, GetJobResponse, UpdateJobDto, UpdateScoringPromptDto } from "@repo/types";
 
 export interface JobRoutes {
   "/job": {
@@ -17,6 +17,12 @@ export interface JobRoutes {
     patch: {
       requestBody: UpdateJobDto;
       responses: GetJobResponse;
+    };
+  };
+  "/job/:id/scoring-criteria": {
+    post: {
+      requestBody: UpdateScoringPromptDto;
+      responses: void;
     };
   };
 }

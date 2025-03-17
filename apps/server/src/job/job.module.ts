@@ -3,8 +3,9 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { JobSchema, ScoringCriteria, ScoringCriteriaSchema } from "@repo/types";
 import { Job } from "bullmq";
 
-import { JobController } from "./JobController";
+import { JobController } from "./job.controller";
 import { JobService } from "./job.service";
+import { LangchainService } from "src/langchain/langchain.service";
 
 const JobModel = MongooseModule.forFeature([{ name: Job.name, schema: JobSchema }]);
 const ScoringCriteriaModel = MongooseModule.forFeature([
@@ -14,7 +15,7 @@ const ScoringCriteriaModel = MongooseModule.forFeature([
 @Module({
   imports: [JobModel, ScoringCriteriaModel],
   controllers: [JobController],
-  providers: [JobService],
+  providers: [JobService, LangchainService],
   exports: [JobModel],
 })
 export class JobModule {}

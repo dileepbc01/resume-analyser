@@ -26,16 +26,10 @@ export class JobController {
   })
   @ApiResponse({ status: 400, description: "Bad Request." })
   async create(@Body() createJobDto: CreateJobDto, @GetUser() user: JwtPayload): Promise<GetJobResponse> {
-    const newJob = await this.jobService.createJob(
-      {
-        ...createJobDto,
-      },
-      user.sub
-    );
+    const newJob = await this.jobService.createJob(createJobDto, user.sub);
     return GetJobResponse.fromEntity(newJob);
   }
 
-  // TODO: return only recruiters jobs
   @Get()
   @ApiResponse({
     status: 200,
@@ -56,8 +50,11 @@ export class JobController {
     type: GetJobResponse,
   })
   @ApiResponse({ status: 404, description: "Job not found." })
-  async findOne(@Param("id") id: string): Promise<GetJobResponse> {
-    const job = await this.jobModel.findById(id);
+  async findOne(@Param("id") id: string, @GetUser() recruiter: JwtPayload): Promise<GetJobResponse> {
+    const job = await this.jobModel.findOne({
+      _id: id,
+      recruiter: recruiter.sub,
+    });
     if (!job) {
       throw new NotFoundException("Job not found");
     }
@@ -72,12 +69,24 @@ export class JobController {
   })
   @ApiResponse({ status: 404, description: "Job not found." })
   async update(@Param("id") id: string, @Body() updateJobDto: UpdateJobDto): Promise<GetJobResponse> {
-    const job = await this.jobModel.findByIdAndUpdate(id, updateJobDto, {
-      new: true,
-    });
+    const job = await this.jobModel.findByIdAndUpdate(id, updateJobDto);
     if (!job) {
       throw new NotFoundException("Job not found");
     }
     return GetJobResponse.fromEntity(job);
+  }
+
+  @Patch(":id/scoring-criteria")
+  @ApiResponse({
+    status: 204,
+    description: "The scoring prompt has been successfully updated.",
+  })
+  @ApiResponse({ status: 400, description: "Bad Request." })
+  async createScoringPrompt(
+    @Param("id") jobId: string,
+    @Body() createScoringPromptDto: { scoringPrompt: string }
+  ) {
+    await this.jobService.updateScoringCriteria(jobId, createScoringPromptDto.scoringPrompt);
+    return;
   }
 }

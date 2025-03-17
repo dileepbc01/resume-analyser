@@ -64,6 +64,13 @@ export class Job {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Recruiter" })
   recruiter: Recruiter;
+
+  @Prop({
+    type: MongooseSchema.Types.Number,
+    required: true,
+    default: 1,
+  })
+  score_setting_version: number;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);

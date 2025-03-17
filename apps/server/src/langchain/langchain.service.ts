@@ -53,13 +53,9 @@ export class LangchainService {
     return structured_resume;
   }
 
-  async scoreResume(
-    resume_text: string,
-    jd_text: string,
-    criteria: ScoringCriteria,
-    criteriaSchema: z.AnyZodObject
-  ) {
+  async scoreResume(resume_text: string, jd_text: string, criteria: ScoringCriteria) {
     //
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const promptTemplate = ChatPromptTemplate.fromMessages([
       [
         "system",
@@ -72,13 +68,64 @@ export class LangchainService {
       ["human", "{text}"],
     ]);
 
-    const prompt = await promptTemplate.invoke({
-      text: `Resume: ${resume_text}\n\nJob Description: ${jd_text}\n`,
-    });
-    console.log(prompt.toChatMessages());
+    // const prompt = await promptTemplate.invoke({
+    //   text: `Resume: ${resume_text}\n\nJob Description: ${jd_text}\n`,
+    // });
     // const structured_llm = this.llm.withStructuredOutput(criteriaSchema);
     // const structured_criteria = await structured_llm.invoke(prompt);
 
-    // return structured_criteria;
+    return "";
+  }
+
+  async getStructedScoreSettings(str_score_setting: string) {
+    // Define the schema for a single criterion as per your requirements
+    const CriterionSchema = z.object({
+      criteria_name: z.string().describe("The name of the evaluation criterion"),
+      importance: z.number().min(0).max(100).describe("The importance score (0-100) of this criterion"),
+      parameters: z
+        .array(z.string())
+        .describe("List of specific parameters to evaluate within this criterion"),
+    });
+
+    // Define the schema for the entire criteria set
+    const CriteriaSetSchema = z.object({
+      criteria: z.array(CriterionSchema).describe("List of all evaluation criteria"),
+    });
+
+    const promptTemplate = ChatPromptTemplate.fromMessages([
+      [
+        "system",
+        `
+You are analyzing a prompt that contains criteria for evaluating resumes.
+Your task is to extract and structure these criteria according to the specified format.
+
+Input Text:
+{input_text}
+
+Instructions:
+1. Identify all evaluation criteria mentioned in the text.
+2. For each criterion, extract:
+   - The name of the criterion
+   - The importance score (a number from 0 to 100)
+   - Parameters or aspects to evaluate within that criterion
+
+3. Organize this information according to the Given schema:
+
+Note: If importance scores are not explicitly stated, infer them from the emphasis placed on each criterion in the text. If parameters are not clearly defined for a criterion, leave the parameters array empty.
+`,
+      ],
+
+      ["human", "{input_text}"],
+    ]);
+
+    const structured_llm = this.llm.withStructuredOutput(CriteriaSetSchema);
+
+    const prompt = await promptTemplate.invoke({
+      input_text: str_score_setting,
+    });
+
+    const Structured_setting = await structured_llm.invoke(prompt);
+
+    return Structured_setting;
   }
 }

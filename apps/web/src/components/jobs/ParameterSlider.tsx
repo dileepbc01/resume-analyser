@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import TipTapEditor from "../common/TiptapEditor";
+import { jobApi } from "@/lib/api/job.api";
 
 export enum ApiWeightKey {
   TECHNICAL = "technical_competence",
@@ -107,8 +108,17 @@ const getWeightKeyAtIdx = (weights: ScoringWeights, index: number) => {
   return weightKey;
 };
 
-export const ResumeScoreSettings = () => {
+export const ResumeScoreSettings = ({jobId}:{jobId:string}) => {
   const [activeTab, setActiveTab] = useState<'prompt' | 'parameters'>('parameters');
+
+    const update = async()=>{
+      try{
+        const d = jobApi.updateScoringCriteria(jobId, "CriteriaString");
+
+      }catch(err){
+        console.log(err)
+      }
+    }
 
   return (
     <div className="w-full">
@@ -159,6 +169,9 @@ export const ResumeScoreSettings = () => {
             onChange={() => {}}
             isDisabled={false}
            />
+           <button onClick={update} className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+            <span>Save Prompt</span>
+          </button>
           </div>
         )}
       </div>

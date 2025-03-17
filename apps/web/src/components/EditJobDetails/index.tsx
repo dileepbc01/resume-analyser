@@ -60,7 +60,7 @@ const JobDetails = ({ job_id }: { job_id: string }) => {
         />
       )}
       {currentTab === JobDetailsTab.Scoring && (
-        <ResumeScoreSettings/>
+        <ResumeScoreSettings jobId={job_id} />
       )}
     </>
   );

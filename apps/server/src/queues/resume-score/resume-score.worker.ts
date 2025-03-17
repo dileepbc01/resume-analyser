@@ -48,8 +48,8 @@ export class ResumeScoreProcessor extends WorkerHost {
       const criteriascoreJson = await this.langchainService.scoreResume(
         application.resume_text,
         appJob.description,
-        scoreCriteria,
-        criteriaData.schema
+        scoreCriteria
+        // criteriaData.schema
       );
       console.log("criteriascoreJson", criteriascoreJson);
     });
