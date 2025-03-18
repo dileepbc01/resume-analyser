@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import TipTapEditor from "../common/TiptapEditor";
-import { jobApi } from "@/lib/api/job.api";
 import { useGetScoringPromptSettings } from "../../hooks/useJob";
 
 export enum ApiWeightKey {
@@ -113,17 +112,16 @@ export const ResumeScoreSettings = ({jobId}:{jobId:string}) => {
   const [activeTab, setActiveTab] = useState<'prompt' | 'parameters'>('parameters');
   const {
     scoreSetting,
-    error,
-    isLoading,
+
   }=useGetScoringPromptSettings(jobId);
     
   const update = async()=>{
-      try{
-        const d = jobApi.updateScoringCriteria(jobId, "CriteriaString");
+      // try{
+      //   // const d = jobApi.updateScoringCriteria(jobId, "CriteriaString");
 
-      }catch(err){
-        console.log(err)
-      }
+      // }catch(err){
+      //   // console.log(err)
+      // }
     }
 
   return (
@@ -155,7 +153,7 @@ export const ResumeScoreSettings = ({jobId}:{jobId:string}) => {
 
       <div className="mt-4">
         {activeTab === 'parameters' ? (
-          <ParameterSlider onSubmit={() => {}} initialWeights={null} />
+          <ParameterSlider onSubmit={() => {}}  />
         ) : (
           <div className="p-4 bg-gray-50 rounded-lg">
             <h3 className="font-medium mb-2">Resume Scoring Prompt</h3>
