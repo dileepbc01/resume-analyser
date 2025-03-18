@@ -8,6 +8,7 @@ import {
   Job,
   ScoringCriteria,
   UpdateJobDto,
+  UpdateScoringSliderDto,
 } from "@repo/types";
 import { Model } from "mongoose";
 import { JwtPayload } from "src/auth/strategies/accessToken.strategy";
@@ -98,6 +99,44 @@ export class JobController {
     return;
   }
 
+  @Patch(":id/scoring-slider")
+  @ApiResponse({
+    status: 204,
+    description: "The scoring prompt has been successfully updated.",
+  })
+  @ApiResponse({ status: 400, description: "Bad Request." })
+  async updateResumeScoringSlider(
+    @Param("id") jobId: string,
+    @Body() updatedCriteriasImp: UpdateScoringSliderDto
+  ): Promise<void> {
+    const jobDetails = await this.jobModel.findById(jobId);
+
+    if (!jobDetails) {
+      throw new NotFoundException("Job not found");
+    }
+    const jobScoringCrit = await this.ScoringCritModel.findOne({ _id: jobDetails.scoringCriteria._id });
+
+    if (!jobScoringCrit) {
+      throw new NotFoundException("Scoring Criteria not");
+    }
+
+    jobScoringCrit.criterias = jobScoringCrit.criterias.map((criteria) => {
+      const imp = updatedCriteriasImp.criterias.find((c) => c.criteriaName === criteria.criteria_name);
+      if (!imp) {
+        throw new NotFoundException("Criteria not found");
+      }
+      return {
+        ...criteria,
+        importance: imp.importance,
+      };
+    });
+
+    await jobScoringCrit.save();
+    return;
+  }
+
+  //
+
   @Get(":id/scoring-criteria")
   @ApiResponse({
     status: 200,
@@ -105,8 +144,11 @@ export class JobController {
     type: [GetScoringSettingsResponse],
   })
   @ApiResponse({ status: 400, description: "Bad Request." })
-  async getScoringCriteria(@Param("id") jobId: string): Promise<GetScoringSettingsResponse[]> {
-    const scoringCriteria = await this.ScoringCritModel.find({ job: jobId });
-    return scoringCriteria.map((sc) => GetScoringSettingsResponse.fromEntity(sc));
+  async getScoringCriteria(@Param("id") jobId: string) {
+    const jobDetails = await this.jobModel.findById(jobId).populate("scoringCriteria");
+    if (!jobDetails) {
+      throw new NotFoundException("Job not found");
+    }
+    return GetScoringSettingsResponse.fromEntity(jobDetails.scoringCriteria);
   }
 }

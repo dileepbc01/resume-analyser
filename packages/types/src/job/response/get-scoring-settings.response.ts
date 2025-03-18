@@ -1,44 +1,29 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsString, IsNumber, IsArray } from "class-validator";
 import { ScoringCriteria } from "src/schema";
-
-class Criteria {
-  @ApiProperty({ description: "Name of the criteria" })
-  @IsString()
-  criteriaName: string;
-
-  @ApiProperty({ description: "Importance of the criteria" })
-  @IsNumber()
-  importance: number;
-
-  @ApiProperty({ description: "Order of the criteria" })
-  @IsNumber()
-  order: number;
-
-  @ApiProperty({ description: "Parameters for the criteria" })
-  @IsString()
-  parameters: string[];
-}
+import { JobScoringCriteria } from "../dto";
 
 export class GetScoringSettingsResponse {
   @ApiProperty({ description: "Name of the criteria" })
   @IsArray()
-  criterias: Criteria[];
+  criterias: JobScoringCriteria[];
 
   @ApiProperty({ description: "Name of the criteria" })
   @IsString()
   scoring_instructions: string;
 
-  @ApiProperty({ description: "Name of the criteria" })
-  @IsString()
-  job_id: string;
+  @ApiPropertyOptional({ description: "Version of the scoring settings" })
+  @IsNumber()
+  version: number;
 
   static fromEntity(jobScoringSettings: ScoringCriteria): GetScoringSettingsResponse {
     const dto = new GetScoringSettingsResponse();
+    dto.version = jobScoringSettings.version;
     dto.criterias = jobScoringSettings.criterias.map((criteria) => ({
       criteriaName: criteria.criteria_name,
       importance: criteria.importance,
       order: criteria.order,
+
       parameters: criteria.parameters,
     }));
 
