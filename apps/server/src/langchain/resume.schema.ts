@@ -89,3 +89,18 @@ export const ResumeSchema = z.object({
   projects: ProjectItemSchema.array().default([]).describe("Projects undertaken by the individual"),
   skills: SkillItemSchema.array().default([]).describe("Skills possessed by the individual"),
 });
+
+const EvaluationParameterSchema = z.object({
+  parameterName: z.string().describe("Name of the parameter"),
+  score: z.number().describe("Score of the parameter"),
+});
+
+const EvaluationCriterionSchema = z.object({
+  criterionName: z.string().describe("Name of the criterion"),
+  parameters: EvaluationParameterSchema.array().describe("Parameters for the criterion"),
+  justification: z.string().describe("Overview of the criterion"),
+});
+
+export const EvaluationSchema = z.object({
+  evaluation: EvaluationCriterionSchema.array().describe("Evaluation results"),
+});
