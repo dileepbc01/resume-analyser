@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { jobApi } from "@/lib/api/job.api";
 
 import JobForm from "../jobs/JobForm";
-import { ParameterSlider } from "../jobs/ParameterSlider";
+import {  ResumeScoreSettings } from "../jobs/ParameterSlider";
 
 export enum JobDetailsTab {
   Details = "details",
@@ -60,7 +60,7 @@ const JobDetails = ({ job_id }: { job_id: string }) => {
         />
       )}
       {currentTab === JobDetailsTab.Scoring && (
-        <ParameterSlider onSubmit={() => {}} initialWeights={job.scoringWeights} />
+        <ResumeScoreSettings jobId={job_id} />
       )}
     </>
   );

@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
 
 import { Job } from "./job.schema";
+import { ResumeScore, ResumeScoreSchema } from "./resume-score.schema";
 
 export type CandidateDocument = HydratedDocument<Application>;
 
@@ -144,7 +145,6 @@ const ProfileSchema = SchemaFactory.createForClass(Profile);
 
 @Schema()
 export class Application {
-  
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, auto: true })
   _id: MongooseSchema.Types.ObjectId;
 
@@ -153,7 +153,7 @@ export class Application {
 
   @Prop({ type: MongooseSchema.Types.Date, default: Date.now() })
   updated_at: Date;
-  
+
   @Prop({ type: MongooseSchema.Types.String, default: null })
   full_name: string;
 
@@ -195,6 +195,9 @@ export class Application {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
   job: Job; // Reference to the Job schema
+
+  @Prop({ type: ResumeScoreSchema, ref: "ResumeScoreSchema", default: null })
+  resume_analysis: ResumeScore;
 }
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);

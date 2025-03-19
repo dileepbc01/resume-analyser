@@ -1,8 +1,8 @@
-import { InjectQueue, OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
+import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Application, Job, ScoringCriteria } from "@repo/types";
-import { Job as BullJob, Queue } from "bullmq";
+import { Application, Job, ResumeScore, ScoringCriteria } from "@repo/types";
+import { Job as BullJob } from "bullmq";
 import { Model } from "mongoose";
 import { LangchainService } from "src/langchain/langchain.service";
 import { defaultScoringCriteria } from "src/utils/defaultScoringCriteria";
@@ -16,6 +16,7 @@ export class ResumeScoreProcessor extends WorkerHost {
     @InjectModel(Job.name) private jobModel: Model<Job>,
     @InjectModel(Application.name) private applicationModel: Model<Application>,
     @InjectModel(ScoringCriteria.name) private scoringCriteria: Model<ScoringCriteria>,
+    @InjectModel(ResumeScore.name) private resumeScore: Model<ResumeScore>,
     private langchainService: LangchainService
   ) {
     super();
@@ -30,30 +31,38 @@ export class ResumeScoreProcessor extends WorkerHost {
     if (!appJob) {
       throw new Error("Job not found"); // TODO: custom error
     }
-    const scoreCriterias = await this.scoringCriteria.find({
-      job: application.job,
+    const scoreCriteria = await this.scoringCriteria.findOne({
+      _id: appJob.scoringCriteria._id,
     });
-    if (!scoreCriterias.length) {
-      throw new Error("No scoring criteria found for the job"); // TODO: custom error
+    if (!scoreCriteria) {
+      throw new Error("Scoring Criteria not found"); // TODO: custom error
     }
-    console.log("scoring........");
-    console.log("criteriaData", scoreCriterias.length);
-    const promises = scoreCriterias.map(async (scoreCriteria) => {
-      const criteriaData = defaultScoringCriteria.find(
-        (criteria) => criteria.criteria_name === scoreCriteria.criteria_name
-      );
-      if (!criteriaData) {
-        throw new Error("Schema not found"); // TODO: custom error
-      }
-      const criteriascoreJson = await this.langchainService.scoreResume(
-        application.resume_text,
-        appJob.description,
-        scoreCriteria,
-        criteriaData.schema
-      );
-      console.log("criteriascoreJson", criteriascoreJson);
+
+    const score = await this.langchainService.scoreResume(
+      application.resume_text,
+      appJob.description,
+      scoreCriteria
+    );
+
+    const savedScore = await this.resumeScore.create({
+      criterias: score.evaluation.map((c, idx) => {
+        return {
+          criteria_name: c.criterionName,
+          total_score: c.parameters.reduce((acc, p) => acc + p.score, 0),
+          justification: c.justification,
+          order: idx,
+          parameters: c.parameters.map((p) => {
+            return {
+              name: p.parameterName,
+              score: p.score,
+            };
+          }),
+        };
+      }),
     });
-    await Promise.allSettled(promises);
+    application.resume_analysis = savedScore;
+    await application.save();
+    return savedScore;
   }
 
   @OnWorkerEvent("active")

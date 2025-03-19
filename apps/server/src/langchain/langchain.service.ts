@@ -5,7 +5,7 @@ import { ConfigService } from "@nestjs/config";
 import { ScoringCriteria } from "@repo/types";
 import { z } from "zod";
 
-import { ResumeSchema } from "./resume.schema";
+import { EvaluationSchema, ResumeSchema } from "./resume.schema";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const officeParser = require("officeparser");
@@ -16,7 +16,7 @@ export class LangchainService {
 
   constructor(private configService: ConfigService) {
     this.llm = new ChatAnthropic({
-      model: "claude-3-5-sonnet-20240620",
+      model: "claude-3-5-haiku-20241022",
       temperature: 0,
       apiKey: this.configService.get("ANTHROPIC_API_KEY"),
     });
@@ -53,32 +53,112 @@ export class LangchainService {
     return structured_resume;
   }
 
-  async scoreResume(
-    resume_text: string,
-    jd_text: string,
-    criteria: ScoringCriteria,
-    criteriaSchema: z.AnyZodObject
-  ) {
-    //
+  async scoreResume(resume_text: string, jd_text: string, criterias: ScoringCriteria) {
+    const systemMessage = `
+    You are an AI assistant specializing in resume evaluation. Your task is to assess a candidate's resume against a job description using specific criteria. You will be provided with a resume, job description, and a list of criteria.
+
+    Resume:
+    <resume>
+    ${resume_text}
+    </resume>
+
+    Job Description:
+    <job_description>
+    ${jd_text}
+    </job_description>
+
+    Criteria List:
+    <criteria_list>
+    ${criterias.criterias.map((criteria) => {
+      return `${criteria.criteria_name}\n ${criteria.parameters.map((param) => {
+        return ` - ${param}\n`;
+      })}`;
+    })}
+    </criteria_list>
+    
+
+
+    Instructions:
+
+    1. Carefully review the resume, job description, and criteria list.
+
+    2. For each criterion in the criteria list:
+       a. Evaluate each parameter within the criterion.
+       b. Score each parameter on a scale of 0 to 1 (0 = no match, 1 = perfect match).
+       c. Write a brief overview (2-3 sentences) for each parameter.
+       d. After evaluating all parameters, write a summary overview (3-4 sentences) for the entire criterion.
+
+    3. Before providing your final evaluation for each criterion, wrap your evaluation process in <evaluation_process> tags. Include the following steps:
+       a. Quote relevant parts of the resume and job description for each parameter.
+       b. List pros and cons for how well the candidate matches each parameter.
+       c. Justify the score given for each parameter.
+       d. Summarize the overall match for the criterion.
+
+    4. After completing the analysis for all criteria, present your final evaluation as a JSON object with the following structure:
+
+    Important Notes:
+    - Ensure your evaluation is objective and based solely on the information provided in the resume and job description.
+    - Do not make assumptions beyond what is explicitly stated in these documents.
+    - Adhere strictly to the scoring scale of 0 to 1 for each parameter.
+    - Keep your overviews concise and informative.
+
+    Begin your analysis with the first criterion, showing your evaluation process in <evaluation_process> tags, and then provide the final JSON output after completing all criteria.
+            `;
+
+    const structured_llm = this.llm.withStructuredOutput(EvaluationSchema);
+    const structured_resume = await structured_llm.invoke(systemMessage);
+    return structured_resume;
+  }
+
+  async getStructedScoreSettings(str_score_setting: string) {
+    // Define the schema for a single criterion as per your requirements
+    const CriterionSchema = z.object({
+      criteria_name: z.string().describe("The name of the evaluation criterion"),
+      importance: z.number().min(0).max(100).describe("The importance score (0-100) of this criterion"),
+      parameters: z
+        .array(z.string())
+        .describe("List of specific parameters to evaluate within this criterion"),
+    });
+
+    // Define the schema for the entire criteria set
+    const CriteriaSetSchema = z.object({
+      criteria: z.array(CriterionSchema).describe("List of all evaluation criteria"),
+    });
+
     const promptTemplate = ChatPromptTemplate.fromMessages([
       [
         "system",
-        `Given the resume of the candidate and the job description, your task is to evaluate the candidate based on the provided criteria and parameters.\n
-        
-        Criteria:${criteria.criteria_name} score each parameter between 1-10 \n
-        Parameters:${criteria.parameters.join("\n")}\n             
-        `,
+        `
+You are analyzing a prompt that contains criteria for evaluating resumes.
+Your task is to extract and structure these criteria according to the specified format.
+
+Input Text:
+{input_text}
+
+Instructions:
+1. Identify all evaluation criteria mentioned in the text.
+2. For each criterion, extract:
+   - The name of the criterion
+   - The importance score (a number from 0 to 100)
+   - Parameters or aspects to evaluate within that criterion
+
+3. Organize this information according to the Given schema:
+
+Note: If importance scores are not explicitly stated, infer them from the emphasis placed on each criterion in the text. If parameters are not clearly defined for a criterion, leave the parameters array empty.
+`,
       ],
-      ["human", "{text}"],
+
+      ["human", "{input_text}"],
     ]);
 
-    const prompt = await promptTemplate.invoke({
-      text: `Resume: ${resume_text}\n\nJob Description: ${jd_text}\n`,
-    });
-    console.log(prompt.toChatMessages());
-    // const structured_llm = this.llm.withStructuredOutput(criteriaSchema);
-    // const structured_criteria = await structured_llm.invoke(prompt);
+    const structured_llm = this.llm.withStructuredOutput(CriteriaSetSchema);
 
-    // return structured_criteria;
+    const prompt = await promptTemplate.invoke({
+      input_text: str_score_setting,
+    });
+
+    const Structured_setting = await structured_llm.invoke(prompt);
+
+    return Structured_setting;
   }
 }

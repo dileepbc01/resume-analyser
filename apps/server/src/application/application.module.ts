@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { Application, ApplicationSchema } from "@repo/types";
+import { Application, ApplicationSchema, ResumeScore, ResumeScoreSchema } from "@repo/types";
 import { JobModule } from "src/job/job.module";
 import { LangchainService } from "src/langchain/langchain.service";
 import { AppQueues } from "src/queues/app-queues";
@@ -16,6 +16,7 @@ import { ApplicationService } from "./application.service";
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Application.name, schema: ApplicationSchema }]),
+    MongooseModule.forFeature([{ name: ResumeScore.name, schema: ResumeScoreSchema }]),
     JobModule,
     ...AppQueues,
   ],
