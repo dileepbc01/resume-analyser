@@ -8,6 +8,7 @@ import { CustomAxiosError } from "@/lib/axios";
 
 export const useJobApplications = ({ job_id }: GetApplicationsDto) => {
   const applicationsQry = useQuery({
+    refetchInterval: 2000,
     queryFn: () =>
       applicationApi.getApplications({
         job_id,

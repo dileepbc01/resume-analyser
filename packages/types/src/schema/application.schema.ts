@@ -34,15 +34,15 @@ export class Education {
   })
   degree: string;
   @Prop({
-    type: MongooseSchema.Types.Date,
+    type: MongooseSchema.Types.String,
     default: null,
   })
-  start_date: Date;
+  start_date: String;
   @Prop({
-    type: MongooseSchema.Types.Date,
+    type: MongooseSchema.Types.String,
     default: null,
   })
-  end_date: Date;
+  end_date: String;
   @Prop({
     type: MongooseSchema.Types.Boolean,
     default: false,
@@ -67,7 +67,6 @@ export class Experience {
   title: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    enum: ["full-time", "part-time", "contract", "internship", "temporary"],
     default: null,
   })
   employment_type: string;
@@ -85,22 +84,21 @@ export class Experience {
 
   @Prop({
     type: MongooseSchema.Types.String,
-    enum: ["remote", "onsite", "hybrid"],
     default: null,
   })
   location_type: string;
 
   @Prop({
-    type: MongooseSchema.Types.Date,
+    type: MongooseSchema.Types.String,
     default: null,
   })
-  start_date: Date;
+  start_date: String;
 
   @Prop({
-    type: MongooseSchema.Types.Date,
+    type: MongooseSchema.Types.String,
     default: null,
   })
-  end_date: Date;
+  end_date: String;
 
   @Prop({
     type: MongooseSchema.Types.Boolean,

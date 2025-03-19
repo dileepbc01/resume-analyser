@@ -44,13 +44,10 @@ const EducationItemSchema = z.object({
 
 const ExperienceItemSchema = z.object({
   title: z.string().nullish().describe("Title of the position"),
-  employment_type: z
-    .enum(["full-time", "part-time", "contract", "internship", "temporary"])
-    .nullish()
-    .describe("Type of employment"),
+  employment_type: z.string().nullish().describe("Type of employment"),
   location: z.string().nullish().describe("Location of the position"),
   description: z.string().nullish().describe("Description of the position"),
-  location_type: z.enum(["remote", "onsite", "hybrid"]).nullish().describe("Type of location"),
+  location_type: z.string().nullish().describe("Type of location"),
   start_date: z.string().nullish().describe("Start date of the position"),
   end_date: z.string().nullish().describe("End date of the position"),
   is_currently_working: z.boolean().describe("Is currently working"),

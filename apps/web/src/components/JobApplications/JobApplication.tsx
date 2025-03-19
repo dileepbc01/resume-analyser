@@ -1,5 +1,5 @@
 import { GetApplicationResponse } from "@repo/types";
-import { CheckCircle2Icon, Circle, CircleX, LoaderIcon } from "lucide-react";
+import { CheckCircle2Icon, Circle, CircleX } from "lucide-react";
 
 import React from "react";
 
@@ -46,28 +46,28 @@ const StatusColumn = ({ jobApplication }: { jobApplication: GetApplicationRespon
   ) {
     return (
       <div className="flex items-center">
-        <LoaderIcon />
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-yellow-500 border-t-transparent" />
         <span className="ml-2 text-yellow-500">Processing...</span>
       </div>
     );
   } else if (jobApplication.parsingStatus.status == "not_started") {
     return (
       <div className="flex items-center">
-        <Circle />
+        <Circle className="h-4 w-4 text-gray-500" />
         <span className="ml-2 text-gray-500">Not Started</span>
       </div>
     );
   } else if (jobApplication.scoringStatus.status == "completed") {
     return (
       <div className="flex items-center">
-        <CheckCircle2Icon className="text-green-500 dark:text-green-400" />
+        <CheckCircle2Icon className="h-4 w-4 text-green-500 dark:text-green-400" />
         <span className="ml-2 text-green-500">Completed</span>
       </div>
     );
   } else {
     return (
       <div className="flex items-center">
-        <CircleX />
+        <CircleX className="h-4 w-4 text-red-500" />
         <span className="ml-2 text-red-500">Failed</span>
       </div>
     );
