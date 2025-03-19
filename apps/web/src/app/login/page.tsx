@@ -6,6 +6,8 @@ import * as z from "zod";
 
 import { useForm } from "react-hook-form";
 
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -43,10 +45,10 @@ export default function SignInPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="w-full max-w-md px-4">
-        <Card className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg dark:bg-slate-800">
           <CardHeader className="space-y-1 pb-2 pt-6">
             <div className="mb-4 flex justify-center">
-              <img src="/app-logo.png" alt="App Logo" className="h-16 w-auto" />
+              <Image src="/app-logo.png" alt="App Logo" className="h-16 w-auto" width={64} height={64} />
             </div>
             <h1 className="text-center text-2xl font-bold tracking-tight">Welcome back</h1>
             <p className="text-muted-foreground text-center text-sm">

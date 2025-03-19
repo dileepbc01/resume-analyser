@@ -1,7 +1,10 @@
+import { Theme } from "@radix-ui/themes";
 import { Toaster } from "sonner";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import { ThemeProvider } from "@/components/theme-provider";
 
 import ReactQueryProvider from "@/lib/ReactQueryProvider";
 
@@ -19,7 +22,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Resume Analyser",
-  description: "",
+  description: "Resume Analyser",
 };
 
 export default function RootLayout({
@@ -28,10 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Theme accentColor="mint" grayColor="gray" panelBackground="solid" scaling="100%" radius="full">
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+            <Toaster />
+          </Theme>
+        </ThemeProvider>
       </body>
     </html>
   );

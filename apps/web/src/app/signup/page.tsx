@@ -50,7 +50,7 @@ export default function SignUpPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="w-full max-w-md px-4">
-        <Card className="border-0 shadow-lg">
+        <Card className="border-0 shadow-lg dark:bg-slate-800">
           <CardHeader className="space-y-1 pb-2 pt-6">
             <div className="mb-4 flex justify-center">
               <img src="/app-logo.png" alt="App Logo" className="h-16 w-auto" />

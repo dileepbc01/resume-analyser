@@ -1,8 +1,9 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Briefcase, LogOut, Moon, User } from "lucide-react";
+import { Briefcase, LogOut, Moon, Sun, User } from "lucide-react";
 
 import React, { useState } from "react";
 
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +14,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const { logoutMutation } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   function handleLogout() {
     logoutMutation.mutate();
@@ -33,23 +35,24 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       <Tooltip>
         <TooltipTrigger>
           <li
-            className={`flex cursor-pointer items-center justify-center rounded-md p-3 hover:bg-gray-100 ${
-              activeTab === tabName ? "bg-gray-100" : ""
+            className={`hover:bg-muted flex cursor-pointer items-center justify-center rounded-md p-3 ${
+              activeTab === tabName ? "bg-muted" : ""
             }`}
             onClick={onClick || (() => setActiveTab(tabName))}>
-            <Icon className="h-5 w-5 text-gray-600" />
+            <Icon className="text-muted-foreground h-5 w-5" />
           </li>
         </TooltipTrigger>
         <TooltipContent>{label}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
+
   return (
     <>
       <div className="flex h-screen">
         {/* Sidebar */}
-        <div className="flex w-16 flex-col border-r bg-gray-100">
-          <div className="flex justify-center border-b p-4">
+        <div className="border-border bg-background flex w-16 flex-col border-r">
+          <div className="border-border flex justify-center border-b p-4">
             <Image src={"/app-logo.png"} width={30} height={30} alt="app-logo" />
           </div>
 
@@ -60,13 +63,13 @@ function AppLayout({ children }: { children: React.ReactNode }) {
               </ul>
             </nav>
 
-            <div className="space-y-2 border-t p-4">
+            <div className="border-border space-y-2 border-t p-4">
               <NavItem
                 onClick={() => {
-                  //
+                  setTheme(theme === "dark" ? "light" : "dark");
                 }}
-                icon={Moon}
-                label="Change Theme"
+                icon={theme === "dark" ? Sun : Moon}
+                label={theme === "dark" ? "Light Mode" : "Dark Mode"}
                 tabName="theme"
               />
               <NavItem icon={LogOut} label="Logout" tabName="logout" onClick={handleLogout} />
@@ -77,7 +80,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Main Content */}
         <div className="flex flex-1 flex-col">
           {/* Top Header with Profile */}
-          <div className="border-b bg-gray-100 px-6 py-3">
+          <div className="border-border bg-background border-b px-6 py-3">
             <div className="flex justify-end">
               <Button
                 variant="outline"

@@ -35,7 +35,7 @@ const Jobs: React.FC = () => {
         <CardContent className="p-0">
           <div className="w-full">
             <div className="border-b">
-              <div className="grid grid-cols-5 bg-gray-50">
+              <div className="grid grid-cols-5">
                 <div className="p-4 text-sm font-medium text-gray-600">Job Title</div>
                 <div className="p-4 text-sm font-medium text-gray-600">Location</div>
                 <div className="p-4 text-sm font-medium text-gray-600">Company</div>

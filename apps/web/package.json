@@ -38,6 +38,7 @@
     "@radix-ui/react-toggle": "^1.1.1",
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
+    "@radix-ui/themes": "^3.2.1",
     "@repo/types": "workspace:^",
     "@repo/typescript-config": "workspace:^",
     "@tiptap/extension-placeholder": "3.0.0-next.4",
