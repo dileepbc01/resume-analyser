@@ -36,7 +36,7 @@ export class ResumeParseProcessor extends WorkerHost {
       throw new Error("Image parsing not supported yet");
     }
     const json = await this.langchainService.getStructuredData(text);
-    await job.updateProgress(50);
+    await job.updateProgress(100);
     return {
       resumeJson: json,
       resumeText: text,
@@ -44,17 +44,26 @@ export class ResumeParseProcessor extends WorkerHost {
   }
 
   @OnWorkerEvent("active")
-  onActive(job: Job<QueuePayload["resume-parse"]>) {
+  async onActive(job: Job<QueuePayload["resume-parse"]>) {
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: null,
+      percentage: 0,
+      status: "processing",
+    });
     console.info(`Processing job with id ${job.id}`);
   }
 
   @OnWorkerEvent("progress")
-  onProgress(job: Job<QueuePayload["resume-parse"]>) {
-    console.info(`Job ${job.id} is in progress: ${job.progress}% completed.`);
+  async onProgress(job: Job<QueuePayload["resume-parse"]>) {
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: null,
+      percentage: job.progress as number,
+      status: "processing",
+    });
   }
 
   @OnWorkerEvent("completed")
-  onCompleted(job: Job<QueuePayload["resume-parse"]>) {
+  async onCompleted(job: Job<QueuePayload["resume-parse"]>) {
     const returnvalue = job.returnvalue as {
       resumeJson: z.infer<typeof ResumeSchema>;
       resumeText: string;
@@ -70,11 +79,25 @@ export class ResumeParseProcessor extends WorkerHost {
     this.resumeScoringQueue.add("score-resume", {
       application_id: job.data.applicationId,
     });
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: null,
+      percentage: job.progress as number,
+      status: "completed",
+    });
   }
 
   @OnWorkerEvent("failed")
-  onFailed(job: Job<QueuePayload["resume-parse"]>) {
+  async onFailed(job: Job<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} FAILED! Attempt Number ${job.attemptsMade}`);
     console.info("Failed reason", job.failedReason);
+
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: {
+        type: "client", //TODO: classify the errors
+        message: job.failedReason,
+      },
+      percentage: 0,
+      status: "failed",
+    });
   }
 }

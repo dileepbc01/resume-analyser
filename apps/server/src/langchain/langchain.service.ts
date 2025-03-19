@@ -16,7 +16,7 @@ export class LangchainService {
 
   constructor(private configService: ConfigService) {
     this.llm = new ChatAnthropic({
-      model: "claude-3-5-haiku-20241022",
+      // model: "claude-3-5-haiku-20241022",
       temperature: 0,
       apiKey: this.configService.get("ANTHROPIC_API_KEY"),
     });
@@ -31,6 +31,7 @@ export class LangchainService {
   }
 
   async getStructuredData(text: string) {
+    this.llm.model = "claude-3-5-haiku-20241022"; // TODO: remove hardcoding
     const promptTemplate = ChatPromptTemplate.fromMessages([
       [
         "system",
@@ -54,6 +55,7 @@ export class LangchainService {
   }
 
   async scoreResume(resume_text: string, jd_text: string, criterias: ScoringCriteria) {
+    this.llm.model = "claude-3-5-haiku-20241022"; // TODO: remove hardcoding
     const systemMessage = `
     You are an AI assistant specializing in resume evaluation. Your task is to assess a candidate's resume against a job description using specific criteria. You will be provided with a resume, job description, and a list of criteria.
 
@@ -111,6 +113,7 @@ export class LangchainService {
   }
 
   async getStructedScoreSettings(str_score_setting: string) {
+    this.llm.model = "claude-3-5-haiku-20241022"; // TODO: remove hardcoding
     // Define the schema for a single criterion as per your requirements
     const CriterionSchema = z.object({
       criteria_name: z.string().describe("The name of the evaluation criterion"),

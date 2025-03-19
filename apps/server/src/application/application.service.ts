@@ -49,4 +49,21 @@ export class ApplicationService {
       .exec();
     return applications;
   }
+
+  async updateParseStatus(
+    application_id: string,
+    type: "parse" | "scoring",
+    status: Application["parsing_status"]
+  ) {
+    const application = await this.applicationModel.findById(application_id);
+    if (!application) {
+      throw new Error("Application not found");
+    }
+    if (type == "parse") {
+      application.parsing_status = status;
+    } else {
+      application.scoring_status = status;
+    }
+    await application.save();
+  }
 }

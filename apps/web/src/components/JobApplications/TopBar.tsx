@@ -99,7 +99,7 @@ export function TopBar({ job_id }: { job_id: string }) {
             <span className="text-muted-foreground text-sm">Full Stack Developer</span>
           </div>
           <div className="flex items-center gap-3 pb-3">
-            <Button variant="outline" onClick={() => setOpen(true)}>
+            <Button variant="default" onClick={() => setOpen(true)}>
               {loading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

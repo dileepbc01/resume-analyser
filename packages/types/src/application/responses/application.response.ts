@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsBoolean, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
 import { Skill, Education, Experience, Profile, Application } from "../../schema/application.schema";
 
 class SkillResponse {
@@ -63,8 +63,8 @@ class EducationResponse {
     dto.grade = education.grade;
     dto.type = education.type;
     dto.degree = education.degree;
-    dto.start_date = education.start_date;
-    dto.end_date = education.end_date;
+    dto.start_date = String(education.start_date);
+    dto.end_date = String(education.end_date);
     dto.is_currently_studying = education.is_currently_studying;
     dto.description = education.description;
     return dto;
@@ -111,8 +111,8 @@ class ExperienceResponse {
     dto.location = experience.location;
     dto.description = experience.description;
     dto.location_type = experience.location_type;
-    dto.start_date = experience.start_date;
-    dto.end_date = experience.end_date;
+    dto.start_date = String(experience.start_date);
+    dto.end_date = String(experience.end_date);
     dto.is_currently_working = experience.is_currently_working;
     return dto;
   }
@@ -136,9 +136,9 @@ class ProfileResponse {
 }
 
 export class GetApplicationResponse {
-  @ApiProperty({ description: "Application ID" })
+  @ApiProperty({ description: "Application Id" })
   @IsString()
-  id: string;
+  application_id: string;
 
   @ApiProperty({ description: "Created At" })
   @IsString()
@@ -202,7 +202,7 @@ export class GetApplicationResponse {
 
   static fromEntity(application: Application): GetApplicationResponse {
     const dto = new GetApplicationResponse();
-    dto.id = application._id.toString();
+    dto.application_id = application._id.toString();
     dto.full_name = application.full_name;
     dto.resume_file_name = application.resume_file_name;
     dto.resume_text = application.resume_text;

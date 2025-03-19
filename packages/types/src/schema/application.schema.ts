@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
+import mongoose, { HydratedDocument, Schema as MongooseSchema } from "mongoose";
 
 import { Job } from "./job.schema";
 import { ResumeScore, ResumeScoreSchema } from "./resume-score.schema";
@@ -34,15 +34,15 @@ export class Education {
   })
   degree: string;
   @Prop({
-    type: MongooseSchema.Types.String,
+    type: MongooseSchema.Types.Date,
     default: null,
   })
-  start_date: string;
+  start_date: Date;
   @Prop({
-    type: MongooseSchema.Types.String,
+    type: MongooseSchema.Types.Date,
     default: null,
   })
-  end_date: string;
+  end_date: Date;
   @Prop({
     type: MongooseSchema.Types.Boolean,
     default: false,
@@ -51,7 +51,7 @@ export class Education {
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: "",
   })
   description: string;
 }
@@ -67,8 +67,8 @@ export class Experience {
   title: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
     enum: ["full-time", "part-time", "contract", "internship", "temporary"],
+    default: null,
   })
   employment_type: string;
   @Prop({
@@ -79,28 +79,28 @@ export class Experience {
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: "",
   })
   description: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
     enum: ["remote", "onsite", "hybrid"],
+    default: null,
   })
   location_type: string;
 
   @Prop({
-    type: MongooseSchema.Types.String,
+    type: MongooseSchema.Types.Date,
     default: null,
   })
-  start_date: string;
+  start_date: Date;
 
   @Prop({
-    type: MongooseSchema.Types.String,
+    type: MongooseSchema.Types.Date,
     default: null,
   })
-  end_date: string;
+  end_date: Date;
 
   @Prop({
     type: MongooseSchema.Types.Boolean,
@@ -143,10 +143,60 @@ const SkillSchema = SchemaFactory.createForClass(Skill);
 
 const ProfileSchema = SchemaFactory.createForClass(Profile);
 
+
+const STATUS_ENUMS = ["not_started", "processing", "completed", "failed"] as const;
+type StatusEnum = (typeof STATUS_ENUMS)[number];
+
+interface ErrorType {
+  type: "server" | "client";
+  message: string;
+}
+
+@Schema()
+class JobProcessingStatus {
+  @Prop({
+    type: String,
+    enum: STATUS_ENUMS,
+    default: "not_started",
+    required: true,
+  })
+  status: StatusEnum; // Corrected enum type
+
+  @Prop({ required: true, default: 0 })
+  percentage: number;
+
+  @Prop({
+    type: Object,
+    required: false,
+    default: null,
+  })
+  error: ErrorType | null;
+}
+
+
+const JobProcessingStatusSchema = SchemaFactory.createForClass(JobProcessingStatus);
+
+
+@Schema()
+export class Counter {
+  @Prop({ required: true, unique: true })
+  name: string;
+
+  @Prop({ required: true, default: 1 })
+  seq: number;
+}
+
+export const CounterSchema = SchemaFactory.createForClass(Counter);
+
+// Register the Counter model with Mongoose
 @Schema()
 export class Application {
+  
   @Prop({ type: MongooseSchema.Types.ObjectId, required: true, auto: true })
   _id: MongooseSchema.Types.ObjectId;
+
+  @Prop({ type: MongooseSchema.Types.Number })
+  application_number: number; //TODO: impl counter later
 
   @Prop({ type: MongooseSchema.Types.Date, default: Date.now() })
   created_at: Date;
@@ -163,7 +213,7 @@ export class Application {
   @Prop({ type: MongooseSchema.Types.String, default: null })
   resume_text: string;
 
-  @Prop({ type: MongooseSchema.Types.String, default: null })
+  @Prop({ type: MongooseSchema.Types.String,default:null })
   email: string;
 
   @Prop({ type: MongooseSchema.Types.String, default: null })
@@ -196,8 +246,23 @@ export class Application {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
   job: Job; // Reference to the Job schema
 
+  @Prop({
+    type:JobProcessingStatusSchema,
+    ref:"JobProcessingStatus"
+  })
+  parsing_status:JobProcessingStatus
+
+   @Prop({
+    type:JobProcessingStatusSchema,
+    ref:"JobProcessingStatus"
+  })
+  scoring_status:JobProcessingStatus
+
+
   @Prop({ type: ResumeScoreSchema, ref: "ResumeScoreSchema", default: null })
   resume_analysis: ResumeScore;
 }
 
-export const ApplicationSchema = SchemaFactory.createForClass(Application);
+
+
+export const ApplicationSchema = SchemaFactory.createForClass(Application)
