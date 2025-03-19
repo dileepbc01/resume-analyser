@@ -252,13 +252,15 @@ export class Application {
 
   @Prop({
     type:JobProcessingStatusSchema,
-    ref:"JobProcessingStatus"
+    ref:"JobProcessingStatus",
+    default:{}
   })
   parsing_status:JobProcessingStatus
 
    @Prop({
-    type:JobProcessingStatusSchema,
-    ref:"JobProcessingStatus"
+     type:JobProcessingStatusSchema,
+     ref:"JobProcessingStatus",
+     default:{}
   })
   scoring_status:JobProcessingStatus
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsNumber, IsString,IsObject, IsOptional, IsEnum, IsNotEmpty, } from "class-validator";
 import { Skill, Education, Experience, Profile, Application } from "../../schema/application.schema";
 
 class SkillResponse {
@@ -135,6 +135,33 @@ class ProfileResponse {
   }
 }
 
+const STATUS_ENUMS = ["not_started", "processing", "completed", "failed"] as const;
+
+
+type StatusEnum = (typeof STATUS_ENUMS)[number];
+
+interface ErrorType {
+  type: "server" | "client";
+  message: string;
+}
+
+class JobProcessingStatus {
+  @IsEnum(STATUS_ENUMS)
+  @IsNotEmpty()
+  status: StatusEnum; // Corrected enum type
+
+  @IsNumber()
+  @IsNotEmpty()
+  percentage: number;
+
+  @IsOptional()
+  error: ErrorType | null;
+
+  @IsNumber()
+  @IsNotEmpty()
+  retry_count: number;
+}
+
 export class GetApplicationResponse {
   @ApiProperty({ description: "Application Id" })
   @IsString()
@@ -200,6 +227,15 @@ export class GetApplicationResponse {
   @IsString()
   job: string;
 
+  @ApiProperty({})
+  @IsObject()
+
+  parsingStatus:JobProcessingStatus
+
+  @ApiProperty({})
+  @IsObject()
+  scoringStatus:JobProcessingStatus
+
   static fromEntity(application: Application): GetApplicationResponse {
     const dto = new GetApplicationResponse();
     dto.application_id = application._id.toString();
@@ -218,6 +254,8 @@ export class GetApplicationResponse {
     dto.job = application.job.toString();
     dto.createdAt = application.created_at.toISOString();
     dto.updatedAt = application.updated_at.toISOString();
+    dto.parsingStatus=    application.parsing_status
+    dto.scoringStatus=    application.scoring_status
     return dto;
   }
 }

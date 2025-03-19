@@ -4,12 +4,9 @@ import React from "react";
 
 import Link from "next/link";
 
-const Job: React.FC<{ job: GetJobResponse }> = ({ job }) => {
-  const formatDate = (date: string) => {
-    const days = Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24));
-    return `${days} ${days === 1 ? "day" : "days"} ago`;
-  };
+import { untilNow } from "@/lib/untilNow";
 
+const Job: React.FC<{ job: GetJobResponse }> = ({ job }) => {
   return (
     <div className="hover:bg-secondary border-b">
       <Link
@@ -29,7 +26,7 @@ const Job: React.FC<{ job: GetJobResponse }> = ({ job }) => {
           <span className="bg-secondary/30 text-secondary-foreground rounded px-2 py-1">{0} Qualified</span>
         </div>
 
-        <div className="text-muted-foreground text-sm">{formatDate(job.createdAt)}</div>
+        <div className="text-muted-foreground text-sm">{untilNow(job.createdAt)}</div>
       </Link>
     </div>
   );

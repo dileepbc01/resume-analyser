@@ -44,6 +44,7 @@ const Applications = ({ job_id }: { job_id: string }) => {
               <TableHead>Current Job Title</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Created At</TableHead>
+              <TableHead>Scoring Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -52,7 +53,7 @@ const Applications = ({ job_id }: { job_id: string }) => {
                   .fill(0)
                   .map((_, i) => <LoadingRow key={i} />)
               : (jobApplicationsQry.data ?? []).map((jobApp) => (
-                  <JobApplication key={jobApp.id} jobApplication={jobApp} />
+                  <JobApplication key={jobApp.application_id} jobApplication={jobApp} />
                 ))}
           </TableBody>
         </Table>
