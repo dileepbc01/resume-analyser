@@ -155,22 +155,26 @@ interface ErrorType {
 @Schema()
 class JobProcessingStatus {
   @Prop({
-    type: String,
+    type:  MongooseSchema.Types.String,
     enum: STATUS_ENUMS,
     default: "not_started",
     required: true,
   })
   status: StatusEnum; // Corrected enum type
-
   @Prop({ required: true, default: 0 })
   percentage: number;
-
   @Prop({
     type: Object,
     required: false,
     default: null,
   })
   error: ErrorType | null;
+
+  @Prop({
+    type:  MongooseSchema.Types.Number,
+    required:true,default:0
+  })
+  retry_count:number
 }
 
 

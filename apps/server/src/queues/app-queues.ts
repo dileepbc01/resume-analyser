@@ -24,7 +24,7 @@ export type QueuePayload = {
     resumeFileName: string;
   };
   [AppQueueEnum.RESUME_SCORE]: {
-    application_id: string;
+    applicationId: string;
   };
 };
 

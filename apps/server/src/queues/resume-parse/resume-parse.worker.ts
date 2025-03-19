@@ -49,6 +49,7 @@ export class ResumeParseProcessor extends WorkerHost {
       error: null,
       percentage: 0,
       status: "processing",
+      retry_count: job.attemptsMade,
     });
     console.info(`Processing job with id ${job.id}`);
   }
@@ -59,6 +60,7 @@ export class ResumeParseProcessor extends WorkerHost {
       error: null,
       percentage: job.progress as number,
       status: "processing",
+      retry_count: job.attemptsMade,
     });
   }
 
@@ -77,12 +79,13 @@ export class ResumeParseProcessor extends WorkerHost {
     });
     console.info(`Job with id ${job.id} COMPLETED!`);
     this.resumeScoringQueue.add("score-resume", {
-      application_id: job.data.applicationId,
+      applicationId: job.data.applicationId,
     });
     await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
       error: null,
       percentage: job.progress as number,
       status: "completed",
+      retry_count: job.attemptsMade,
     });
   }
 
@@ -98,6 +101,7 @@ export class ResumeParseProcessor extends WorkerHost {
       },
       percentage: 0,
       status: "failed",
+      retry_count: job.attemptsMade,
     });
   }
 }

@@ -4,8 +4,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Application, Job, ResumeScore, ScoringCriteria } from "@repo/types";
 import { Job as BullJob } from "bullmq";
 import { Model } from "mongoose";
+import { ApplicationService } from "src/application/application.service";
 import { LangchainService } from "src/langchain/langchain.service";
-import { defaultScoringCriteria } from "src/utils/defaultScoringCriteria";
 
 import { AppQueueEnum, QueuePayload } from "../app-queues";
 
@@ -17,13 +17,14 @@ export class ResumeScoreProcessor extends WorkerHost {
     @InjectModel(Application.name) private applicationModel: Model<Application>,
     @InjectModel(ScoringCriteria.name) private scoringCriteria: Model<ScoringCriteria>,
     @InjectModel(ResumeScore.name) private resumeScore: Model<ResumeScore>,
+    private applicationService: ApplicationService,
     private langchainService: LangchainService
   ) {
     super();
   }
 
   async process(job: BullJob<QueuePayload["resume-score"]>) {
-    const application = await this.applicationModel.findById(job.data.application_id);
+    const application = await this.applicationModel.findById(job.data.applicationId);
     if (!application) {
       throw new Error("Application not found"); // TODO: custom error and logger
     }
@@ -66,22 +67,49 @@ export class ResumeScoreProcessor extends WorkerHost {
   }
 
   @OnWorkerEvent("active")
-  onActive(job: BullJob<QueuePayload["resume-parse"]>) {
+  async onActive(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} ACTIVE!`);
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: null,
+      percentage: job.progress as number,
+      status: "processing",
+      retry_count: job.attemptsMade,
+    });
   }
 
   @OnWorkerEvent("progress")
-  onProgress(job: BullJob<QueuePayload["resume-parse"]>) {
+  async onProgress(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} PROGRESS!`);
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: null,
+      percentage: job.progress as number,
+      status: "processing",
+      retry_count: job.attemptsMade,
+    });
   }
 
   @OnWorkerEvent("completed")
-  onCompleted(job: BullJob<QueuePayload["resume-parse"]>) {
+  async onCompleted(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} COMPLETED!`);
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: null,
+      percentage: job.progress as number,
+      status: "completed",
+      retry_count: job.attemptsMade,
+    });
   }
 
   @OnWorkerEvent("failed")
-  onFailed(job: BullJob<QueuePayload["resume-parse"]>) {
+  async onFailed(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} FAILED!`, job.failedReason);
+    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+      error: {
+        type: "client",
+        message: job.failedReason,
+      },
+      percentage: job.progress as number,
+      status: "failed",
+      retry_count: job.attemptsMade,
+    });
   }
 }
