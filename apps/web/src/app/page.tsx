@@ -1,51 +1,52 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import Image from 'next/image';
-import React from 'react';
+import React from "react";
+
+import Image from "next/image";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 function App() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Navbar */}
       <nav className="bg-card shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-primary">Resume Analyzer</div>
-          <Button variant="default">
-            Get Started
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <div className="text-primary text-2xl font-bold">Resume Analyzer</div>
+          <Button variant="default" asChild>
+            <Link href="/analyze">Try Now</Link>
           </Button>
         </div>
       </nav>
 
       {/* Hero Section */}
       <header className="bg-card py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex justify-center mb-6">
-            <Image src={'/app-logo.png'} alt='app-logo' width={100} height={100} />
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <div className="mb-6 flex justify-center">
+            <Image src={"/app-logo.png"} alt="app-logo" width={100} height={100} />
           </div>
-          <h1 className="text-5xl font-bold text-foreground mb-6">
-            AI-Powered Resume Analysis
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          <h1 className="text-foreground mb-6 text-5xl font-bold">AI-Powered Resume Analysis</h1>
+          <p className="text-muted-foreground mb-8 text-xl">
             Score resumes against job descriptions effortlessly with our LLM-powered SaaS solution.
           </p>
           <div className="flex justify-center gap-4">
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Try It Free
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
+              <Link href="/signup">Register Now</Link>
             </Button>
-            <Button variant="outline" className="text-primary border-primary">
-              Learn More
+            <Button variant="outline" className="text-primary border-primary" asChild>
+              <Link href="/login">Login</Link>
             </Button>
           </div>
         </div>
       </header>
 
       {/* Features Section */}
-      <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
+      <section className="bg-background py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-foreground mb-12 text-center text-3xl font-bold">
             Why Choose Resume Analyzer?
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle>LLM-Powered Analysis</CardTitle>
@@ -80,44 +81,36 @@ function App() {
         </div>
       </section>
 
+      {/* Try It Out Section */}
+      <section className="bg-background py-20">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-foreground mb-6 text-3xl font-bold">Try It Out for Free</h2>
+          <p className="text-muted-foreground mb-8 text-xl">
+            Upload a job description and resumes to see how Resume Analyzer works—no sign-up required!
+          </p>
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
+            <Link href="/analyze">Analyze Resumes Now</Link>
+          </Button>
+        </div>
+      </section>
       {/* Pricing Section */}
-      <section className="py-20 bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-foreground mb-12">
-            Pricing
-          </h2>
+      <section className="bg-card py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-foreground mb-12 text-center text-3xl font-bold">Pricing</h2>
           <div className="text-center">
-            <p className="text-xl text-muted-foreground mb-8">
+            <p className="text-muted-foreground mb-8 text-xl">
               Pay only for what you use. Just $X per 1,000 resumes analyzed.
             </p>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Start Analyzing
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
+              <Link href="/login">Start Analyzing</Link>
             </Button>
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-primary">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-primary-foreground mb-6">
-            Ready to Transform Your Hiring Process?
-          </h2>
-          <p className="text-xl text-primary-foreground/80 mb-8">
-            Sign up today and experience the power of AI-driven resume analysis.
-          </p>
-          <Button variant="outline" className="bg-background text-primary hover:bg-background/90">
-            Get Started Now
-          </Button>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="bg-card py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            &copy; 2023 Resume Analyzer. All rights reserved.
-          </p>
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <p className="text-muted-foreground text-sm">&copy; 2023 Resume Analyzer. All rights reserved.</p>
         </div>
       </footer>
     </div>
