@@ -6,7 +6,7 @@ import TopBar from "./TopBar";
 
 function JobApplications({ job_id }: { job_id: string }) {
   return (
-    <div className="bg-white">
+    <div className="bg-background">
       <TopBar job_id={job_id} />
       <ActionBar />
       <Applications job_id={job_id} />

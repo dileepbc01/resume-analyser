@@ -15,7 +15,7 @@ const ActionBar = () => {
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">Sort by</span>
+            <span className="text-muted-foreground text-sm">Sort by</span>
             <Button variant="outline" className="text-sm">
               Latest Activity
             </Button>

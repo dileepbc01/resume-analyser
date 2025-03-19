@@ -51,7 +51,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex h-screen">
         {/* Sidebar */}
-        <div className="border-border bg-background flex w-16 flex-col border-r">
+        <div className="border-border bg-background flex h-full w-16 flex-col border-r">
           <div className="border-border flex justify-center border-b p-4">
             <Image src={"/app-logo.png"} width={30} height={30} alt="app-logo" />
           </div>
@@ -78,7 +78,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 flex-col overflow-y-auto">
           {/* Top Header with Profile */}
           <div className="border-border bg-background border-b px-6 py-3">
             <div className="flex justify-end">

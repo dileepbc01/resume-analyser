@@ -95,16 +95,20 @@ export function TopBar({ job_id }: { job_id: string }) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-medium">Job Details</h1>
-            <span className="text-sm text-gray-500">•</span>
-            <span className="text-sm text-gray-500">Full Stack Developer</span>
+            <span className="text-muted-foreground text-sm">-</span>
+            <span className="text-muted-foreground text-sm">Full Stack Developer</span>
           </div>
           <div className="flex items-center gap-3 pb-3">
-            <Button variant="ghost" onClick={() => setOpen(true)}>
-              {loading ? <Loader2 /> : <UploadCloudIcon />}
+            <Button variant="outline" onClick={() => setOpen(true)}>
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <UploadCloudIcon className="mr-2 h-4 w-4" />
+              )}
               Upload Resumes
             </Button>
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={() => {
                 router.push(`/job/edit?job_id=${job_id}`);
               }}>
