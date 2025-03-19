@@ -108,7 +108,7 @@ export default function SignInPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="email@example.com" {...field} className="h-11" />
+                        <Input placeholder="email@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -126,7 +126,12 @@ export default function SignInPage() {
                         </a>
                       </div>
                       <FormControl>
-                        <Input type="password" placeholder="••••••" {...field} className="h-11" />
+                        <Input
+                          type="password"
+                          placeholder="••••••"
+                          {...field}
+                          className="ring-offset-background focus-visible:ring-ring h-11 focus-visible:ring-2"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
