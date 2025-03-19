@@ -36,7 +36,6 @@ export class JobService {
     if (!jobDetails) throw new Error("Job not found");
     const structuredScoreSetting = await this.langchainService.getStructedScoreSettings(CriteriaString);
 
-    console.log(jobDetails.scoringCriteria);
     await this.ScoringCritModel.findByIdAndUpdate(jobDetails.scoringCriteria._id, {
       scoring_instructions: CriteriaString,
       job: jobId,

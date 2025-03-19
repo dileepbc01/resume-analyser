@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export enum JobType {
   FULL_TIME = "full-time",

@@ -6,6 +6,8 @@ import * as z from "zod";
 
 import { useForm } from "react-hook-form";
 
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -53,7 +55,7 @@ export default function SignUpPage() {
         <Card className="border-0 shadow-lg dark:bg-slate-800">
           <CardHeader className="space-y-1 pb-2 pt-6">
             <div className="mb-4 flex justify-center">
-              <img src="/app-logo.png" alt="App Logo" className="h-16 w-auto" />
+              <Image src={"/app-logo.png"} alt="app-logo" width={16} height={16} />
             </div>
             <h1 className="text-center text-2xl font-bold tracking-tight">Create an account</h1>
             <p className="text-muted-foreground text-center text-sm">

@@ -1,13 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import {
-  Application,
-  ApplicationSchema,
-  Counter,
-  CounterSchema,
-  ResumeScore,
-  ResumeScoreSchema,
-} from "@repo/types";
+import { Application, ApplicationSchema, ResumeScore, ResumeScoreSchema } from "@repo/types";
 import { JobModule } from "src/job/job.module";
 import { LangchainService } from "src/langchain/langchain.service";
 import { AppQueues } from "src/queues/app-queues";

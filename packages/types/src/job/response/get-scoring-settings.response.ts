@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsString, IsNumber, IsArray } from "class-validator";
-import { ScoringCriteria } from "src/schema";
 import { JobScoringCriteria } from "../dto";
+import { ScoringCriteria } from "../../schema";
 
 export class GetScoringSettingsResponse {
   @ApiProperty({ description: "Name of the criteria" })
