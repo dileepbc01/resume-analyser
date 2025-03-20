@@ -263,7 +263,7 @@ export class Application {
   scoring_status:JobProcessingStatus
 
 
-  @Prop({ type: ResumeScoreSchema, ref: "ResumeScoreSchema", default: null })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "ResumeScore", default: null })
   resume_analysis: ResumeScore;
 }
 

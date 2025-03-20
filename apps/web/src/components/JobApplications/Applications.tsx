@@ -39,12 +39,13 @@ const Applications = ({ job_id }: { job_id: string }) => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Sl. NO</TableHead>
               <TableHead>Candidate</TableHead>
               <TableHead>Current Job Title</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Created At</TableHead>
               <TableHead>Resume Match</TableHead>
               <TableHead>Scoring Status</TableHead>
+              <TableHead>Created At</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

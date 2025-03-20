@@ -12,6 +12,7 @@ const JobApplication = ({ jobApplication }: { jobApplication: GetApplicationResp
   return (
     <>
       <TableRow key={jobApplication.application_id}>
+        <TableCell></TableCell>
         <TableCell>
           <div className="flex items-center">
             <Avatar className="mr-2 h-8 w-8">
@@ -24,7 +25,6 @@ const JobApplication = ({ jobApplication }: { jobApplication: GetApplicationResp
 
         <TableCell>{jobApplication.current_role}</TableCell>
         <TableCell>{jobApplication.location}</TableCell>
-        <TableCell>{untilNow(jobApplication.createdAt)}</TableCell>
         <TableCell>
           {/* <Badge
             variant={jobApplication.matchPercentage === 0 ? "destructive" : "secondary"}
@@ -37,6 +37,7 @@ const JobApplication = ({ jobApplication }: { jobApplication: GetApplicationResp
         <TableCell>
           <StatusColumn jobApplication={jobApplication} />
         </TableCell>
+        <TableCell>{untilNow(jobApplication.createdAt)}</TableCell>
       </TableRow>
     </>
   );

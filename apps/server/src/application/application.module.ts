@@ -15,8 +15,10 @@ import { ApplicationService } from "./application.service";
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Application.name, schema: ApplicationSchema }]),
-    MongooseModule.forFeature([{ name: ResumeScore.name, schema: ResumeScoreSchema }]),
+    MongooseModule.forFeature([
+      { name: Application.name, schema: ApplicationSchema },
+      { name: ResumeScore.name, schema: ResumeScoreSchema },
+    ]),
     JobModule,
     ...AppQueues,
   ],

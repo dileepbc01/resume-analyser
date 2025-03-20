@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsBoolean, IsNumber, IsString,IsObject, IsOptional, IsEnum, IsNotEmpty, } from "class-validator";
 import { Skill, Education, Experience, Profile, Application } from "../../schema/application.schema";
+import { Job } from "src/schema";
 
 class SkillResponse {
   @ApiProperty({ description: "Name of the skill" })
@@ -26,7 +27,7 @@ class EducationResponse {
 
   @ApiProperty({ description: "Field of study" })
   @IsString()
-  field_of_study: string;
+  fieldOfStudy: string;
 
   @ApiProperty({ description: "Grade" })
   @IsString()
@@ -42,15 +43,15 @@ class EducationResponse {
 
   @ApiProperty({ description: "Start date" })
   @IsString()
-  start_date: string;
+  startDate: string;
 
   @ApiProperty({ description: "End date" })
   @IsString()
-  end_date: string;
+  endDate: string;
 
   @ApiProperty({ description: "Currently studying" })
   @IsBoolean()
-  is_currently_studying: boolean;
+  isCurrentlyStudying: boolean;
 
   @ApiProperty({ description: "Description" })
   @IsString()
@@ -59,13 +60,13 @@ class EducationResponse {
   static fromEntity(education: Education): EducationResponse {
     const dto = new EducationResponse();
     dto.institution = education.institution;
-    dto.field_of_study = education.field_of_study;
+    dto.fieldOfStudy = education.field_of_study;
     dto.grade = education.grade;
     dto.type = education.type;
     dto.degree = education.degree;
-    dto.start_date = String(education.start_date);
-    dto.end_date = String(education.end_date);
-    dto.is_currently_studying = education.is_currently_studying;
+    dto.startDate = String(education.start_date);
+    dto.endDate = String(education.end_date);
+    dto.isCurrentlyStudying = education.is_currently_studying;
     dto.description = education.description;
     return dto;
   }
@@ -78,7 +79,7 @@ class ExperienceResponse {
 
   @ApiProperty({ description: "Employment type" })
   @IsString()
-  employment_type: string;
+  employmentType: string;
 
   @ApiProperty({ description: "Location" })
   @IsString()
@@ -90,30 +91,30 @@ class ExperienceResponse {
 
   @ApiProperty({ description: "Location type" })
   @IsString()
-  location_type: string;
+  locationType: string;
 
   @ApiProperty({ description: "Start date" })
   @IsString()
-  start_date: string;
+  startDate: string;
 
   @ApiProperty({ description: "End date" })
   @IsString()
-  end_date: string;
+  endDate: string;
 
   @ApiProperty({ description: "Currently working" })
   @IsBoolean()
-  is_currently_working: boolean;
+  isCurrentlyWorking: boolean;
 
   static fromEntity(experience: Experience): ExperienceResponse {
     const dto = new ExperienceResponse();
     dto.title = experience.title;
-    dto.employment_type = experience.employment_type;
+    dto.employmentType = experience.employment_type;
     dto.location = experience.location;
     dto.description = experience.description;
-    dto.location_type = experience.location_type;
-    dto.start_date = String(experience.start_date);
-    dto.end_date = String(experience.end_date);
-    dto.is_currently_working = experience.is_currently_working;
+    dto.locationType = experience.location_type;
+    dto.startDate = String(experience.start_date);
+    dto.endDate = String(experience.end_date);
+    dto.isCurrentlyWorking = experience.is_currently_working;
     return dto;
   }
 }
@@ -162,10 +163,76 @@ class JobProcessingStatus {
   retry_count: number;
 }
 
-export class GetApplicationResponse {
+class ParameterResponse {
+  @ApiProperty({ description: "Parameter name" })
+  @IsString()
+  name: string;
+
+  @ApiProperty({ description: "Score for the parameter" })
+  @IsNumber()
+  score: number;
+
+  static fromEntity(param: any): ParameterResponse {
+    const dto = new ParameterResponse();
+    dto.name = param.name;
+    dto.score = param.score;
+    return dto;
+  }
+}
+
+class ResumeScoreCriteriaResponse {
+  @ApiProperty({ description: "Criteria name" })
+  @IsString()
+  criteriaName: string;
+
+  @ApiProperty({ description: "Total score" })
+  @IsNumber()
+  totalScore: number;
+
+  @ApiProperty({ description: "Justification" })
+  @IsString()
+  justification: string;
+
+  @ApiProperty({ description: "Order" })
+  @IsNumber()
+  order: number;
+
+  @ApiProperty({ description: "Parameters" })
+  @IsArray()
+  parameters: ParameterResponse[];
+
+  static fromEntity(criteria: any): ResumeScoreCriteriaResponse {
+    const dto = new ResumeScoreCriteriaResponse();
+    dto.criteriaName = criteria.criteria_name;
+    dto.totalScore = criteria.total_score;
+    dto.justification = criteria.justification;
+    dto.order = criteria.order;
+    dto.parameters = criteria.parameters.map(ParameterResponse.fromEntity);
+    return dto;
+  }
+}
+
+class ResumeScoreResponse {
+  @ApiProperty({ description: "Resume score criterias" })
+  @IsArray()
+  criterias: ResumeScoreCriteriaResponse[];
+
+  static fromEntity(resumeScore: any): ResumeScoreResponse {
+    const dto = new ResumeScoreResponse();
+    dto.criterias = resumeScore.criterias.map(ResumeScoreCriteriaResponse.fromEntity);
+    return dto;
+  }
+}
+
+export class ApplicationResponse {
+
+  @ApiProperty({description:"Serial number"})
+  @IsNumber()
+  slNo: number;
+  
   @ApiProperty({ description: "Application Id" })
   @IsString()
-  application_id: string;
+  applicationId: string;
 
   @ApiProperty({ description: "Created At" })
   @IsString()
@@ -177,15 +244,15 @@ export class GetApplicationResponse {
 
   @ApiProperty({ description: "Full name of the applicant" })
   @IsString()
-  full_name: string;
+  fullName: string;
 
   @ApiProperty({ description: "Resume file name" })
   @IsString()
-  resume_file_name: string;
+  resumeFileName: string;
 
   @ApiProperty({ description: "Resume text" })
   @IsString()
-  resume_text: string;
+  resumeText: string;
 
   @ApiProperty({ description: "Email of the applicant" })
   @IsString()
@@ -197,7 +264,7 @@ export class GetApplicationResponse {
 
   @ApiProperty({ description: "Current role of the applicant" })
   @IsString()
-  current_role: string;
+  currentRole: string;
 
   @ApiProperty({ description: "Location of the applicant" })
   @IsString()
@@ -205,7 +272,7 @@ export class GetApplicationResponse {
 
   @ApiProperty({ description: "Resume URL" })
   @IsString()
-  resume_url: string;
+  resumeUrl: string;
 
   @ApiProperty({ description: "Skills of the applicant" })
   @IsArray()
@@ -229,24 +296,33 @@ export class GetApplicationResponse {
 
   @ApiProperty({})
   @IsObject()
-
-  parsingStatus:JobProcessingStatus
+  parsingStatus: JobProcessingStatus;
 
   @ApiProperty({})
   @IsObject()
-  scoringStatus:JobProcessingStatus
+  scoringStatus: JobProcessingStatus;
 
-  static fromEntity(application: Application): GetApplicationResponse {
-    const dto = new GetApplicationResponse();
-    dto.application_id = application._id.toString();
-    dto.full_name = application.full_name;
-    dto.resume_file_name = application.resume_file_name;
-    dto.resume_text = application.resume_text;
+  @ApiProperty({ description: "Resume Analysis Score" })
+  @IsOptional()
+  resumeAnalysis: ResumeScoreResponse|null;
+
+  @ApiProperty({ description: "Resume Analysis Score" })
+  @IsOptional()
+  resumeScore:number|null;
+
+
+  static fromEntity(application: Application): ApplicationResponse {
+    const dto = new ApplicationResponse();
+    dto.applicationId = String(application._id);
+    dto.slNo = 0;
+    dto.fullName = application.full_name;
+    dto.resumeFileName = application.resume_file_name;
+    dto.resumeText = application.resume_text;
     dto.email = application.email;
     dto.phone = application.phone;
-    dto.current_role = application.current_role;
+    dto.currentRole = application.current_role;
     dto.location = application.location;
-    dto.resume_url = application.resume_url;
+    dto.resumeUrl = application.resume_url;
     dto.skills = application.skills.map(SkillResponse.fromEntity);
     dto.education = application.education.map(EducationResponse.fromEntity);
     dto.experience = application.experience.map(ExperienceResponse.fromEntity);
@@ -254,8 +330,33 @@ export class GetApplicationResponse {
     dto.job = application.job.toString();
     dto.createdAt = application.created_at.toISOString();
     dto.updatedAt = application.updated_at.toISOString();
-    dto.parsingStatus=    application.parsing_status
-    dto.scoringStatus=    application.scoring_status
+    dto.parsingStatus = application.parsing_status;
+    dto.scoringStatus = application.scoring_status;
+    dto.resumeAnalysis =application.resume_analysis
+      ? ResumeScoreResponse.fromEntity(application.resume_analysis)
+      : null;
+    dto.resumeScore=0;
+    return dto;
+  }
+}
+
+
+export class GetApplicationResponse{
+
+  @ApiProperty({
+    description:"Candidate Applications"
+  })
+  @IsArray()
+  applications:ApplicationResponse[]
+  
+  @ApiProperty()
+  @IsNumber()
+  totalCandidates:number
+
+  static fromEntity(applications: Application[],totalCandidates:number){
+    const dto = new GetApplicationResponse()
+    dto.applications = applications.map(a=>ApplicationResponse.fromEntity(a)); 
+    dto.totalCandidates=totalCandidates
     return dto;
   }
 }
