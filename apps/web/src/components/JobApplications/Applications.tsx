@@ -31,8 +31,8 @@ const LoadingRow = () => (
 );
 
 const Applications = ({ job_id }: { job_id: string }) => {
-  const jobApplicationsQry = useJobApplications({ job_id: job_id });
-
+  const jobApplicationsQry = useJobApplications(job_id);
+  const applications = jobApplicationsQry.data?.applications ?? null;
   return (
     <>
       <div className="px-6 py-4">
@@ -43,25 +43,25 @@ const Applications = ({ job_id }: { job_id: string }) => {
               <TableHead>Candidate</TableHead>
               <TableHead>Current Job Title</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Resume Match</TableHead>
-              <TableHead>Scoring Status</TableHead>
+              <TableHead>Resume Score</TableHead>
               <TableHead>Created At</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {jobApplicationsQry.isLoading
-              ? Array(5)
-                  .fill(0)
-                  .map((_, i) => <LoadingRow key={i} />)
-              : (jobApplicationsQry.data ?? []).map((jobApp) => {
-                  if (
-                    jobApp.parsingStatus.status === "processing" ||
-                    jobApp.parsingStatus.status === "not_started"
-                  ) {
-                    return <LoadingRow key={jobApp.application_id} />;
-                  }
-                  return <JobApplication key={jobApp.application_id} jobApplication={jobApp} />;
-                })}
+            {jobApplicationsQry.isLoading &&
+              Array(5)
+                .fill(0)
+                .map((_, i) => <LoadingRow key={i} />)}
+            {applications != null &&
+              applications.map((jobApp) => {
+                if (
+                  jobApp.parsingStatus.status === "processing" ||
+                  jobApp.parsingStatus.status === "not_started"
+                ) {
+                  return <LoadingRow key={jobApp.applicationId} />;
+                }
+                return <JobApplication key={jobApp.applicationId} jobApplication={jobApp} />;
+              })}
           </TableBody>
         </Table>
       </div>

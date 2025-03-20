@@ -21,6 +21,5 @@ export class GetApplicationsDto {
   sort_order:"Asc"|"Desc";  
 
   @IsNumber()
-  @IsOptional()
   page_number:number;
 }

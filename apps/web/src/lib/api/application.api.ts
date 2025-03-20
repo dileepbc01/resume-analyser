@@ -1,4 +1,5 @@
 import { ApplicationRoutes } from "@/types/routes/application.route";
+import { GetApplicationsDto } from "@repo/types";
 
 import { api } from "../axios";
 
@@ -20,9 +21,10 @@ export const applicationApi = {
     });
     return data;
   },
-  getApplications: async ({ job_id }: { job_id: string }) => {
-    const { data } = await api.get<ApplicationRoutes["/application"]["get"]["responses"]>(
-      `/application?job_id=${job_id}`
+  getApplications: async (dto: GetApplicationsDto) => {
+    const { data } = await api.post<ApplicationRoutes["/application"]["get"]["responses"]>(
+      `/application`,
+      dto
     );
     return data;
   },

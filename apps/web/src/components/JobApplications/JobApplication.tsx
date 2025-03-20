@@ -8,32 +8,49 @@ import { TableCell, TableRow } from "@/components/ui/table";
 
 import { untilNow } from "@/lib/untilNow";
 
-const JobApplication = ({ jobApplication }: { jobApplication: GetApplicationResponse }) => {
+import { Badge } from "../ui/badge";
+
+const JobApplication = ({
+  jobApplication,
+}: {
+  jobApplication: GetApplicationResponse["applications"][0];
+}) => {
   return (
     <>
-      <TableRow key={jobApplication.application_id}>
-        <TableCell></TableCell>
+      <TableRow key={jobApplication.applicationId}>
+        <TableCell>{jobApplication.slNo}</TableCell>
         <TableCell>
           <div className="flex items-center">
             <Avatar className="mr-2 h-8 w-8">
-              <AvatarImage src={""} alt={jobApplication.full_name} />
-              <AvatarFallback>{jobApplication.full_name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={""} alt={jobApplication.fullName} />
+              <AvatarFallback>{jobApplication.fullName.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div className="font-medium">{jobApplication.full_name}</div>
+            <div className="font-medium">{jobApplication.fullName}</div>
           </div>
         </TableCell>
 
-        <TableCell>{jobApplication.current_role}</TableCell>
+        <TableCell>{jobApplication.currentRole}</TableCell>
         <TableCell>{jobApplication.location}</TableCell>
-        <TableCell>
-          {/* <Badge
-            variant={jobApplication.matchPercentage === 0 ? "destructive" : "secondary"}
+        {/* <TableCell>
+          {jobApplication.resumeScore && <>mjknjn</>}
+          {jobApplication.resumeScore && jobApplication.resumeScore >= 0 && (
+            <Badge
+              variant={jobApplication.resumeScore === 0 ? "destructive" : "secondary"}
+              className="font-normal">
+              {jobApplication.resumeScore === 0
+                ? "Not a match - 0%"
+                : `Good match - ${jobApplication.resumeScore}%`}
+              smss
+            </Badge>
+          )}
+          <Badge
+            variant={jobApplication.resumeScore === 0 ? "destructive" : "secondary"}
             className="font-normal">
-            {jobApplication.matchPercentage === 0
-            ? "Not a match - 0%"
-            : `Good match - ${jobApplication.matchPercentage}%`}
-            </Badge> */}
-        </TableCell>
+            {jobApplication.resumeScore === 0
+              ? "Not a match - 0%"
+              : `Good match - ${jobApplication.resumeScore}%`}
+          </Badge>
+        </TableCell> */}
         <TableCell>
           <StatusColumn jobApplication={jobApplication} />
         </TableCell>
@@ -45,7 +62,7 @@ const JobApplication = ({ jobApplication }: { jobApplication: GetApplicationResp
 
 export default JobApplication;
 
-const StatusColumn = ({ jobApplication }: { jobApplication: GetApplicationResponse }) => {
+const StatusColumn = ({ jobApplication }: { jobApplication: GetApplicationResponse["applications"][0] }) => {
   let content;
   switch (true) {
     case jobApplication.parsingStatus.status === "not_started":
@@ -99,8 +116,17 @@ const StatusColumn = ({ jobApplication }: { jobApplication: GetApplicationRespon
     case jobApplication.scoringStatus.status === "completed":
       content = (
         <div className="flex items-center">
+          {jobApplication.resumeScore && jobApplication.resumeScore >= 0 && (
+            <Badge
+              variant={jobApplication.resumeScore === 0 ? "destructive" : "secondary"}
+              className="font-normal">
+              {jobApplication.resumeScore === 0
+                ? "Not a match - 0%"
+                : `Good match - ${jobApplication.resumeScore}%`}
+              smss
+            </Badge>
+          )}
           <CheckCircle2Icon className="h-4 w-4 text-green-500 dark:text-green-400" />
-          <span className="ml-2 text-green-500">Scoring Completed</span>
         </div>
       );
       break;

@@ -316,10 +316,10 @@ export class ApplicationResponse {
   scoreCriteriaVersion:number|null;
 
 
-  static fromEntity(application: Application): ApplicationResponse {
+  static fromEntity(application: Application,slNo:number): ApplicationResponse {
     const dto = new ApplicationResponse();
     dto.applicationId = String(application._id);
-    dto.slNo = 0;
+    dto.slNo = slNo;
     dto.fullName = application.full_name;
     dto.resumeFileName = application.resume_file_name;
     dto.resumeText = application.resume_text;
@@ -359,9 +359,9 @@ export class GetApplicationResponse{
   @IsNumber()
   totalCandidates:number
 
-  static fromEntity(applications: Application[],totalCandidates:number){
+  static fromEntity(applications: Application[],totalCandidates:number,pageNo:number){
     const dto = new GetApplicationResponse()
-    dto.applications = applications.map(a=>ApplicationResponse.fromEntity(a)); 
+    dto.applications = applications.map((a,idx)=>ApplicationResponse.fromEntity(a,pageNo*(idx+1))); 
     dto.totalCandidates=totalCandidates
     return dto;
   }

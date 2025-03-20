@@ -90,7 +90,11 @@ export class ApplicationService {
       .limit(pageSize)
       .exec();
 
-    const getApplicationsResponse = GetApplicationResponse.fromEntity(applications, total_records);
+    const getApplicationsResponse = GetApplicationResponse.fromEntity(
+      applications,
+      total_records,
+      dto.page_number
+    );
 
     return getApplicationsResponse;
   }
