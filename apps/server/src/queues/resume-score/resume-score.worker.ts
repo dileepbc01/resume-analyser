@@ -69,7 +69,7 @@ export class ResumeScoreProcessor extends WorkerHost {
   @OnWorkerEvent("active")
   async onActive(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} ACTIVE!`);
-    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+    await this.applicationService.updateParseStatus(job.data.applicationId, "scoring", {
       error: null,
       percentage: job.progress as number,
       status: "processing",
@@ -80,7 +80,7 @@ export class ResumeScoreProcessor extends WorkerHost {
   @OnWorkerEvent("progress")
   async onProgress(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} PROGRESS!`);
-    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+    await this.applicationService.updateParseStatus(job.data.applicationId, "scoring", {
       error: null,
       percentage: job.progress as number,
       status: "processing",
@@ -91,7 +91,7 @@ export class ResumeScoreProcessor extends WorkerHost {
   @OnWorkerEvent("completed")
   async onCompleted(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} COMPLETED!`);
-    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+    await this.applicationService.updateParseStatus(job.data.applicationId, "scoring", {
       error: null,
       percentage: job.progress as number,
       status: "completed",
@@ -102,7 +102,7 @@ export class ResumeScoreProcessor extends WorkerHost {
   @OnWorkerEvent("failed")
   async onFailed(job: BullJob<QueuePayload["resume-parse"]>) {
     console.info(`Job with id ${job.id} FAILED!`, job.failedReason);
-    await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
+    await this.applicationService.updateParseStatus(job.data.applicationId, "scoring", {
       error: {
         type: "client",
         message: job.failedReason,

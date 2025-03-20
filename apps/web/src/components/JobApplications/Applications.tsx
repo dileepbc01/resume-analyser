@@ -40,10 +40,10 @@ const Applications = ({ job_id }: { job_id: string }) => {
           <TableHeader>
             <TableRow>
               <TableHead>Candidate</TableHead>
-              <TableHead>Resume Match</TableHead>
               <TableHead>Current Job Title</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Created At</TableHead>
+              <TableHead>Resume Match</TableHead>
               <TableHead>Scoring Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -52,9 +52,15 @@ const Applications = ({ job_id }: { job_id: string }) => {
               ? Array(5)
                   .fill(0)
                   .map((_, i) => <LoadingRow key={i} />)
-              : (jobApplicationsQry.data ?? []).map((jobApp) => (
-                  <JobApplication key={jobApp.application_id} jobApplication={jobApp} />
-                ))}
+              : (jobApplicationsQry.data ?? []).map((jobApp) => {
+                  if (
+                    jobApp.parsingStatus.status === "processing" ||
+                    jobApp.parsingStatus.status === "not_started"
+                  ) {
+                    return <LoadingRow key={jobApp.application_id} />;
+                  }
+                  return <JobApplication key={jobApp.application_id} jobApplication={jobApp} />;
+                })}
           </TableBody>
         </Table>
       </div>
