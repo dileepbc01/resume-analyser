@@ -90,13 +90,9 @@ export class ApplicationService {
       .limit(pageSize)
       .exec();
 
-    // const applicationWithScore = applications.map((a) => ({
-    //   ...a,
-    //   resumeScore: calcResumeScore(a.resume_analysis, job_details.scoring_criteria),
-    // }));
     const getApplicationsResponse = GetApplicationResponse.fromEntity(applications, total_records);
 
-    return applications;
+    return getApplicationsResponse;
   }
 
   async updateParseStatus(

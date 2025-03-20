@@ -311,6 +311,11 @@ export class ApplicationResponse {
   resumeScore:number|null;
 
 
+  @ApiProperty({ description: "Resume Analysis Score" })
+  @IsOptional()
+  scoreCriteriaVersion:number|null;
+
+
   static fromEntity(application: Application): ApplicationResponse {
     const dto = new ApplicationResponse();
     dto.applicationId = String(application._id);
@@ -335,7 +340,8 @@ export class ApplicationResponse {
     dto.resumeAnalysis =application.resume_analysis
       ? ResumeScoreResponse.fromEntity(application.resume_analysis)
       : null;
-    dto.resumeScore=0;
+    dto.resumeScore=application.resume_score;
+    dto.scoreCriteriaVersion=application.scoring_criteria_version;
     return dto;
   }
 }

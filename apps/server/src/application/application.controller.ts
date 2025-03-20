@@ -77,7 +77,7 @@ export class ApplicationController {
   }
 
   @Post()
-  async getApplications(@Body() dto: GetApplicationsDto) {
+  async getApplications(@Body() dto: GetApplicationsDto): Promise<GetApplicationResponse> {
     return await this.applicationService.getApplications(dto);
   }
 }
