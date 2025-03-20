@@ -77,7 +77,7 @@ export class ApplicationService {
     const sortFieldMap: Record<string, string> = {
       Name: "full_name",
       Experience: "experience",
-      // "Resume Score": "resume_score", TODO:// Implement this later
+      "Resume Score": "resume_score",
     };
     const sortField = sortFieldMap[dto.sort_by] || "full_name";
     const sortOrder = dto.sort_order === "Asc" ? 1 : -1;
