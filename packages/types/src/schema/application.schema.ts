@@ -248,6 +248,13 @@ export class Application {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Job" })
   job: Job; // Reference to the Job schema
 
+  
+  @Prop({ type: MongooseSchema.Types.Number,required:false })
+  resume_score: number|null; // Reference to the Job schema
+
+  @Prop({ type: MongooseSchema.Types.Number,required:false,default:null })
+  scoring_criteria_version: number|null; // Reference to the Job schema
+
   @Prop({
     type:JobProcessingStatusSchema,
     ref:"JobProcessingStatus",
@@ -263,7 +270,7 @@ export class Application {
   scoring_status:JobProcessingStatus
 
 
-  @Prop({ type: ResumeScoreSchema, ref: "ResumeScoreSchema", default: null })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: "ResumeScore", default: null })
   resume_analysis: ResumeScore;
 }
 

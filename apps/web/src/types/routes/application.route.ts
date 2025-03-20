@@ -12,7 +12,7 @@ export type ApplicationRoutes = {
   "/application": {
     get: {
       request: GetApplicationsDto;
-      responses: GetApplicationResponse[];
+      responses: GetApplicationResponse;
     };
   };
 };

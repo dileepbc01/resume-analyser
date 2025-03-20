@@ -13,9 +13,7 @@ function App() {
       <nav className="bg-card shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="text-primary text-2xl font-bold">Resume Analyzer</div>
-          <Button variant="default" asChild>
-            <Link href="/analyze">Try Now</Link>
-          </Button>
+          <Button variant="default">Get Started</Button>
         </div>
       </nav>
 
@@ -31,10 +29,10 @@ function App() {
           </p>
           <div className="flex justify-center gap-4">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-              <Link href="/signup">Register Now</Link>
+              <Link href="/login">Try It Free</Link>
             </Button>
-            <Button variant="outline" className="text-primary border-primary" asChild>
-              <Link href="/login">Login</Link>
+            <Button variant="outline" className="text-primary border-primary">
+              Learn More
             </Button>
           </div>
         </div>
@@ -88,8 +86,8 @@ function App() {
           <p className="text-muted-foreground mb-8 text-xl">
             Upload a job description and resumes to see how Resume Analyzer works—no sign-up required!
           </p>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-            <Link href="/analyze">Analyze Resumes Now</Link>
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+            Analyze Resumes Now
           </Button>
         </div>
       </section>
@@ -101,8 +99,8 @@ function App() {
             <p className="text-muted-foreground mb-8 text-xl">
               Pay only for what you use. Just $X per 1,000 resumes analyzed.
             </p>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-              <Link href="/login">Start Analyzing</Link>
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Start Analyzing
             </Button>
           </div>
         </div>

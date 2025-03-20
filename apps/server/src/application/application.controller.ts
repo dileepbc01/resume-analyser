@@ -1,5 +1,6 @@
 import { InjectQueue } from "@nestjs/bullmq";
 import {
+  Body,
   Controller,
   Get,
   MaxFileSizeValidator,
@@ -75,9 +76,8 @@ export class ApplicationController {
     });
   }
 
-  @Get()
-  async getApplications(@Query() dto: GetApplicationsDto): Promise<GetApplicationResponse[]> {
-    const applicants = await this.applicationService.getApplicationsByJobId(dto.job_id);
-    return applicants.map((a) => GetApplicationResponse.fromEntity(a));
+  @Post()
+  async getApplications(@Body() dto: GetApplicationsDto): Promise<GetApplicationResponse> {
+    return await this.applicationService.getApplications(dto);
   }
 }

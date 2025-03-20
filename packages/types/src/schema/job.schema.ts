@@ -71,7 +71,7 @@ export class Job {
     ref: "ScoringCriteria",
     required: true,
   })
-  scoringCriteria: ScoringCriteria;
+  scoring_criteria: ScoringCriteria;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);
