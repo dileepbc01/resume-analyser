@@ -6,6 +6,7 @@ import { Job as BullJob } from "bullmq";
 import { Model } from "mongoose";
 import { ApplicationService } from "src/application/application.service";
 import { LangchainService } from "src/langchain/langchain.service";
+import { calcResumeScore } from "src/utils/calcResumeScore";
 
 import { AppQueueEnum, QueuePayload } from "../app-queues";
 
@@ -28,21 +29,15 @@ export class ResumeScoreProcessor extends WorkerHost {
     if (!application) {
       throw new Error("Application not found"); // TODO: custom error and logger
     }
-    const appJob = await this.jobModel.findById(application.job);
+    const appJob = await this.jobModel.findById(application.job).populate("scoring_criteria");
     if (!appJob) {
       throw new Error("Job not found"); // TODO: custom error
-    }
-    const scoreCriteria = await this.scoringCriteria.findOne({
-      _id: appJob.scoringCriteria._id,
-    });
-    if (!scoreCriteria) {
-      throw new Error("Scoring Criteria not found"); // TODO: custom error
     }
 
     const score = await this.langchainService.scoreResume(
       application.resume_text,
       appJob.description,
-      scoreCriteria
+      appJob.scoring_criteria
     );
 
     const savedScore = await this.resumeScore.create({
@@ -62,6 +57,8 @@ export class ResumeScoreProcessor extends WorkerHost {
       }),
     });
     application.resume_analysis = savedScore;
+    application.scoring_criteria_version = appJob.scoring_criteria.version;
+    application.resume_score = calcResumeScore(savedScore, appJob.scoring_criteria);
     await application.save();
     return savedScore;
   }
