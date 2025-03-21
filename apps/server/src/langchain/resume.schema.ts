@@ -102,22 +102,7 @@ export const ResumeSchema = z.object({
   skills: withDefault(SkillItemSchema.array().default([]).describe("Skills possessed by the individual"), []),
 });
 
-const EvaluationParameterSchema = z.object({
-  parameterName: withDefault(z.string().describe("Name of the parameter"), ""),
-  score: withDefault(z.number().describe("Score of the parameter"), 0),
-});
-
-const EvaluationCriterionSchema = z.object({
-  criterionName: withDefault(z.string().describe("Name of the criterion"), ""),
-  parameters: withDefault(EvaluationParameterSchema.array().describe("Parameters for the criterion"), []),
-  justification: withDefault(z.string().describe("Overview of the criterion"), ""),
-});
-
-export const EvaluationSchema = z.object({
-  evaluation: withDefault(EvaluationCriterionSchema.array().describe("Evaluation results"), []),
-});
-
-//Scoring
+// parameter
 const CriterionSchema = z.object({
   criteria_name: withDefault(z.string().describe("The name of the evaluation criterion"), ""),
   importance: withDefault(
@@ -133,6 +118,21 @@ const CriterionSchema = z.object({
 // Define the schema for the entire criteria set
 export const CriteriaSetSchema = z.object({
   criteria: withDefault(z.array(CriterionSchema).describe("List of all evaluation criteria"), []),
+});
+
+const EvaluationParameterSchema = z.object({
+  parameterName: withDefault(z.string().describe("Name of the parameter"), ""),
+  score: withDefault(z.number().describe("Score of the parameter"), 0),
+});
+
+const EvaluationCriterionSchema = z.object({
+  criterionName: withDefault(z.string().describe("Name of the criterion"), ""),
+  parameters: withDefault(EvaluationParameterSchema.array().describe("Parameters for the criterion"), []),
+  justification: withDefault(z.string().describe("justification for the evalution of the criteria"), "None"),
+});
+
+export const EvaluationSchema = z.object({
+  evaluation: withDefault(EvaluationCriterionSchema.array().describe("Evaluation results"), []),
 });
 
 function withDefault<T>(schema: z.ZodType<T>, defaultValue: T) {

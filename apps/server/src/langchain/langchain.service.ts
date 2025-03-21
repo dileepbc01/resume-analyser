@@ -57,55 +57,30 @@ export class LangchainService {
   async scoreResume(resume_text: string, jd_text: string, criterias: ScoringCriteria) {
     this.llm.model = "claude-3-5-haiku-20241022"; // TODO: remove hardcoding
     const systemMessage = `
-    You are an AI assistant specializing in resume evaluation. Your task is to assess a candidate's resume against a job description using specific criteria. You will be provided with a resume, job description, and a list of criteria.
+    You are an AI assistant evaluating a resume against a job description using specific criteria.
 
     Resume:
-    <resume>
     ${resume_text}
-    </resume>
 
     Job Description:
-    <job_description>
     ${jd_text}
-    </job_description>
 
-    Criteria List:
-    <criteria_list>
-    ${criterias.criterias.map((criteria) => {
-      return `${criteria.criteria_name}\n ${criteria.parameters.map((param) => {
-        return ` - ${param}\n`;
-      })}`;
-    })}
-    </criteria_list>
-    
-
+    Criteria:
+    ${criterias.criterias
+      .map(
+        (criteria) =>
+          `${criteria.criteria_name}
+       ${criteria.parameters.map((param) => `- ${param}`).join("\n")}`
+      )
+      .join("\n\n")}
 
     Instructions:
+    1. For each criterion and its parameters, evaluate how well the resume matches the job description
+    2. Score each parameter from 0 to 1 (0=no match, 1=perfect match)
+    3. justify your evaluation of each criteria in 1-2 sentence.
 
-    1. Carefully review the resume, job description, and criteria list.
-
-    2. For each criterion in the criteria list:
-       a. Evaluate each parameter within the criterion.
-       b. Score each parameter on a scale of 0 to 1 (0 = no match, 1 = perfect match).
-       c. Write a brief overview (2-3 sentences) for each parameter.
-       d. After evaluating all parameters, write a summary overview (3-4 sentences) for the entire criterion.
-
-    3. Before providing your final evaluation for each criterion, wrap your evaluation process in <evaluation_process> tags. Include the following steps:
-       a. Quote relevant parts of the resume and job description for each parameter.
-       b. List pros and cons for how well the candidate matches each parameter.
-       c. Justify the score given for each parameter.
-       d. Summarize the overall match for the criterion.
-
-    4. After completing the analysis for all criteria, present your final evaluation as a JSON object with the following structure:
-
-    Important Notes:
-    - Ensure your evaluation is objective and based solely on the information provided in the resume and job description.
-    - Do not make assumptions beyond what is explicitly stated in these documents.
-    - Adhere strictly to the scoring scale of 0 to 1 for each parameter.
-    - Keep your overviews concise and informative.
-
-    Begin your analysis with the first criterion, showing your evaluation process in <evaluation_process> tags, and then provide the final JSON output after completing all criteria.
-            `;
+    Return your evaluation as a structured JSON object following the EvaluationSchema format.
+    `;
 
     const structured_llm = this.llm.withStructuredOutput(EvaluationSchema);
     const structured_resume = await structured_llm.invoke(systemMessage);
