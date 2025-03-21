@@ -56,7 +56,8 @@ const Applications = ({ job_id }: { job_id: string }) => {
               applications.map((jobApp) => {
                 if (
                   jobApp.parsingStatus.status === "processing" ||
-                  jobApp.parsingStatus.status === "not_started"
+                  jobApp.parsingStatus.status === "not_started" ||
+                  jobApp.parsingStatus.status === "failed"
                 ) {
                   return <LoadingRow key={jobApp.applicationId} />;
                 }

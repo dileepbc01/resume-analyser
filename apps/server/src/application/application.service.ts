@@ -90,6 +90,15 @@ export class ApplicationService {
       .limit(pageSize)
       .exec();
 
+    applications.sort((a, b) => {
+      if (a.scoring_status.status === "completed" && b.scoring_status.status !== "completed") {
+        return -1; // a comes before b (completed first)
+      } else if (a.scoring_status.status !== "completed" && b.scoring_status.status === "completed") {
+        return 1; // b comes before a (completed first)
+      }
+      return 0; // no change in order
+    });
+
     const getApplicationsResponse = GetApplicationResponse.fromEntity(
       applications,
       total_records,

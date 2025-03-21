@@ -63,6 +63,7 @@ const JobApplication = ({
 export default JobApplication;
 
 const StatusColumn = ({ jobApplication }: { jobApplication: GetApplicationResponse["applications"][0] }) => {
+  console.log(jobApplication.resumeScore, "score");
   let content;
   switch (true) {
     case jobApplication.parsingStatus.status === "not_started":

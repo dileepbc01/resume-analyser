@@ -30,7 +30,7 @@ export class ResumeScoreProcessor extends WorkerHost {
       throw new Error("Application not found"); // TODO: custom error and logger
     }
     const appJob = await this.jobModel.findById(application.job).populate("scoring_criteria");
-    if (!appJob) {
+    if (!appJob || !appJob.scoring_criteria) {
       throw new Error("Job not found"); // TODO: custom error
     }
 
@@ -59,6 +59,7 @@ export class ResumeScoreProcessor extends WorkerHost {
     application.resume_analysis = savedScore;
     application.scoring_criteria_version = appJob.scoring_criteria.version;
     application.resume_score = calcResumeScore(savedScore, appJob.scoring_criteria);
+    console.log("calc score", application.resume_score);
     await application.save();
     return savedScore;
   }

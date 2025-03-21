@@ -5,7 +5,7 @@ import { ConfigService } from "@nestjs/config";
 import { ScoringCriteria } from "@repo/types";
 import { z } from "zod";
 
-import { EvaluationSchema, ResumeSchema } from "./resume.schema";
+import { CriteriaSetSchema, EvaluationSchema, ResumeSchema } from "./resume.schema";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const officeParser = require("officeparser");
@@ -115,18 +115,6 @@ export class LangchainService {
   async getStructedScoreSettings(str_score_setting: string) {
     this.llm.model = "claude-3-5-haiku-20241022"; // TODO: remove hardcoding
     // Define the schema for a single criterion as per your requirements
-    const CriterionSchema = z.object({
-      criteria_name: z.string().describe("The name of the evaluation criterion"),
-      importance: z.number().min(0).max(100).describe("The importance score (0-100) of this criterion"),
-      parameters: z
-        .array(z.string())
-        .describe("List of specific parameters to evaluate within this criterion"),
-    });
-
-    // Define the schema for the entire criteria set
-    const CriteriaSetSchema = z.object({
-      criteria: z.array(CriterionSchema).describe("List of all evaluation criteria"),
-    });
 
     const promptTemplate = ChatPromptTemplate.fromMessages([
       [
