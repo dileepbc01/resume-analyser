@@ -114,7 +114,7 @@ export class JobController {
     if (!jobDetails) {
       throw new NotFoundException("Job not found");
     }
-    const jobScoringCrit = await this.ScoringCritModel.findOne({ _id: jobDetails.scoringCriteria._id });
+    const jobScoringCrit = await this.ScoringCritModel.findOne({ _id: jobDetails.scoring_criteria._id });
 
     if (!jobScoringCrit) {
       throw new NotFoundException("Scoring Criteria not");
@@ -149,6 +149,6 @@ export class JobController {
     if (!jobDetails) {
       throw new NotFoundException("Job not found");
     }
-    return GetScoringSettingsResponse.fromEntity(jobDetails.scoringCriteria);
+    return GetScoringSettingsResponse.fromEntity(jobDetails.scoring_criteria);
   }
 }

@@ -1,7 +1,7 @@
 import { OnWorkerEvent, Processor, WorkerHost } from "@nestjs/bullmq";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Application, Job, ResumeScore, ScoringCriteria } from "@repo/types";
+import { Application, Job, ResumeScore, ResumeScoreCriteria, ScoringCriteria } from "@repo/types";
 import { Job as BullJob } from "bullmq";
 import { Model } from "mongoose";
 import { ApplicationService } from "src/application/application.service";
@@ -34,6 +34,9 @@ export class ResumeScoreProcessor extends WorkerHost {
       throw new Error("Job not found"); // TODO: custom error
     }
 
+    if (!appJob.scoring_criteria) {
+      throw new Error("Scoring Criteria not found"); // TODO: custom error
+    }
     const score = await this.langchainService.scoreResume(
       application.resume_text,
       appJob.description,
@@ -42,9 +45,8 @@ export class ResumeScoreProcessor extends WorkerHost {
 
     const savedScore = await this.resumeScore.create({
       criterias: score.evaluation.map((c, idx) => {
-        return {
+        const crit: ResumeScoreCriteria = {
           criteria_name: c.criterionName,
-          total_score: c.parameters.reduce((acc, p) => acc + p.score, 0),
           justification: c.justification,
           order: idx,
           parameters: c.parameters.map((p) => {
@@ -53,7 +55,9 @@ export class ResumeScoreProcessor extends WorkerHost {
               score: p.score,
             };
           }),
+          total_score: (c.parameters.reduce((acc, p) => acc + p.score, 0) / c.parameters.length) * 100,
         };
+        return crit;
       }),
     });
     application.resume_analysis = savedScore;

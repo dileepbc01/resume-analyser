@@ -3,7 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Application, GetApplicationResponse, GetApplicationsDto, Job, ResumeScore } from "@repo/types";
 import { Model } from "mongoose";
 import { ResumeSchema } from "src/langchain/resume.schema";
-import { calcResumeScore } from "src/utils/calcResumeScore";
 import { z } from "zod";
 
 @Injectable()
@@ -89,6 +88,15 @@ export class ApplicationService {
       .skip((dto.page_number - 1) * pageSize)
       .limit(pageSize)
       .exec();
+
+    applications.sort((a, b) => {
+      if (a.scoring_status.status === "completed" && b.scoring_status.status !== "completed") {
+        return -1; // a comes before b (completed first)
+      } else if (a.scoring_status.status !== "completed" && b.scoring_status.status === "completed") {
+        return 1; // b comes before a (completed first)
+      }
+      return 0; // no change in order
+    });
 
     const getApplicationsResponse = GetApplicationResponse.fromEntity(
       applications,

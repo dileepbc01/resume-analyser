@@ -31,26 +31,6 @@ const JobApplication = ({
 
         <TableCell>{jobApplication.currentRole}</TableCell>
         <TableCell>{jobApplication.location}</TableCell>
-        {/* <TableCell>
-          {jobApplication.resumeScore && <>mjknjn</>}
-          {jobApplication.resumeScore && jobApplication.resumeScore >= 0 && (
-            <Badge
-              variant={jobApplication.resumeScore === 0 ? "destructive" : "secondary"}
-              className="font-normal">
-              {jobApplication.resumeScore === 0
-                ? "Not a match - 0%"
-                : `Good match - ${jobApplication.resumeScore}%`}
-              smss
-            </Badge>
-          )}
-          <Badge
-            variant={jobApplication.resumeScore === 0 ? "destructive" : "secondary"}
-            className="font-normal">
-            {jobApplication.resumeScore === 0
-              ? "Not a match - 0%"
-              : `Good match - ${jobApplication.resumeScore}%`}
-          </Badge>
-        </TableCell> */}
         <TableCell>
           <StatusColumn jobApplication={jobApplication} />
         </TableCell>
@@ -116,14 +96,17 @@ const StatusColumn = ({ jobApplication }: { jobApplication: GetApplicationRespon
     case jobApplication.scoringStatus.status === "completed":
       content = (
         <div className="flex items-center">
-          {jobApplication.resumeScore && jobApplication.resumeScore >= 0 && (
+          {jobApplication.resumeScore !== undefined && jobApplication.resumeScore !== null && (
             <Badge
-              variant={jobApplication.resumeScore === 0 ? "destructive" : "secondary"}
-              className="font-normal">
-              {jobApplication.resumeScore === 0
-                ? "Not a match - 0%"
-                : `Good match - ${jobApplication.resumeScore}%`}
-              smss
+              variant={
+                jobApplication.resumeScore < 30
+                  ? "destructive"
+                  : jobApplication.resumeScore < 70
+                    ? "secondary"
+                    : "default"
+              }
+              className="mr-3 font-medium">
+              {jobApplication.resumeScore === 0 ? "No match (0%)" : `${jobApplication.resumeScore}%`}
             </Badge>
           )}
           <CheckCircle2Icon className="h-4 w-4 text-green-500 dark:text-green-400" />

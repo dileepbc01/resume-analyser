@@ -58,11 +58,6 @@ export class Job {
   @Prop({ type: Date, default: Date.now })
   updated_at: Date;
 
-  @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: "Application" }],
-  })
-  candidates: Application[]; // One-to-many relationship with Candidate
-
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: "Recruiter" })
   recruiter: Recruiter;
 
