@@ -24,5 +24,6 @@ export const calcResumeScore = (
     return total + criteria_score;
   }, 0);
 
-  return totalresumeScore;
+  // Round to 2 decimal places
+  return Number(totalresumeScore.toFixed(2));
 };
