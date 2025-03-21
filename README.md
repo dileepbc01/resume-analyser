@@ -2,6 +2,8 @@
 
 # Resume Analyzer 🚀
 
+> **Note:** This application is currently in active development. Features and functionality may change.
+
 Resume Analyzer is an AI-powered SaaS tool designed to streamline resume analysis and job matching. It leverages advanced language models to provide accurate insights, helping recruiters efficiently evaluate candidates.
 
 ## 🛠 Tech Stack
@@ -31,7 +33,7 @@ Resume Analyzer is an AI-powered SaaS tool designed to streamline resume analysi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/resume-analyzer.git
+   git clone https://github.com/dileepbc01/resume-analyser.git
    ```
 2. Install dependencies:
    ```bash
