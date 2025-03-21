@@ -3,7 +3,6 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ScoringCriteria } from "@repo/types";
-import { z } from "zod";
 
 import { CriteriaSetSchema, EvaluationSchema, ResumeSchema } from "./resume.schema";
 

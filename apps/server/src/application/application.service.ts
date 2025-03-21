@@ -3,7 +3,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Application, GetApplicationResponse, GetApplicationsDto, Job, ResumeScore } from "@repo/types";
 import { Model } from "mongoose";
 import { ResumeSchema } from "src/langchain/resume.schema";
-import { calcResumeScore } from "src/utils/calcResumeScore";
 import { z } from "zod";
 
 @Injectable()

@@ -2,11 +2,9 @@ import { InjectQueue } from "@nestjs/bullmq";
 import {
   Body,
   Controller,
-  Get,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
-  Query,
   Req,
   UploadedFile,
   UseGuards,
