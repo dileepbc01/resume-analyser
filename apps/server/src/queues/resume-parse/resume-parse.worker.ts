@@ -3,8 +3,6 @@ import { Injectable } from "@nestjs/common";
 import { Job, Queue } from "bullmq";
 import { ApplicationService } from "src/application/application.service";
 import { LangchainService } from "src/langchain/langchain.service";
-import { ResumeSchema } from "src/langchain/resume.schema";
-import { z } from "zod";
 
 import { AppQueueEnum, FileMimeTypes, QueuePayload } from "../app-queues";
 

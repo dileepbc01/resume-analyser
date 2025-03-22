@@ -28,7 +28,6 @@ export class ApplicationService {
     resume_text: string;
     resume_json: z.infer<typeof ResumeSchema>;
   }) {
-    console.log("profuile", dto.resume_json.profiles);
     await this.applicationModel
       .findByIdAndUpdate(dto.application_id, {
         _id: dto.application_id,
