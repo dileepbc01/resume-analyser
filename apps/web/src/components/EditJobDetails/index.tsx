@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { jobApi } from "@/lib/api/job.api";
 
 import JobForm from "../jobs/JobForm";
-import {  ResumeScoreSettings } from "../jobs/ParameterSlider";
+import { ResumeScoreSettings } from "../jobs/ParameterSlider";
 
 export enum JobDetailsTab {
   Details = "details",
@@ -57,11 +57,10 @@ const JobDetails = ({ job_id }: { job_id: string }) => {
             location: job.location,
             type: job.type,
           }}
+          isEdit
         />
       )}
-      {currentTab === JobDetailsTab.Scoring && (
-        <ResumeScoreSettings jobId={job_id} />
-      )}
+      {currentTab === JobDetailsTab.Scoring && <ResumeScoreSettings jobId={job_id} />}
     </>
   );
 };

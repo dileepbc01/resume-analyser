@@ -111,7 +111,7 @@ export function TopBar({ jobDetails }: { jobDetails: GetJobResponse }) {
             <Button
               variant="outline"
               onClick={() => {
-                router.push(`/job/edit?job_id=${jobDetails.id}`);
+                router.push(`/job/${jobDetails.id}/edit?tab=scoring`);
               }}>
               Edit
             </Button>
