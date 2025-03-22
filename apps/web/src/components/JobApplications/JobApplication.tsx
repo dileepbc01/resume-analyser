@@ -12,12 +12,14 @@ import { Badge } from "../ui/badge";
 
 const JobApplication = ({
   jobApplication,
+  openJobApplication,
 }: {
   jobApplication: GetApplicationResponse["applications"][0];
+  openJobApplication: () => void;
 }) => {
   return (
     <>
-      <TableRow key={jobApplication.applicationId}>
+      <TableRow key={jobApplication.applicationId} onClick={() => openJobApplication()}>
         <TableCell>{jobApplication.slNo}</TableCell>
         <TableCell>
           <div className="flex items-center">
