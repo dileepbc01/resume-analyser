@@ -1,31 +1,31 @@
 import { z } from "zod";
 
 const BasicsSchema = z.object({
-  full_name: withDefault(z.string().nullish().describe("Full name of the individual"), ""),
-  email: withDefault(z.string().nullish().describe("Email address of the individual"), ""),
-  phone: withDefault(z.string().nullish().describe("Phone number of the individual"), ""),
-  current_role: withDefault(z.string().nullish().describe("Current role of the individual"), ""),
-  location: withDefault(z.string().nullish().describe("Location of the individual"), ""),
-  resume_url: withDefault(z.string().nullish().describe("URL to the resume of the individual"), ""),
+  full_name: withDefault(z.string().describe("Full name of the individual"), ""),
+  email: withDefault(z.string().describe("Email address of the individual"), ""),
+  phone: withDefault(z.string().describe("Phone number of the individual"), ""),
+  current_role: withDefault(z.string().describe("Current role of the individual"), ""),
+  location: withDefault(z.string().describe("Location of the individual"), ""),
+  resume_url: withDefault(z.string().describe("URL to the resume of the individual"), ""),
 });
 
 const AwardItemSchema = z.object({
-  title: withDefault(z.string().nullish(), ""),
-  awarder: withDefault(z.string().nullish(), ""),
-  date: withDefault(z.string().nullish(), ""),
-  summary: withDefault(z.string().nullish(), ""),
-  url: withDefault(z.string().nullish(), ""),
+  title: withDefault(z.string(), ""),
+  awarder: withDefault(z.string(), ""),
+  date: withDefault(z.string(), ""),
+  summary: withDefault(z.string(), ""),
+  url: withDefault(z.string(), ""),
 });
 
 const CertificationItemSchema = z.object({
-  title: withDefault(z.string().nullish(), ""),
-  date: withDefault(z.string().nullish(), ""),
-  summary: withDefault(z.string().nullish(), ""),
+  title: withDefault(z.string(), ""),
+  date: withDefault(z.string(), ""),
+  summary: withDefault(z.string(), ""),
   url: withDefault(
     z
       .object({
-        label: withDefault(z.string().nullish(), ""),
-        href: withDefault(z.string().nullish(), ""),
+        label: withDefault(z.string(), ""),
+        href: withDefault(z.string(), ""),
       })
       .nullish(),
     { label: "", href: "" }
@@ -33,50 +33,50 @@ const CertificationItemSchema = z.object({
 });
 
 const EducationItemSchema = z.object({
-  institution: withDefault(z.string().nullish().describe("Name of the institution"), ""),
-  field_of_study: withDefault(z.string().nullish().describe("Field of study"), ""),
-  grade: withDefault(z.string().nullish().describe("Grade achieved"), ""),
-  type: withDefault(z.string().nullish().describe("Type of education"), ""),
-  degree: withDefault(z.string().nullish().describe("Degree obtained"), ""),
-  start_date: withDefault(z.string().nullish().describe("Start date of the education"), ""),
-  end_date: withDefault(z.string().nullish().describe("End date of the education"), ""),
+  institution: withDefault(z.string().describe("Name of the institution"), ""),
+  field_of_study: withDefault(z.string().describe("Field of study"), ""),
+  grade: withDefault(z.string().describe("Grade achieved"), ""),
+  type: withDefault(z.string().describe("Type of education"), ""),
+  degree: withDefault(z.string().describe("Degree obtained"), ""),
+  start_date: withDefault(z.string().describe("Start date of the education"), ""),
+  end_date: withDefault(z.string().describe("End date of the education"), ""),
   is_currently_studying: z.boolean().describe("Is currently studying"),
-  description: withDefault(z.string().nullish().describe("Description of the education"), ""),
+  description: withDefault(z.string().describe("Description of the education"), ""),
 });
 
 const ExperienceItemSchema = z.object({
-  title: withDefault(z.string().nullish().describe("Title of the position"), ""),
-  employment_type: withDefault(z.string().nullish().describe("Type of employment"), ""),
-  location: withDefault(z.string().nullish().describe("Location of the position"), ""),
-  description: withDefault(z.string().nullish().describe("Description of the position"), ""),
-  location_type: withDefault(z.string().nullish().describe("Type of location"), ""),
-  start_date: withDefault(z.string().nullish().describe("Start date of the position"), ""),
-  end_date: withDefault(z.string().nullish().describe("End date of the position"), ""),
+  title: withDefault(z.string().describe("Title of the position"), ""),
+  employment_type: withDefault(z.string().describe("Type of employment"), ""),
+  location: withDefault(z.string().describe("Location of the position"), ""),
+  description: withDefault(z.string().describe("Description of the position"), ""),
+  location_type: withDefault(z.string().describe("Type of location"), ""),
+  start_date: withDefault(z.string().describe("Start date of the position"), ""),
+  end_date: withDefault(z.string().describe("End date of the position"), ""),
   is_currently_working: z.boolean().describe("Is currently working"),
 });
 
 const InterestItemSchema = z.object({
-  name: withDefault(z.string().nullish(), ""),
+  name: withDefault(z.string(), ""),
 });
 
 const ProfileItemSchema = z.object({
-  network: withDefault(z.string().nullish(), ""),
-  url: withDefault(z.string().nullish(), ""),
+  network: withDefault(z.string(), ""),
+  url: withDefault(z.string(), ""),
 });
 
 const ProjectItemSchema = z.object({
-  name: withDefault(z.string().nullish(), ""),
-  description: withDefault(z.string().nullish(), ""),
+  name: withDefault(z.string(), ""),
+  description: withDefault(z.string(), ""),
 });
 
 const SkillItemSchema = z.object({
-  name: withDefault(z.string().nullish().describe("The name of the skill"), ""),
-  level: withDefault(z.number().nullish().describe("The proficiency level of the skill"), 0),
+  name: withDefault(z.string().describe("The name of the skill"), ""),
+  level: withDefault(z.number().describe("The proficiency level of the skill"), 0),
 });
 
 export const ResumeSchema = z.object({
-  basics: withDefault(BasicsSchema.describe("Basic information about the individual"), {}),
-  summary: withDefault(z.string().nullish().describe("A brief summary about the individual"), ""),
+  basics: BasicsSchema.describe("Basic information about the individual"),
+  summary: withDefault(z.string().describe("A brief summary about the individual"), ""),
   awards: withDefault(AwardItemSchema.array().default([]).describe("Awards received by the individual"), []),
   certifications: withDefault(
     CertificationItemSchema.array().default([]).describe("Certifications obtained by the individual"),

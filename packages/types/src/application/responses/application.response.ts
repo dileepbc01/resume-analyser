@@ -122,7 +122,7 @@ class ExperienceResponse {
 class ProfileResponse {
   @ApiProperty({ description: "Profile name" })
   @IsString()
-  name: string;
+  network: string;
 
   @ApiProperty({ description: "Profile URL" })
   @IsString()
@@ -130,7 +130,7 @@ class ProfileResponse {
 
   static fromEntity(profile: Profile): ProfileResponse {
     const dto = new ProfileResponse();
-    dto.name = profile.name;
+    dto.network = profile.network;
     dto.url = profile.url;
     return dto;
   }

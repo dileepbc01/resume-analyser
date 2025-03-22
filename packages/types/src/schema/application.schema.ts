@@ -10,37 +10,37 @@ export type CandidateDocument = HydratedDocument<Application>;
 export class Education {
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   institution: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   field_of_study: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   grade: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   type: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   degree: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   start_date: String;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   end_date: String;
   @Prop({
@@ -62,17 +62,17 @@ const EducationSchema = SchemaFactory.createForClass(Education);
 export class Experience {
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   title: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   employment_type: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   location: string;
 
@@ -84,19 +84,19 @@ export class Experience {
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   location_type: string;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   start_date: String;
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   end_date: String;
 
@@ -113,12 +113,12 @@ const ExperienceSchema = SchemaFactory.createForClass(Experience);
 export class Profile {
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
-  name: string;
+  network: string;
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   url: string;
 }
@@ -127,7 +127,7 @@ export class Profile {
 export class Skill {
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   name: string;
   @Prop({
@@ -179,17 +179,6 @@ class JobProcessingStatus {
 const JobProcessingStatusSchema = SchemaFactory.createForClass(JobProcessingStatus);
 
 
-@Schema()
-export class Counter {
-  @Prop({ required: true, unique: true })
-  name: string;
-
-  @Prop({ required: true, default: 1 })
-  seq: number;
-}
-
-export const CounterSchema = SchemaFactory.createForClass(Counter);
-
 // Register the Counter model with Mongoose
 @Schema()
 export class Application {
@@ -229,7 +218,7 @@ export class Application {
 
   @Prop({
     type: MongooseSchema.Types.String,
-    default: null,
+    default: '',
   })
   resume_url: string;
 
