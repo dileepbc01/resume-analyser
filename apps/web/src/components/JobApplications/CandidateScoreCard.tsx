@@ -126,7 +126,7 @@ const CandidateScoreCard = ({
               <div className="flex flex-wrap gap-1">
                 {topSkills.map((skill) => (
                   <Badge key={skill.name} variant="outline">
-                    {skill.name} - {skill.level}/5
+                    {skill.name} - {skill.level}
                   </Badge>
                 ))}
               </div>
@@ -295,7 +295,7 @@ const CandidateScoreCard = ({
                     <Badge key={skill.name} variant="secondary" className="flex items-center gap-1">
                       {skill.name}
                       <span className="bg-primary/10 ml-1 rounded-full px-1.5 py-0.5 text-xs">
-                        {skill.level}/5
+                        {skill.level}
                       </span>
                     </Badge>
                   ))}
