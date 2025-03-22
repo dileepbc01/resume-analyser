@@ -45,6 +45,7 @@ export class ResumeScoreProcessor extends WorkerHost {
 
     const savedScore = await this.resumeScore.create({
       criterias: score.evaluation.map((c, idx) => {
+        const crit_score = (c.parameters.reduce((acc, p) => acc + p.score, 0) / c.parameters.length) * 100;
         const crit: ResumeScoreCriteria = {
           criteria_name: c.criterionName,
           justification: c.justification,
@@ -55,7 +56,7 @@ export class ResumeScoreProcessor extends WorkerHost {
               score: p.score,
             };
           }),
-          total_score: (c.parameters.reduce((acc, p) => acc + p.score, 0) / c.parameters.length) * 100,
+          total_score: parseFloat(Number(crit_score).toPrecision(2)),
         };
         return crit;
       }),

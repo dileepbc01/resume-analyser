@@ -22,6 +22,7 @@ interface JobFormProps {
     description?: string;
   };
   disabled?: boolean;
+  isEdit: boolean;
 }
 
 const jobTypes = [
@@ -50,6 +51,7 @@ const JobForm: React.FC<JobFormProps> = ({
     description: "",
   },
   disabled = false,
+  isEdit = false,
 }) => {
   const form = useForm({
     disabled,
@@ -144,9 +146,11 @@ const JobForm: React.FC<JobFormProps> = ({
           <FormMessage />
         </FormItem>
 
-        <div className="flex justify-end">
-          <Button type="submit">Create Job</Button>
-        </div>
+        {!isEdit && (
+          <div className="flex justify-end">
+            <Button type="submit">Create Job</Button>
+          </div>
+        )}
       </form>
     </Form>
   );

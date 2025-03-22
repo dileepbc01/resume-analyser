@@ -3,8 +3,6 @@ import { Injectable } from "@nestjs/common";
 import { Job, Queue } from "bullmq";
 import { ApplicationService } from "src/application/application.service";
 import { LangchainService } from "src/langchain/langchain.service";
-import { ResumeSchema } from "src/langchain/resume.schema";
-import { z } from "zod";
 
 import { AppQueueEnum, FileMimeTypes, QueuePayload } from "../app-queues";
 
@@ -36,11 +34,16 @@ export class ResumeParseProcessor extends WorkerHost {
       throw new Error("Image parsing not supported yet");
     }
     const json = await this.langchainService.getStructuredData(text);
+
+    this.applicationService.updateParsedDetails({
+      application_id: job.data.applicationId,
+      job_id: job.data.jobId,
+      resume_json: json,
+      resume_text: text,
+      resume_url: job.data.resumeFileUrl,
+    });
+
     await job.updateProgress(100);
-    return {
-      resumeJson: json,
-      resumeText: text,
-    };
   }
 
   @OnWorkerEvent("active")
@@ -66,26 +69,15 @@ export class ResumeParseProcessor extends WorkerHost {
 
   @OnWorkerEvent("completed")
   async onCompleted(job: Job<QueuePayload["resume-parse"]>) {
-    const returnvalue = job.returnvalue as {
-      resumeJson: z.infer<typeof ResumeSchema>;
-      resumeText: string;
-    };
-    this.applicationService.updateParsedDetails({
-      application_id: job.data.applicationId,
-      job_id: job.data.jobId,
-      resume_json: returnvalue.resumeJson,
-      resume_text: returnvalue.resumeText,
-      resume_url: job.data.resumeFileUrl,
-    });
     console.info(`Job with id ${job.id} COMPLETED!`);
-    this.resumeScoringQueue.add("score-resume", {
-      applicationId: job.data.applicationId,
-    });
     await this.applicationService.updateParseStatus(job.data.applicationId, "parse", {
       error: null,
       percentage: job.progress as number,
       status: "completed",
       retry_count: job.attemptsMade,
+    });
+    this.resumeScoringQueue.add("score-resume", {
+      applicationId: job.data.applicationId,
     });
   }
 

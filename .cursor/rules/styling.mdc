@@ -1,0 +1,8 @@
+---
+description: Stlying using tailwind csss
+globs: 
+---
+
+# Your rule content
+
+- use css classes from @globals.css

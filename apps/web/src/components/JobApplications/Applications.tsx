@@ -1,10 +1,12 @@
 import { useJobApplications } from "@/hooks/useJobApplications";
+import { ApplicationResponse } from "@repo/types";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import { Skeleton } from "../ui/skeleton";
+import CandidateScoreCard from "./CandidateScoreCard";
 import JobApplication from "./JobApplication";
 
 const LoadingRow = () => (
@@ -33,6 +35,8 @@ const LoadingRow = () => (
 const Applications = ({ job_id }: { job_id: string }) => {
   const jobApplicationsQry = useJobApplications(job_id);
   const applications = jobApplicationsQry.data?.applications ?? null;
+  const [selJobApplication, setSelectedJobApplication] = useState<ApplicationResponse | null>(null);
+
   return (
     <>
       <div className="px-6 py-4">
@@ -61,10 +65,23 @@ const Applications = ({ job_id }: { job_id: string }) => {
                 ) {
                   return <LoadingRow key={jobApp.applicationId} />;
                 }
-                return <JobApplication key={jobApp.applicationId} jobApplication={jobApp} />;
+                return (
+                  <JobApplication
+                    key={jobApp.applicationId}
+                    jobApplication={jobApp}
+                    openJobApplication={() => {
+                      setSelectedJobApplication(jobApp);
+                    }}
+                  />
+                );
               })}
           </TableBody>
         </Table>
+        <CandidateScoreCard
+          jobApplication={selJobApplication}
+          open={selJobApplication != null}
+          setClose={() => setSelectedJobApplication(null)}
+        />
       </div>
     </>
   );

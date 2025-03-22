@@ -26,6 +26,7 @@ export const New = () => {
           description: "",
         }}
         disabled={false}
+        isEdit={false}
       />
     </div>
   );

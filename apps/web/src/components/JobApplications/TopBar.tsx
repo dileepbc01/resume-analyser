@@ -1,3 +1,4 @@
+import { GetJobResponse } from "@repo/types";
 import { File, Loader2, Upload, UploadCloudIcon, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,7 +19,7 @@ import { cn } from "@/lib/utils";
 const MAX_FILES = 30;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 10MB
 
-export function TopBar({ job_id }: { job_id: string }) {
+export function TopBar({ jobDetails }: { jobDetails: GetJobResponse }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,7 +69,7 @@ export function TopBar({ job_id }: { job_id: string }) {
       const promises = await files.map(async (file) => {
         const formData = new FormData();
         formData.append("file", file.file);
-        formData.append("job_id", job_id);
+        formData.append("job_id", jobDetails.id);
         await mutateAsync({
           form: formData,
           onFileUploadProgress: (per: number) => {
@@ -96,7 +97,7 @@ export function TopBar({ job_id }: { job_id: string }) {
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-medium">Job Details</h1>
             <span className="text-muted-foreground text-sm">-</span>
-            <span className="text-muted-foreground text-sm">Full Stack Developer</span>
+            <span className="text-muted-foreground text-sm">{jobDetails.role}</span>
           </div>
           <div className="flex items-center gap-3 pb-3">
             <Button variant="default" onClick={() => setOpen(true)}>
@@ -110,7 +111,7 @@ export function TopBar({ job_id }: { job_id: string }) {
             <Button
               variant="outline"
               onClick={() => {
-                router.push(`/job/edit?job_id=${job_id}`);
+                router.push(`/job/${jobDetails.id}/edit?tab=scoring`);
               }}>
               Edit
             </Button>
