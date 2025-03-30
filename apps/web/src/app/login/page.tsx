@@ -59,16 +59,7 @@ export default function SignInPage() {
 
           
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="text-muted-foreground bg-white px-2 dark:bg-slate-800">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
+            
 
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField
