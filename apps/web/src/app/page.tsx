@@ -13,7 +13,9 @@ function App() {
       <nav className="bg-card shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="text-primary text-2xl font-bold">Resume Analyzer</div>
-          <Button variant="default">Get Started</Button>
+          <Button variant="default">
+            <Link href={"/signup"} >Get Started</Link>
+          </Button>
         </div>
       </nav>
 
@@ -29,7 +31,7 @@ function App() {
           </p>
           <div className="flex justify-center gap-4">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-              <Link href="/login">Try It Free</Link>
+              <Link href="/signup">Try It Free</Link>
             </Button>
             <Button variant="outline" className="text-primary border-primary">
               Learn More
@@ -91,20 +93,7 @@ function App() {
           </Button>
         </div>
       </section>
-      {/* Pricing Section */}
-      <section className="bg-card py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-foreground mb-12 text-center text-3xl font-bold">Pricing</h2>
-          <div className="text-center">
-            <p className="text-muted-foreground mb-8 text-xl">
-              Pay only for what you use. Just $X per 1,000 resumes analyzed.
-            </p>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Start Analyzing
-            </Button>
-          </div>
-        </div>
-      </section>
+     
       {/* Footer */}
       <footer className="bg-card py-8">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">

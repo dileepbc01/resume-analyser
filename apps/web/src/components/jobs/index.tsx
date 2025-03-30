@@ -35,12 +35,11 @@ const Jobs: React.FC = () => {
         <CardContent className="p-0">
           <div className="w-full">
             <div className="border-b">
-              <div className="grid grid-cols-5">
-                <div className="p-4 text-sm font-medium text-gray-600">Job Title</div>
-                <div className="p-4 text-sm font-medium text-gray-600">Location</div>
-                <div className="p-4 text-sm font-medium text-gray-600">Company</div>
-                <div className="p-4 text-sm font-medium text-gray-600">Candidates</div>
-                <div className="p-4 text-sm font-medium text-gray-600">Created at</div>
+              <div className="grid grid-cols-4 gap-2 p-4 text-sm font-medium text-gray-600">
+                <div>Job Title</div>
+                <div>Location</div>
+                <div>Company</div>
+                <div>Created at</div>
               </div>
             </div>
             {jobs?.map((job) => {
