@@ -1,3 +1,4 @@
+import { InjectQueue } from "@nestjs/bullmq";
 import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -10,10 +11,12 @@ import {
   UpdateJobDto,
   UpdateScoringSliderDto,
 } from "@repo/types";
+import { Queue } from "bullmq";
 import { Model } from "mongoose";
 import { JwtPayload } from "src/auth/strategies/accessToken.strategy";
 import { AccessTokenGuard } from "src/common/guards/access-token.guard";
 import { GetUser } from "src/decorators/user.decorator";
+import { AppQueueEnum, QueuePayload } from "src/queues/app-queues";
 
 import { JobService } from "./job.service";
 
@@ -24,7 +27,9 @@ export class JobController {
   constructor(
     private readonly jobService: JobService,
     @InjectModel(Job.name) private jobModel: Model<Job>,
-    @InjectModel(ScoringCriteria.name) private ScoringCritModel: Model<ScoringCriteria>
+    @InjectModel(ScoringCriteria.name) private ScoringCritModel: Model<ScoringCriteria>,
+    @InjectQueue(AppQueueEnum.RESUME_RESCORE)
+    private readonly resumeReScoringQueue: Queue<QueuePayload["resume-re-score"]>
   ) {}
 
   @Post()
@@ -85,19 +90,20 @@ export class JobController {
     return GetJobResponse.fromEntity(job);
   }
 
-  @Patch(":id/scoring-criteria")
-  @ApiResponse({
-    status: 204,
-    description: "The scoring prompt has been successfully updated.",
-  })
-  @ApiResponse({ status: 400, description: "Bad Request." })
-  async createScoringPrompt(
-    @Param("id") jobId: string,
-    @Body() createScoringPromptDto: { scoringPrompt: string }
-  ) {
-    await this.jobService.updateScoringCriteria(jobId, createScoringPromptDto.scoringPrompt);
-    return;
-  }
+  // TODO: future req
+  // @Patch(":id/scoring-criteria")
+  // @ApiResponse({
+  //   status: 204,
+  //   description: "The scoring prompt has been successfully updated.",
+  // })
+  // @ApiResponse({ status: 400, description: "Bad Request." })
+  // async createScoringPrompt(
+  //   @Param("id") jobId: string,
+  //   @Body() createScoringPromptDto: { scoringPrompt: string }
+  // ) {
+  //   await this.jobService.updateScoringCriteria(jobId, createScoringPromptDto.scoringPrompt);
+  //   return;
+  // }
 
   @Patch(":id/scoring-slider")
   @ApiResponse({
@@ -109,15 +115,15 @@ export class JobController {
     @Param("id") jobId: string,
     @Body() updatedCriteriasImp: UpdateScoringSliderDto
   ): Promise<void> {
-    const jobDetails = await this.jobModel.findById(jobId);
+    const jobDetails = await this.jobModel.findById(jobId).populate("scoring_criteria");
 
     if (!jobDetails) {
       throw new NotFoundException("Job not found");
     }
-    const jobScoringCrit = await this.ScoringCritModel.findOne({ _id: jobDetails.scoring_criteria._id });
+    const jobScoringCrit = await this.ScoringCritModel.findById(jobDetails.scoring_criteria._id);
 
     if (!jobScoringCrit) {
-      throw new NotFoundException("Scoring Criteria not");
+      throw new NotFoundException("Scoring Criteria not found");
     }
 
     jobScoringCrit.criterias = jobScoringCrit.criterias.map((criteria) => {
@@ -132,6 +138,10 @@ export class JobController {
     });
 
     await jobScoringCrit.save();
+
+    this.resumeReScoringQueue.add("resume-rescore", {
+      jobId: jobDetails.id,
+    });
     return;
   }
 
@@ -145,7 +155,7 @@ export class JobController {
   })
   @ApiResponse({ status: 400, description: "Bad Request." })
   async getScoringCriteria(@Param("id") jobId: string) {
-    const jobDetails = await this.jobModel.findById(jobId).populate("scoringCriteria");
+    const jobDetails = await this.jobModel.findById(jobId).populate("scoring_criteria");
     if (!jobDetails) {
       throw new NotFoundException("Job not found");
     }
