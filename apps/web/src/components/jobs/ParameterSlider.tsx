@@ -1,10 +1,10 @@
-import { useGetScoringPromptSettings } from '@/hooks/useJob';
+import { useGetScoringPromptSettings, useUpdateScoringSlider } from '@/hooks/useJob';
 import { useForm, Controller } from 'react-hook-form';
 import { Slider } from '@/components/ui/slider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { GetScoringSettingsResponse } from '@repo/types';
 
 interface Criteria {
@@ -18,6 +18,7 @@ interface FormData {
 
 const ParameterSlider = ({ jobId }: { jobId: string }) => {
   const { scoreSetting, isLoading, error } = useGetScoringPromptSettings(jobId);
+  const {updateScoringSlider}=useUpdateScoringSlider(jobId)
   const { control, handleSubmit, setValue, reset, watch } = useForm<FormData>({
     defaultValues: {
       criterias: scoreSetting?.criterias || [],
@@ -25,7 +26,7 @@ const ParameterSlider = ({ jobId }: { jobId: string }) => {
   });
 
   // Ensure `criterias` is always an array
-  const criterias = (watch('criterias') as GetScoringSettingsResponse['criterias']) || [];
+  const criterias = useMemo(() => (watch('criterias') as GetScoringSettingsResponse['criterias']) || [], [watch('criterias')]);
   
   // Track which slider is being adjusted
   const [activeSliderIndex, setActiveSliderIndex] = useState<number | null>(null);
@@ -127,8 +128,6 @@ const ParameterSlider = ({ jobId }: { jobId: string }) => {
     }
   }, [criterias, activeSliderIndex, setValue]);
 
-  // Calculate total for display
-  const totalImportance = criterias?.reduce((sum, criteria) => sum + (criteria.importance || 0), 0) || 0;
 
   if (isLoading) {
     return <></>;
@@ -138,7 +137,9 @@ const ParameterSlider = ({ jobId }: { jobId: string }) => {
   }
 
   const onSubmit = ({criterias}: FormData) => {
-    // console.log(criterias)
+    updateScoringSlider({
+      criterias
+    })
   };
 
   // Handle reset logic
@@ -205,8 +206,8 @@ const ParameterSlider = ({ jobId }: { jobId: string }) => {
           ))}
           <div className="mt-2 flex justify-between font-medium">
             <span>Total:</span>
-            <span className={Math.abs(totalImportance - 100) < 0.01 ? "text-green-500" : "text-red-500"}>
-              {Math.round(totalImportance)}%
+            <span className={"text-green-500"}>
+              {Math.round(100)}%
             </span>
           </div>
         </CardContent>
