@@ -145,7 +145,7 @@ export class JobController {
   })
   @ApiResponse({ status: 400, description: "Bad Request." })
   async getScoringCriteria(@Param("id") jobId: string) {
-    const jobDetails = await this.jobModel.findById(jobId).populate("scoringCriteria");
+    const jobDetails = await this.jobModel.findById(jobId).populate("scoring_criteria");
     if (!jobDetails) {
       throw new NotFoundException("Job not found");
     }

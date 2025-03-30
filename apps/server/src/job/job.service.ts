@@ -31,7 +31,7 @@ export class JobService {
     await this.ScoringCritModel.deleteOne({
       job: jobId,
     });
-    const jobDetails = await this.jobModel.findById(jobId).populate("scoringCriteria");
+    const jobDetails = await this.jobModel.findById(jobId).populate("scoring_criteria");
 
     if (!jobDetails) throw new Error("Job not found");
     const structuredScoreSetting = await this.langchainService.getStructedScoreSettings(CriteriaString);
