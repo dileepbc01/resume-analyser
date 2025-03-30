@@ -5,6 +5,7 @@ import { BullModule } from "@nestjs/bullmq";
 export enum AppQueueEnum {
   RESUME_PARSE = "resume-parse",
   RESUME_SCORE = "resume-score",
+  RESUME_RESCORE = "resume-re-score",
 }
 
 export enum FileMimeTypes {
@@ -26,17 +27,25 @@ export type QueuePayload = {
   [AppQueueEnum.RESUME_SCORE]: {
     applicationId: string;
   };
+  [AppQueueEnum.RESUME_RESCORE]: {
+    jobId: string;
+  };
 };
 
 export const AppQueues = [
   BullModule.registerQueue({ name: AppQueueEnum.RESUME_PARSE }),
   BullModule.registerQueue({ name: AppQueueEnum.RESUME_SCORE }),
+  BullModule.registerQueue({ name: AppQueueEnum.RESUME_RESCORE }),
   BullBoardModule.forFeature({
     name: AppQueueEnum.RESUME_PARSE,
     adapter: BullMQAdapter, //or use BullAdapter if you're using bull instead of bullMQ
   }),
   BullBoardModule.forFeature({
     name: AppQueueEnum.RESUME_SCORE,
+    adapter: BullMQAdapter, //or use BullAdapter if you're using bull instead of bullMQ
+  }),
+  BullBoardModule.forFeature({
+    name: AppQueueEnum.RESUME_RESCORE,
     adapter: BullMQAdapter, //or use BullAdapter if you're using bull instead of bullMQ
   }),
 ];

@@ -1,4 +1,4 @@
-import { CreateJobDto, UpdateJobDto, UpdateScoringPromptDto, UpdateScoringSliderDto } from "@repo/types";
+import { CreateJobDto, UpdateJobDto, UpdateScoringSliderDto } from "@repo/types";
 import { toast } from "sonner";
 
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -55,25 +55,6 @@ export const useJob = () => {
 
     // Errors
     jobsError,
-  };
-};
-
-export const useUpdateScoringPrompt = (jobId: string) => {
-  const { mutateAsync: updateScoringPrompt } = useMutation({
-    mutationFn: ({ scoringPrompt }: UpdateScoringPromptDto) =>
-      jobApi.updateScoringCriteria(jobId, scoringPrompt),
-    onSuccess: () => {
-      toast.success("Scoring prompt updated successfully");
-      //TODO: Add success toast
-    },
-    onError: (error: CustomAxiosError) => {
-      toast.error(error.response.data.message);
-    },
-    mutationKey: ["score-settings", jobId],
-  });
-
-  return {
-    updateScoringPrompt,
   };
 };
 

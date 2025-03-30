@@ -217,7 +217,7 @@ const ParameterSlider = ({ jobId }: { jobId: string }) => {
               Reset
             </Button>
             <Button type="submit">
-              Save
+              Save and Rescore
             </Button>
           </div>
         </div>
