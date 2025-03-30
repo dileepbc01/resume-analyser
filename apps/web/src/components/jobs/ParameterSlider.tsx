@@ -1,259 +1,229 @@
-"use client";
+import { useGetScoringPromptSettings, useUpdateScoringSlider } from '@/hooks/useJob';
+import { useForm, Controller } from 'react-hook-form';
+import { Slider } from '@/components/ui/slider';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { useState, useEffect, useMemo } from 'react';
+import { GetScoringSettingsResponse } from '@repo/types';
 
-import { useState } from "react";
-import TipTapEditor from "../common/TiptapEditor";
-import { useGetScoringPromptSettings } from "../../hooks/useJob";
-
-export enum ApiWeightKey {
-  TECHNICAL = "technical_competence",
-  EXPERIENCE = "proffessional_experience_impact",
-  EDUCATION = "education",
-  LEADERSHIP = "leadership_soft_skills",
-  CULTURAL = "role_alignment_cultural_fit",
+interface Criteria {
+  criteriaName: string;
+  importance: number;
 }
 
-export interface ApiScoringWeights {
-  [ApiWeightKey.TECHNICAL]: number;
-  [ApiWeightKey.EXPERIENCE]: number;
-  [ApiWeightKey.EDUCATION]: number;
-  [ApiWeightKey.LEADERSHIP]: number;
-  [ApiWeightKey.CULTURAL]: number;
+interface FormData {
+  criterias: Criteria[];
 }
 
-export interface ScoringWeight {
-  name: string;
-  value: number;
-  color: string;
-  description: string;
-  apiKey: ApiWeightKey;
-}
-
-export interface ScoringWeights {
-  [key: string]: ScoringWeight;
-}
-
-const DEFAULT_WEIGHTS: ScoringWeights = {
-  technical: {
-    name: "Technical Competence",
-    value: 30,
-    color: "bg-blue-500",
-    description: "Technical skills, domain knowledge, certifications, and programming experience.",
-    apiKey: ApiWeightKey.TECHNICAL,
-  },
-  experience: {
-    name: "Professional Experience & Impact",
-    value: 25,
-    color: "bg-green-500",
-    description: "Years of experience, project scope, business value delivered, and leadership roles.",
-    apiKey: ApiWeightKey.EXPERIENCE,
-  },
-  education: {
-    name: "Education & Continuous Learning",
-    value: 20,
-    color: "bg-purple-500",
-    description: "Academic qualifications, certifications, self-learning, and industry contributions.",
-    apiKey: ApiWeightKey.EDUCATION,
-  },
-  leadership: {
-    name: "Leadership & Soft Skills",
-    value: 15,
-    color: "bg-orange-500",
-    description: "Team management, communication skills, mentoring, and cultural adaptability.",
-    apiKey: ApiWeightKey.LEADERSHIP,
-  },
-  cultural: {
-    name: "Role Alignment & Cultural Fit",
-    value: 10,
-    color: "bg-red-500",
-    description: "Alignment with company values, industry knowledge, work style, and clearances.",
-    apiKey: ApiWeightKey.CULTURAL,
-  },
-};
-
-const mapApiToUiWeights = (apiWeights: ApiScoringWeights): ScoringWeights => {
-  const uiWeights = { ...DEFAULT_WEIGHTS };
-  Object.entries(apiWeights).forEach(([apiKey, value]) => {
-    const weight = Object.values(uiWeights).find((w) => w.apiKey === apiKey);
-    if (weight) {
-      weight.value = value;
-    }
+const ParameterSlider = ({ jobId }: { jobId: string }) => {
+  const { scoreSetting, isLoading, error } = useGetScoringPromptSettings(jobId);
+  const {updateScoringSlider}=useUpdateScoringSlider(jobId)
+  const { control, handleSubmit, setValue, reset, watch } = useForm<FormData>({
+    defaultValues: {
+      criterias: scoreSetting?.criterias || [],
+    },
   });
-  return uiWeights;
-};
 
-const mapUiToApiWeights = (uiWeights: ScoringWeights): ApiScoringWeights => {
-  const apiWeights = {} as ApiScoringWeights;
-  Object.values(uiWeights).forEach((weight) => {
-    apiWeights[weight.apiKey] = weight.value;
-  });
-  return apiWeights;
-};
+  // Ensure `criterias` is always an array
+  const criterias = useMemo(() => (watch('criterias') as GetScoringSettingsResponse['criterias']) || [], [watch('criterias')]);
+  
+  // Track which slider is being adjusted
+  const [activeSliderIndex, setActiveSliderIndex] = useState<number | null>(null);
 
-interface ParameterSliderProps {
-  initialWeights?: ApiScoringWeights;
-  onSubmit: (weights: ApiScoringWeights) => void;
-}
-const getWeightValAtIdx = (weights: ScoringWeights, index: number) => {
-  const weight = Object.values(weights)[index];
-  if (weight) {
-    return weight.value;
-  }
-  return 0;
-};
-const getWeightKeyAtIdx = (weights: ScoringWeights, index: number) => {
-  const weightKey = Object.keys(weights)[index];
-  if (!weightKey) {
-    throw new Error("Invalid weight index");
-  }
-  return weightKey;
-};
-
-export const ResumeScoreSettings = ({jobId}:{jobId:string}) => {
-  const [activeTab, setActiveTab] = useState<'prompt' | 'parameters'>('parameters');
-  const {
-    scoreSetting,
-
-  }=useGetScoringPromptSettings(jobId);
-    
-  const update = async()=>{
-      // try{
-      //   // const d = jobApi.updateScoringCriteria(jobId, "CriteriaString");
-
-      // }catch(err){
-      //   // console.log(err)
-      // }
-    }
-
-  return (
-    <div className="w-full">
-      <div className="flex justify-end mb-4">
-        <div className="inline-flex rounded-lg border border-gray-200">
-          <button
-            className={`px-4 py-2 rounded-l-lg ${
-              activeTab === 'parameters' 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white text-gray-600 hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveTab('parameters')}
-          >
-            Parameters
-          </button>
-          <button
-            className={`px-4 py-2 rounded-r-lg ${
-              activeTab === 'prompt' 
-                ? 'bg-blue-600 text-white' 
-                : 'bg-white text-gray-600 hover:bg-gray-50'
-            }`}
-            onClick={() => setActiveTab('prompt')}
-          >
-            Prompt
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-4">
-        {activeTab === 'parameters' ? (
-          <ParameterSlider onSubmit={() => {}}  />
-        ) : (
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-medium mb-2">Resume Scoring Prompt</h3>
-            <div>
-              <p>Choose Prompt Specific suited for a ROle</p>
-              <select className="w-full p-2 border rounded-md mb-4">
-                <option value="">Select a role-specific prompt</option>
-                <option value="software-engineer">Software Engineer</option>
-                <option value="data-scientist">Data Scientist</option>
-                <option value="product-manager">Product Manager</option>
-                <option value="designer">UX/UI Designer</option>
-                <option value="devops">DevOps Engineer</option>
-              </select>
-            </div>
-           <TipTapEditor
-            description={scoreSetting?scoreSetting.scoring_instructions:""}
-            onChange={() => {}}
-            isDisabled={false}
-           />
-           <button onClick={update} className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-            <span>Save Prompt</span>
-          </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export const ParameterSlider = ({ initialWeights, onSubmit }: ParameterSliderProps) => {
-  const [weights, setWeights] = useState<ScoringWeights>(
-    initialWeights ? mapApiToUiWeights(initialWeights) : DEFAULT_WEIGHTS
-  );
-  const [error, setError] = useState<string>("");
-
+  // Function to adjust other sliders when one slider changes
   const handleSliderChange = (index: number, newValue: number) => {
-    const currentValue = getWeightValAtIdx(weights, index);
-    const diff = newValue - currentValue;
+    if (!criterias || criterias.length <= 1) return;
 
-    if (diff === 0) return;
-
-    const otherIndices = Object.values(weights)
+    // Set the active slider index
+    setActiveSliderIndex(index);
+    
+    // Get the current values and calculate the difference
+    const oldValue = criterias[index]?.importance || 0; // Default to 0 if undefined
+    const difference = newValue - oldValue;
+    
+    // Update the current slider value
+    setValue(`criterias.${index}.importance`, newValue);
+    
+    // Get all other slider indices
+    const otherIndices = criterias
       .map((_, i) => i)
-      .filter((i) => i !== index);
-    const totalOthers = otherIndices.reduce((sum, i) => getWeightValAtIdx(weights, i), 0);
-
-    const newWeights = { ...weights };
-    const currentKey = getWeightKeyAtIdx(weights, index);
-    newWeights[currentKey] = { ...(weights[currentKey] as ScoringWeight), value: newValue };
-
-    // Distribute the difference proportionally among other sliders
-    const ratio = (totalOthers - diff) / totalOthers;
-    otherIndices.forEach((i) => {
-      const key = getWeightKeyAtIdx(weights, i);
-      newWeights[key] = {
-        ...(weights[key] as ScoringWeight),
-        value: Math.round(getWeightValAtIdx(weights, i) * ratio),
-      };
-    });
-
-    setWeights(newWeights);
+      .filter(i => i !== index);
+    
+    // Get sum of other sliders
+    const otherSum = otherIndices.reduce(
+      (sum, i) => sum + (criterias[i]?.importance || 0), // Default to 0 if undefined
+      0
+    );
+    
+    if (otherSum === 0) {
+      // If all other sliders are at 0 and we're decreasing, we can't adjust
+      if (difference < 0) {
+        setValue(`criterias.${index}.importance`, oldValue);
+        return;
+      }
+      
+      // If increasing, distribute the remaining evenly
+      const remainingValue = 100 - newValue;
+      const valuePerSlider = remainingValue / otherIndices.length;
+      
+      otherIndices.forEach(i => {
+        setValue(`criterias.${i}.importance`, valuePerSlider);
+      });
+    } else {
+      // Calculate how much to adjust other sliders proportionally
+      const adjustmentFactor = difference / otherSum;
+      
+      // Apply adjustments to other sliders
+      otherIndices.forEach(i => {
+        const currentValue = criterias[i]?.importance || 0; // Default to 0 if undefined
+        let adjustedValue = currentValue - (currentValue * adjustmentFactor);
+        
+        // Ensure no slider goes below 0
+        adjustedValue = Math.max(0, adjustedValue);
+        
+        setValue(`criterias.${i}.importance`, adjustedValue);
+      });
+      
+      // Check if any adjustment made sliders negative and fix the total
+      setTimeout(() => {
+        const newTotal = criterias.reduce((sum, c) => sum + (c.importance || 0), 0);
+        
+        if (Math.abs(newTotal - 100) > 0.01) {
+          const remainingDifference = 100 - newTotal;
+          
+          // Find sliders that can be adjusted (non-zero values)
+          const adjustableIndices = otherIndices.filter(i => (criterias[i]?.importance || 0) > 0);
+          
+          if (adjustableIndices.length > 0) {
+            const adjustment = remainingDifference / adjustableIndices.length;
+            adjustableIndices.forEach(i => {
+              const newAdjustedValue = (criterias[i]?.importance || 0) + adjustment;
+              setValue(`criterias.${i}.importance`, Math.max(0, newAdjustedValue));
+            });
+          } else {
+            // If no other slider can be adjusted, adjust the active one
+            setValue(`criterias.${index}.importance`, newValue + remainingDifference);
+          }
+        }
+      }, 0);
+    }
+    
+    // Clear active slider when done
+    setTimeout(() => setActiveSliderIndex(null), 100);
   };
 
-  const handleSubmit = () => {
-    const total = Object.values(weights).reduce((sum, w) => sum + w.value, 0);
-    if (total !== 100) {
-      setError("Total weight must equal 100%");
-      return;
+  // Initialize sliders to sum to 100 if they don't already
+  useEffect(() => {
+    if (criterias && activeSliderIndex === null) {
+      const total = criterias.reduce((sum, criteria) => sum + (criteria?.importance || 0), 0);
+      
+      if (Math.abs(total - 100) > 0.01) {
+        // Adjust proportionally to make total 100
+        const factor = 100 / total;
+        criterias.forEach((criteria, index) => {
+          setValue(`criterias.${index}.importance`, (criteria?.importance || 0) * factor);
+        });
+      }
     }
-    setError("");
-    onSubmit(mapUiToApiWeights(weights));
+  }, [criterias, activeSliderIndex, setValue]);
+
+
+  if (isLoading) {
+    return <></>;
+  }
+  if (error || !scoreSetting) {
+    return <></>;
+  }
+
+  const onSubmit = ({criterias}: FormData) => {
+    updateScoringSlider({
+      criterias
+    })
+  };
+
+  // Handle reset logic
+  const handleReset = () => {
+    reset({
+      criterias: scoreSetting?.criterias || [],
+    });
+    
+    // Ensure total is 100 after reset
+    setTimeout(() => {
+      const resetCriterias = watch('criterias') || [];
+      const resetTotal = resetCriterias.reduce((sum, c) => sum + (c?.importance || 0), 0);
+      
+      if (Math.abs(resetTotal - 100) > 0.01) {
+        const factor = 100 / resetTotal;
+        resetCriterias.forEach((_, index) => {
+          setValue(
+            `criterias.${index}.importance`, 
+            (resetCriterias[index]?.importance || 0) * factor
+          );
+        });
+      }
+    }, 0);
   };
 
   return (
-    <div className="space-y-6 p-4">
-      {Object.values(weights).map((weight, index) => (
-        <div key={weight.name} className="space-y-2">
-          <div className="flex justify-between">
-            <label className="font-medium">{weight.name}</label>
-            <span>{weight.value}%</span>
+    <Card className="flex flex-col gap-4">
+      <CardHeader>
+        <CardTitle>Criteria Importance</CardTitle>
+        <CardDescription>Adjust the importance of each criteria (total always equals 100%)</CardDescription>
+      </CardHeader>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="grid gap-4">
+          {scoreSetting.criterias.map((criteria, index) => (
+            <div
+              key={criteria.criteriaName}
+              className="flex items-center justify-between space-x-4"
+            >
+              <Label htmlFor={criteria.criteriaName} className="w-1/4">
+                {criteria.criteriaName}:
+              </Label>
+              <Controller
+                name={`criterias.${index}.importance`}
+                control={control}
+                defaultValue={criteria.importance}
+                render={({ field }) => (
+                  <>
+                    <Slider
+                      id={criteria.criteriaName}
+                      value={[field.value]}
+                      max={100}
+                      step={1}
+                      aria-label={criteria.criteriaName}
+                      className="flex-1"
+                      onValueChange={(value) => {
+                        handleSliderChange(index, Number(value[0]));
+                      }}
+                    />
+                    <span className="w-12 text-right">{Math.round(field.value)}%</span>
+                  </>
+                )}
+              />
+            </div>
+          ))}
+          <div className="mt-2 flex justify-between font-medium">
+            <span>Total:</span>
+            <span className={"text-green-500"}>
+              {Math.round(100)}%
+            </span>
           </div>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={weight.value}
-            onChange={(e) => handleSliderChange(index, parseInt(e.target.value))}
-            className={`w-full ${weight.color}`}
-          />
-          <p className="text-sm text-gray-600">{weight.description}</p>
+        </CardContent>
+        <div className="flex justify-between items-center mt-4 p-3">
+          <div className="flex space-x-4 ml-auto">
+            <Button variant="outline" onClick={handleReset} type="button">
+              Reset
+            </Button>
+            <Button type="submit">
+              Save and Rescore
+            </Button>
+          </div>
         </div>
-      ))}
-
-      {error && <p className="text-red-500">{error}</p>}
-
-      <button
-        onClick={handleSubmit}
-        className="ml-auto rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
-        Save Weights
-      </button>
-    </div>
+      </form>
+    </Card>
   );
 };
+
+export default ParameterSlider;

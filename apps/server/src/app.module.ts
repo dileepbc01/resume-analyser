@@ -11,6 +11,7 @@ import { AppService } from "./app.service";
 import { ApplicationModule } from "./application/application.module";
 import { AuthModule } from "./auth/auth.module";
 import { JobModule } from "./job/job.module";
+import { AppQueues } from "./queues/app-queues";
 import { RecruiterModule } from "./recruiter/recruiter.module";
 
 @Module({
