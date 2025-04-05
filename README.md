@@ -4,7 +4,7 @@
 
 > **Note:** This application is currently in active development. Features and functionality may change.
 
-Resume Analyzer is an AI-powered SaaS tool designed to streamline resume analysis and job matching. It leverages advanced language models to provide accurate insights, helping recruiters efficiently evaluate candidates.
+Resume Analyzer is an AI-powered SaaS tool designed to Rank applicants resume along with a feedback. It leverages advanced language models to provide accurate insights, helping recruiters efficiently evaluate candidates.
 
 ## 🛠 Tech Stack
 
@@ -12,22 +12,14 @@ Resume Analyzer is an AI-powered SaaS tool designed to streamline resume analysi
 - **Backend:** NestJS
 - **Database:** MongoDB
 - **Storage:** AWS S3 for resume file storage
+- **Message Queue:** Bull Mq with Redis for Managing Workers.
 
 ## ✨ Features
 
-- 🔍 **AI-Powered Resume Analysis** – Uses advanced LLMs for accurate resume-job matching.
+- 🔍 **AI-Powered Resume Analysis** – Uses LLMs for accurate resume-job scoring.
 - 📂 **Bulk Resume Processing** – Supports analyzing thousands of resumes efficiently.
-- 🔗 **API Integration** – Easily integrates with HR and ATS systems.
-- ☁️ **File Storage** – Securely stores resumes in AWS S3.
-- 🎉 **Free Trial** – Users can analyze resumes without signing up.
+- ☁️ **Applicants Management ** – Manage Candidates search filter sort.
 
-## 🚀 Upcoming Features
-
-- 📊 **Advanced Reporting** – Generate detailed insights on resume-job fit.
-- 🌎 **Multilingual Support** – Analyze resumes in multiple languages.
-- ⚙️ **Custom Scoring System** – Adjust match criteria based on job needs.
-- 🏢 **Job Board Integration** – Automate resume acquisition from job sites.
-- 👥 **Team Collaboration** – User management with roles and permissions.
 
 ## 🏗 Getting Started
 
@@ -47,7 +39,7 @@ Resume Analyzer is an AI-powered SaaS tool designed to streamline resume analysi
 
 ## ☁️ Deployment
 
-- **Backend:** Deployed on AWS using Docker & Elastic Beanstalk.
+- **Backend:** Deployed on AWS using Docker Image on App Runner.
 - **Frontend:** Hosted on Vercel.
 - **Database:** MongoDB Atlas.
 - **Storage:** AWS S3.
