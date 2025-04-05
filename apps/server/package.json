@@ -11,7 +11,6 @@
     "dev:build": "pnpm  --filter @repo/types build",
     "dev": "pnpm run dev:build && nest start -b swc --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "typecheck": "tsc --noEmit",
     "test": "jest",

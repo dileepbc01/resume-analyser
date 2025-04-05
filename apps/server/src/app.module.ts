@@ -11,7 +11,6 @@ import { AppService } from "./app.service";
 import { ApplicationModule } from "./application/application.module";
 import { AuthModule } from "./auth/auth.module";
 import { JobModule } from "./job/job.module";
-import { AppQueues } from "./queues/app-queues";
 import { RecruiterModule } from "./recruiter/recruiter.module";
 
 @Module({
@@ -20,7 +19,7 @@ import { RecruiterModule } from "./recruiter/recruiter.module";
       isGlobal: true,
     }),
     BullModule.forRoot({
-      connection: { host: "localhost", port: 6379 },
+      connection: { url: process.env.REDIS_URL },
       defaultJobOptions: {
         attempts: 3, // Max number of attempts for failed jobs
         removeOnComplete: 1000, // Keep data for the last 1000 completed jobs
