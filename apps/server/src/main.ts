@@ -1,4 +1,4 @@
-import { ValidationPipe } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import cookieParser from "cookie-parser";
@@ -9,8 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: process.env.ALLOWED_ORIGINS.split(","),
-    allowedHeaders: ["Content-Type", "Authorization", "upload-id"],
-    credentials: true,
+    credentials: true, // allow cookies
   });
 
   const options = new DocumentBuilder()
@@ -27,6 +26,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: false }));
   app.use(cookieParser());
+  Logger.log("ENVIRONMENT_______________________", process.env.NODE_ENV);
   await app.listen(process.env.PORT ?? 3100);
 }
 bootstrap();

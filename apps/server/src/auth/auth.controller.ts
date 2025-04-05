@@ -40,14 +40,16 @@ export class AuthController {
       .cookie("access_token", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)),
+        path: "/",
       })
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "none",
         expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)), // longer expiration for refresh token
+        path: "/",
       });
 
     return {
@@ -79,18 +81,20 @@ export class AuthController {
       userId,
       refreshToken
     );
+    const isProduction = process.env.NODE_ENV === "production";
+
     res
       .cookie("access_token", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax", // cross-site in prod, safer default in dev
         expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)),
       })
       .cookie("refresh_token", newRefreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)), // longer expiration for refresh token
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        expires: new Date(Date.now() + ms(CONSTANTS.COOKIE_EXPIRATION)), // or use a longer value
       })
       .send();
   }
