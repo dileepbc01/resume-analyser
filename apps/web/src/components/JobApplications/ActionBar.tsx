@@ -52,6 +52,7 @@ const ActionBar = () => {
   // Update URL when filters change
   useEffect(() => {
     updateQueryParams();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSort, sortOrder, selectedSearchBy, searchQuery]);
 
   const toggleSortOrder = () => {

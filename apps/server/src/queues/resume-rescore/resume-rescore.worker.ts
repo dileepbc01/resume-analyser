@@ -4,7 +4,6 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Application, Job } from "@repo/types";
 import { Job as BullJob } from "bullmq";
 import { Model } from "mongoose";
-import { ApplicationService } from "src/application/application.service";
 import { calcResumeScore } from "src/utils/calcResumeScore";
 
 import { AppQueueEnum, QueuePayload } from "../app-queues";
@@ -32,7 +31,6 @@ export class ResumeReScoreProcessor extends WorkerHost {
     await Promise.all(
       await applications.map(async (application) => {
         try {
-          const oldScore = application.resume_score;
           if (!application.resume_analysis) {
             return;
           }
@@ -44,9 +42,7 @@ export class ResumeReScoreProcessor extends WorkerHost {
           };
           await application.save();
           application.resume_score = calcResumeScore(application.resume_analysis, appJob.scoring_criteria);
-          console.log(
-            `Application ${application.id}: Score changed from ${oldScore} to ${application.resume_score}`
-          );
+
           application.scoring_status = {
             ...application.scoring_status,
             percentage: 100,
