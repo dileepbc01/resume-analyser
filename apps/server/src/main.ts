@@ -10,6 +10,7 @@ async function bootstrap() {
   app.enableCors({
     origin: process.env.ALLOWED_ORIGINS.split(","),
     credentials: true, // allow cookies
+    exposedHeaders: ["set-cookie"],
   });
 
   const options = new DocumentBuilder()
@@ -26,7 +27,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: false }));
   app.use(cookieParser());
-  Logger.log("ENVIRONMENT_______________________", process.env.NODE_ENV);
   await app.listen(process.env.PORT ?? 3100);
 }
 bootstrap();

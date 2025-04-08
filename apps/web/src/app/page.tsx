@@ -13,9 +13,14 @@ function App() {
       <nav className="bg-card shadow-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="text-primary text-2xl font-bold">Resume Analyzer</div>
-          <Button variant="default">
-            <Link href={"/signup"} >Get Started</Link>
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button variant="outline">
+              <Link href={"/login"}>Login</Link>
+            </Button>
+            <Button variant="default">
+              <Link href={"/signup"}>Get Started</Link>
+            </Button>
+          </div>
         </div>
       </nav>
 
@@ -31,7 +36,7 @@ function App() {
           </p>
           <div className="flex justify-center gap-4">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90" asChild>
-              <Link href="/signup">Try It Free</Link>
+              <Link href="/signup">Register</Link>
             </Button>
             <Button variant="outline" className="text-primary border-primary">
               Learn More
@@ -81,18 +86,6 @@ function App() {
         </div>
       </section>
 
-      {/* Try It Out Section */}
-      <section className="bg-background py-20">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="text-foreground mb-6 text-3xl font-bold">Try It Out for Free</h2>
-          <p className="text-muted-foreground mb-8 text-xl">
-            Upload a job description and resumes to see how Resume Analyzer works—no sign-up required!
-          </p>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-            Analyze Resumes Now
-          </Button>
-        </div>
-      </section>
      
       {/* Footer */}
       <footer className="bg-card py-8">

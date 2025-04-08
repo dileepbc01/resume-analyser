@@ -15,6 +15,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTab] = useState("overview");
   const { logoutMutation } = useAuth();
   const { theme, setTheme } = useTheme();
+  const [showDropdown, setShowDropdown] = useState(false);
 
   function handleLogout() {
     logoutMutation.mutate();
@@ -82,13 +83,26 @@ function AppLayout({ children }: { children: React.ReactNode }) {
           {/* Top Header with Profile */}
           <div className="border-border bg-background border-b px-6 py-3">
             <div className="flex justify-end">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
-                onClick={() => router.push("/profile")}>
-                <User className="h-5 w-5" />
-              </Button>
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={() => setShowDropdown(!showDropdown)}>
+                  <User className="h-5 w-5" />
+                </Button>
+                {showDropdown && (
+                  <div className="absolute right-0 mt-2 w-30 bg-secondary border-border rounded-md shadow-lg">
+                    <ul>
+                      <li
+                        className="px-4 py-2 hover:bg-muted cursor-pointer text-foreground"
+                        onClick={handleLogout}>
+                        Logout
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex-1 p-3">{children}</div>
