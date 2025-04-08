@@ -18,6 +18,8 @@ class EnvironmentVariables {
   PORT: number;
   @IsString()
   MONGO_URI: string;
+  @IsString()
+  ALLOWED_ORIGINS: string;
 }
 
 export function validate(config: Record<string, unknown>) {
