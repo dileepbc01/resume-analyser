@@ -129,7 +129,7 @@ export class JobController {
     jobScoringCrit.criterias = jobScoringCrit.criterias.map((criteria) => {
       const imp = updatedCriteriasImp.criterias.find((c) => c.criteriaName === criteria.criteria_name);
       if (!imp) {
-        throw new NotFoundException("Criteria not found");
+        throw new NotFoundException("Criteria not found ");
       }
       return {
         ...criteria,

@@ -136,10 +136,15 @@ const ParameterSlider = ({ jobId }: { jobId: string }) => {
     return <></>;
   }
 
-  const onSubmit = ({criterias}: FormData) => {
+  const onSubmit = ({ criterias }: FormData) => {
+    const formattedCriterias = criterias.map((criteria, index) => ({
+      criteriaName: scoreSetting.criterias[index]?.criteriaName??"",
+      importance: criteria.importance,
+    }));
+
     updateScoringSlider({
-      criterias
-    })
+      criterias: formattedCriterias
+    });
   };
 
   // Handle reset logic
@@ -164,7 +169,6 @@ const ParameterSlider = ({ jobId }: { jobId: string }) => {
       }
     }, 0);
   };
-
   return (
     <Card className="flex flex-col gap-4">
       <CardHeader>
