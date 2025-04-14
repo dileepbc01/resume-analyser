@@ -44,6 +44,8 @@ export function useAuth() {
   const logoutMutation = useMutation({
     mutationFn: authApi.logout,
     onSettled: () => {
+      // Remove the cookie by setting it to an empty string
+      document.cookie = "auth-token=;path=/;expires=Thu, 01 Jan 1970 00:00:00 UTC";
       queryClient.setQueryData(["auth-user"], null);
       router.push("/login");
     },
